@@ -1,0 +1,22 @@
+{
+  "name": "retail-express/skylink",
+  "description": "Base synchronisation package for connecting a Magento based website to Retail Express.",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Ben Corlett",
+      "email": "ben@retailexpress.com.au"
+    },
+    {
+      "name": "Tariq Hafeez",
+      "email": "tariq@retailexpress.com.au"
+    }
+  ],
+  "require-dev": {
+    "illuminate/support": "^5.1",
+    "phpunit/phpunit": "^5.1",
+    "mockery/mockery": "^0.9.4",
+    "squizlabs/php_codesniffer": "^2.5",
+    "satooshi/php-coveralls": "^0.6.1"
+  }
+}
