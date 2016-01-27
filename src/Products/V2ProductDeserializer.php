@@ -2,6 +2,7 @@
 
 namespace RetailExpress\SkyLink\Products;
 
+use RetailExpress\SkyLink\XmlKeySanitiser;
 use Sabre\Xml\Element\KeyValue as KeyValueElement;
 use Sabre\Xml\Reader as XmlReader;
 
@@ -11,7 +12,9 @@ trait V2ProductDeserializer
     {
         $payload = KeyValueElement::xmlDeserialize($xmlReader);
 
-        $product = new self(
+        dd(XmlKeySanitiser::sanitise($payload));
+
+        $product = static::create(
             new ProductId($payload['{}ProductId']),
             $payload['{}SKU'],
             $payload['{}Description'],

@@ -4,7 +4,7 @@ namespace RetailExpress\SkyLink\Products;
 
 use Sabre\Xml\XmlDeserializable;
 
-class Product implements XmlDeserializable
+abstract class Product implements XmlDeserializable
 {
     use V2ProductDeserializer;
 
@@ -16,7 +16,7 @@ class Product implements XmlDeserializable
 
     private $data = [];
 
-    public function __construct(ProductId $id, $sku, $name, array $data = [])
+    protected function __construct(ProductId $id, $sku, $name, array $data = [])
     {
         $this->id = $id;
         $this->sku = (string) $sku;

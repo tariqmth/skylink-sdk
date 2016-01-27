@@ -20,8 +20,7 @@ class V2ProductRepository implements ProductRepository
         ProductId $productId,
         SalesChannelId $salesChannelId,
         CustomerGroupId $customerGroupId = null
-    )
-    {
+    ) {
         // Grab a response from the Retail Express API
         $rawResponse = $this->api->soapClient->ProductGetDetailsStockPricingByChannel([
             'ProductId' => $productId->toInt(),
@@ -30,18 +29,25 @@ class V2ProductRepository implements ProductRepository
             'ChannelId' => $salesChannelId->toInt(),
         ]);
 
+        // print_r($rawResponse->ProductGetDetailsStockPricingByChanelResult->any);
+
         // Boot up the XML reader and
         $xmlReader = new XmlReader();
         $xmlReader->elementMap = [
-            '{}Product' => Product::class,
+            '{}Product' => SimpleProduct::class,
         ];
         $xmlReader->xml($rawResponse->ProductGetDetailsStockPricingByChannelResult->any);
-        $parsedResponse = $xmlReader->parse();
+        $parsedResponse = $xmlReader->parse()['value'];
 
         // There is a whole layer of junk that surrounds the actual
         // product, so we'll make use of this handy function's
         // dot-notation to traverse to the actual
         // element that we require.
+        $productsResponse = array_except($parsedResponse, 0);
+        print_r($productsResponse);
+        die;
+        // die;
+
         return array_get($parsedResponse, 'value.1.value');
     }
 }

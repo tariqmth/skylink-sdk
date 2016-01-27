@@ -5,6 +5,6 @@ namespace RetailExpress\SkyLink\Customers;
 use RetailExpress\SkyLink\NumericId;
 use RetailExpress\SkyLink\ValueObject;
 
-class CustomerGroupId extends NumericId implements ValueObject
+class CustomerId extends NumericId implements ValueObject
 {
 }
