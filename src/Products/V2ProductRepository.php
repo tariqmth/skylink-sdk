@@ -22,16 +22,13 @@ class V2ProductRepository implements ProductRepository
         CustomerGroupId $customerGroupId = null
     ) {
         // Grab a response from the Retail Express API
-        $rawResponse = $this->api->soapClient->ProductGetDetailsStockPricingByChannel([
+        $rawResponse = $this->api->call('ProductGetDetailsStockPricingByChannel', [
             'ProductId' => $productId->toInt(),
             'CustomerId' => $customerGroupId !== null ? $customerGroupId->toInt() : 0,
             'PriceGroupId' => 0,
             'ChannelId' => $salesChannelId->toInt(),
         ]);
 
-        // print_r($rawResponse->ProductGetDetailsStockPricingByChanelResult->any);
-
-        // Boot up the XML reader and
         $xmlReader = new XmlReader();
         $xmlReader->elementMap = [
             '{}Product' => SimpleProduct::class,

@@ -22,7 +22,7 @@ class V2
 
     public function call($method, array $arguments = [])
     {
-        return $this->soapClient->__soapCall($method, $arguments);
+        return $this->soapClient->__soapCall($method, [$arguments]);
     }
 
     private function determineSoapUrlFromDatabaseName($database)

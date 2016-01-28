@@ -11,6 +11,7 @@ class XmlKeySanitiser
      * @var array
      */
     private static $filters = [
+        'ABN' => 'Abn',
         'SKU' => 'Sku',
         'POS' => 'Pos',
     ];

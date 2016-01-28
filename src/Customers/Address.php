@@ -9,6 +9,10 @@ abstract class Address implements ValueObject
 {
     private static $phoneTypes = ['phone', 'mobile', 'fax'];
 
+    private $firstName;
+
+    private $lastName;
+
     private $lines = [];
 
     private $suburb;
@@ -24,6 +28,8 @@ abstract class Address implements ValueObject
     private $company;
 
     public function __construct(
+        $firstName,
+        $lastName,
         $lines,
         $suburb,
         $postcode,
@@ -33,9 +39,17 @@ abstract class Address implements ValueObject
         Company $company = null
     )
     {
+        $this->firstName = (string) $firstName;
+        $this->lastName = (string) $lastName;
+
         $lines = (array) $lines;
         $this->validateLines($lines);
         $this->lines = $lines;
+
+        $this->suburb = $suburb;
+        $this->postcode = $postcode;
+        $this->state = $state;
+        $this->country = $country;
 
         $this->validatePhones($phones);
         $this->phones = $phones;
@@ -44,6 +58,8 @@ abstract class Address implements ValueObject
     }
 
     public static function forIndividual(
+        $firstName,
+        $lastName,
         $lines,
         $suburb,
         $postcode,
@@ -52,10 +68,21 @@ abstract class Address implements ValueObject
         array $phones = []
     )
     {
-        return new self($lines, $suburb, $postcode, $state, $country, $phones);
+        return new self(
+            $firstName,
+            $lastName,
+            $lines,
+            $suburb,
+            $postcode,
+            $state,
+            $country,
+            $phones
+        );
     }
 
     public static function forCompany(
+        $firstName,
+        $lastName,
         Company $company,
         $lines,
         $suburb,
@@ -65,12 +92,22 @@ abstract class Address implements ValueObject
         array $phones = []
     )
     {
-        return new self($lines, $suburb, $postcode, $state, $country, $phones, $company);
+        return new self(
+            $firstName,
+            $lastName,
+            $lines,
+            $suburb,
+            $postcode,
+            $state,
+            $country,
+            $phones,
+            $company
+        );
     }
 
     public function equals(ValueObject $other)
     {
-        return $other->number === $this->number;
+        throw new \Exception('Implement '.__METHOD__);
     }
 
     private function validateLines(array $lines)

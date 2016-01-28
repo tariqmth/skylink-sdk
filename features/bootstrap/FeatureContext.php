@@ -8,6 +8,8 @@ use Behat\Gherkin\Node\TableNode;
 use Dotenv\Dotenv;
 use Ramsey\Uuid\Uuid;
 use RetailExpress\SkyLink\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Customers\CustomerId;
+use RetailExpress\SkyLink\Customers\V2CustomerRepository;
 use RetailExpress\SkyLink\Products\ProductId;
 use RetailExpress\SkyLink\Products\V2ProductRepository;
 use RetailExpress\SkyLink\SalesChannelId;
@@ -17,6 +19,10 @@ use RetailExpress\SkyLink\SalesChannelId;
  */
 class FeatureContext implements Context, SnippetAcceptingContext
 {
+    private $customerRepository;
+
+    private $customer;
+
     private $productRepository;
 
     private $salesChannelId;
@@ -35,13 +41,44 @@ class FeatureContext implements Context, SnippetAcceptingContext
         // Load environment variables for sensitive credentials used in testing
         (new Dotenv(__DIR__.'/../..'))->load();
 
-        // Initialise the Retail Express V2 Product Repository
-        $this->productRepository = new V2ProductRepository(new V2Api(
+        $api = new V2Api(
             Uuid::fromString(getenv('V2_API_CLIENT_ID')),
             getenv('V2_API_DATABASE'),
             getenv('V2_API_USERNAME'),
             getenv('V2_API_PASSWORD')
-        ));
+        );
+
+        // Initialise the Retail Express V2 Product Repository
+        $this->customerRepository = new V2CustomerRepository($api);
+        $this->productRepository = new V2ProductRepository($api);
+    }
+
+    /**
+     * @When I find the customer with id :arg1
+     */
+    public function iFindTheCustomerWithId($customerId)
+    {
+        $this->customer = $this->customerRepository->find(new CustomerId($customerId));
+    }
+
+    /**
+     * @Then I should see that their first name is :arg1
+     */
+    public function iShouldSeeThatTheirFirstNameIs($firstName)
+    {
+        if ($this->customer->getFirstName() !== $firstName) {
+            throw new Exception("The customer's first name was \"{$firstName}\".");
+        }
+    }
+
+    /**
+     * @Then I should see that their last name is :arg1
+     */
+    public function iShouldSeeThatTheirLastNameIs($lastName)
+    {
+        if ($this->customer->getLastName() !== $lastName) {
+            throw new Exception("The customer's last name was \"{$lastName}\".");
+        }
     }
 
     /**
