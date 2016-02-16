@@ -12,7 +12,7 @@ class Company implements ValueObject
 
     private $website;
 
-    public function __construct($name, Abn $abn, Website $website = null)
+    public function __construct($name, Abn $abn = null, Website $website = null)
     {
         $this->name = (string) $name;
         $this->abn = $abn;

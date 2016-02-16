@@ -68,7 +68,7 @@ abstract class Address implements ValueObject
         array $phones = []
     )
     {
-        return new self(
+        return new static(
             $firstName,
             $lastName,
             $lines,
@@ -81,9 +81,9 @@ abstract class Address implements ValueObject
     }
 
     public static function forCompany(
+        Company $company,
         $firstName,
         $lastName,
-        Company $company,
         $lines,
         $suburb,
         $postcode,
@@ -92,7 +92,7 @@ abstract class Address implements ValueObject
         array $phones = []
     )
     {
-        return new self(
+        return new static(
             $firstName,
             $lastName,
             $lines,

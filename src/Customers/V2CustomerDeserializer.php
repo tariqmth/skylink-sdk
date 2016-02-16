@@ -17,42 +17,87 @@ trait V2CustomerDeserializer
             KeyValueElement::xmlDeserialize($xmlReader)
         );
 
-        $billingAddress = new BillingAddress(
-            $payload['bill_first_name'],
-            $payload['bill_last_name'],
-            [
-                $payload['bill_address'],
-                $payload['bill_address2'],
-            ],
-            $payload['bill_suburb'],
-            $payload['bill_post_code'],
-            $payload['bill_state'],
-            $payload['bill_country'],
-            [
-                'phone' => $payload['bill_phone'],
-                'mobile' => $payload['bill_mobile'],
-                'fax' => $payload['bill_fax'],
-            ]
-        );
+        if (isset($payload['bill_company'])) {
+            $billingAddress = BillingAddress::forCompany(
+                new Company(
+                    $payload['bill_company'],
+                    isset($payload['bill_abn']) ? new Abn($payload['bill_abn']) : null,
+                    $payload['bill_website']
+                ),
+                $payload['bill_first_name'],
+                $payload['bill_last_name'],
+                [
+                    $payload['bill_address'],
+                    $payload['bill_address2'],
+                ],
+                $payload['bill_suburb'],
+                $payload['bill_post_code'],
+                $payload['bill_state'],
+                $payload['bill_country'],
+                [
+                    'phone' => $payload['bill_phone'],
+                    'mobile' => $payload['bill_mobile'],
+                    'fax' => $payload['bill_fax'],
+                ]
+            );
+        } else {
+            $billingAddress = BillingAddress::forIndividual(
+                $payload['bill_first_name'],
+                $payload['bill_last_name'],
+                [
+                    $payload['bill_address'],
+                    $payload['bill_address2'],
+                ],
+                $payload['bill_suburb'],
+                $payload['bill_post_code'],
+                $payload['bill_state'],
+                $payload['bill_country'],
+                [
+                    'phone' => $payload['bill_phone'],
+                    'mobile' => $payload['bill_mobile'],
+                    'fax' => $payload['bill_fax'],
+                ]
+            );
+        }
 
         list($deliveryFirstName, $deliveryLastName) = self::splitDeliveryName($payload['del_name'], [$payload['bill_first_name'], $payload['bill_last_name']]);
 
-        $deliveryAddress = new DeliveryAddress(
-            $deliveryFirstName,
-            $deliveryLastName,
-            [
-                $payload['del_address'],
-                $payload['del_address2'],
-            ],
-            $payload['del_suburb'],
-            $payload['del_post_code'],
-            $payload['del_state'],
-            $payload['del_country'],
-            [
-                'phone' => $payload['del_phone'],
-                'mobile' => $payload['del_mobile'],
-            ]
-        );
+        if (isset($payload['del_company'])) {
+            $deliveryAddress = DeliveryAddress::forCompany(
+                new Company($payload['del_company']),
+                $deliveryFirstName,
+                $deliveryLastName,
+                [
+                    $payload['del_address'],
+                    $payload['del_address2'],
+                ],
+                $payload['del_suburb'],
+                $payload['del_post_code'],
+                $payload['del_state'],
+                $payload['del_country'],
+                [
+                    'phone' => $payload['del_phone'],
+                    'mobile' => $payload['del_mobile'],
+                ]
+            );
+        } else {
+            $deliveryAddress = DeliveryAddress::forIndividual(
+                $deliveryFirstName,
+                $deliveryLastName,
+                [
+                    $payload['del_address'],
+                    $payload['del_address2'],
+                ],
+                $payload['del_suburb'],
+                $payload['del_post_code'],
+                $payload['del_state'],
+                $payload['del_country'],
+                [
+                    'phone' => $payload['del_phone'],
+                    'mobile' => $payload['del_mobile'],
+                ]
+            );
+        }
 
         $customer = static::create(
             new CustomerId($payload['customer_id']),
