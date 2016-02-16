@@ -3,7 +3,7 @@
 namespace RetailExpress\SkyLink\Customers;
 
 use RetailExpress\SkyLink\XmlKeySanitiser;
-use Sabre\Xml\Element\KeyValue as KeyValueElement;
+use Sabre\Xml\Deserializer as XmlDeserializer;
 use Sabre\Xml\Reader as XmlReader;
 
 trait V2CustomerDeserializer
@@ -13,71 +13,69 @@ trait V2CustomerDeserializer
      */
     public static function xmlDeserialize(XmlReader $xmlReader)
     {
-        $payload = XmlKeySanitiser::sanitise(
-            KeyValueElement::xmlDeserialize($xmlReader)
-        );
+        $payload = XmlDeserializer\keyValue($xmlReader, '');
 
-        if (isset($payload['bill_company'])) {
+        if (isset($payload['BillCompany'])) {
             $billingAddress = BillingAddress::forCompany(
                 new Company(
-                    $payload['bill_company'],
-                    isset($payload['bill_abn']) ? new Abn($payload['bill_abn']) : null,
-                    $payload['bill_website']
+                    $payload['BillCompany'],
+                    isset($payload['BillABN']) ? new Abn($payload['BillABN']) : null,
+                    $payload['BillWebsite']
                 ),
-                $payload['bill_first_name'],
-                $payload['bill_last_name'],
+                $payload['BillFirstName'],
+                $payload['BillLastName'],
                 [
-                    $payload['bill_address'],
-                    $payload['bill_address2'],
+                    $payload['BillAddress'],
+                    $payload['BillAddress2'],
                 ],
-                $payload['bill_suburb'],
-                $payload['bill_post_code'],
-                $payload['bill_state'],
-                $payload['bill_country'],
+                $payload['BillSuburb'],
+                $payload['BillPostCode'],
+                $payload['BillState'],
+                $payload['BillCountry'],
                 [
-                    'phone' => $payload['bill_phone'],
-                    'mobile' => $payload['bill_mobile'],
-                    'fax' => $payload['bill_fax'],
+                    'phone' => $payload['BillPhone'],
+                    'mobile' => $payload['BillMobile'],
+                    'fax' => $payload['BillFax'],
                 ]
             );
         } else {
             $billingAddress = BillingAddress::forIndividual(
-                $payload['bill_first_name'],
-                $payload['bill_last_name'],
+                $payload['BillFirstName'],
+                $payload['BillLastName'],
                 [
-                    $payload['bill_address'],
-                    $payload['bill_address2'],
+                    $payload['BillAddress'],
+                    $payload['BillAddress2'],
                 ],
-                $payload['bill_suburb'],
-                $payload['bill_post_code'],
-                $payload['bill_state'],
-                $payload['bill_country'],
+                $payload['BillSuburb'],
+                $payload['BillPostCode'],
+                $payload['BillState'],
+                $payload['BillCountry'],
                 [
-                    'phone' => $payload['bill_phone'],
-                    'mobile' => $payload['bill_mobile'],
-                    'fax' => $payload['bill_fax'],
+                    'phone' => $payload['BillPhone'],
+                    'mobile' => $payload['BillMobile'],
+                    'fax' => $payload['BillFax'],
                 ]
             );
         }
 
-        list($deliveryFirstName, $deliveryLastName) = self::splitDeliveryName($payload['del_name'], [$payload['bill_first_name'], $payload['bill_last_name']]);
+        list($deliveryFirstName, $deliveryLastName) = self::splitDeliveryName($payload['DelName'], [$payload['BillFirstName'], $payload['BillLastName']]);
 
-        if (isset($payload['del_company'])) {
+        if (isset($payload['DelCompany'])) {
             $deliveryAddress = DeliveryAddress::forCompany(
-                new Company($payload['del_company']),
+                new Company($payload['DelCompany']),
                 $deliveryFirstName,
                 $deliveryLastName,
                 [
-                    $payload['del_address'],
-                    $payload['del_address2'],
+                    $payload['DelAddress'],
+                    $payload['DelAddress2'],
                 ],
-                $payload['del_suburb'],
-                $payload['del_post_code'],
-                $payload['del_state'],
-                $payload['del_country'],
+                $payload['DelSuburb'],
+                $payload['DelPostCode'],
+                $payload['DelState'],
+                $payload['DelCountry'],
                 [
-                    'phone' => $payload['del_phone'],
-                    'mobile' => $payload['del_mobile'],
+                    'phone' => $payload['DelPhone'],
+                    'mobile' => $payload['DelMobile'],
                 ]
             );
         } else {
@@ -85,28 +83,28 @@ trait V2CustomerDeserializer
                 $deliveryFirstName,
                 $deliveryLastName,
                 [
-                    $payload['del_address'],
-                    $payload['del_address2'],
+                    $payload['DelAddress'],
+                    $payload['DelAddress2'],
                 ],
-                $payload['del_suburb'],
-                $payload['del_post_code'],
-                $payload['del_state'],
-                $payload['del_country'],
+                $payload['DelSuburb'],
+                $payload['DelPostCode'],
+                $payload['DelState'],
+                $payload['DelCountry'],
                 [
-                    'phone' => $payload['del_phone'],
-                    'mobile' => $payload['del_mobile'],
+                    'phone' => $payload['DelPhone'],
+                    'mobile' => $payload['DelMobile'],
                 ]
             );
         }
 
         $customer = static::create(
-            new CustomerId($payload['customer_id']),
-            new Email($payload['bill_email']),
-            $payload['bill_first_name'],
-            $payload['bill_last_name'],
+            new CustomerId($payload['CustomerId']),
+            new Email($payload['BillEmail']),
+            $payload['BillFirstName'],
+            $payload['BillLastName'],
             $billingAddress,
             $deliveryAddress,
-            $payload['receives_news']
+            $payload['ReceivesNews']
         );
 
         return $customer;

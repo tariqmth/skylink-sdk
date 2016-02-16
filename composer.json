@@ -20,7 +20,7 @@
   "require": {
     "illuminate/support": "^5.1",
     "ramsey/uuid": "^3.0",
-    "sabre/xml": "^1.2"
+    "sabre/xml": "^1.4"
   },
   "require-dev": {
     "behat/behat": "^3.0",
