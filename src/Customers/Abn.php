@@ -16,6 +16,11 @@ class Abn implements ValueObject
         $this->number = trim((string) $number);
     }
 
+    public function getNumber()
+    {
+        return $this->number;
+    }
+
     public function equals(ValueObject $other)
     {
         return $other->number === $this->number;
@@ -29,6 +34,7 @@ class Abn implements ValueObject
      * @link https://www.dropbox.com/s/xsy1spftmb8o525/Screenshot%202016-02-22%2011.29.38.png?dl=0
      *
      * @param string|int $number
+     *
      * @throws InvalidArgumentException
      */
     private function assertValidAbnOrAcn($number)

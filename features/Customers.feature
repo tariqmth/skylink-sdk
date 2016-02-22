@@ -1,6 +1,5 @@
 Feature: Products
 
-  @run
   Scenario: Retrieving a customer with lots of information
     When I find the customer with id "300000"
     Then I should see that their first name is "Joe"
@@ -22,11 +21,10 @@ Feature: Products
     Then I should see that their first name is "Sarah"
      And I should see that their last name is "Bloggs"
 
-  Scenario: Registering a new customer
-    When I have an email
+  @run
+  Scenario: Registering a new customer with bare minimum information
+    Given I use a unique email based on "hello@example.com" and a password "hello123"
+      And I use "Ben" and "Corlett" as the first and last name respectively
+     Then I should be able to register a customer based on these details
+      And I should be able to add the customer to Retail Express
 
-  # Scenario: Updating a customer
-  #   When I find the customer with id "300013"
-  #   Then I should see that their first name is "Kelly"
-  #    And I should be able to update their first name to "Smelly"
-  #    And I should be able to update their first name to "Kelly"

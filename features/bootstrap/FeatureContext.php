@@ -8,7 +8,11 @@ use Behat\Gherkin\Node\TableNode;
 use Dotenv\Dotenv;
 use Ramsey\Uuid\Uuid;
 use RetailExpress\SkyLink\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Customers\BillingAddress;
+use RetailExpress\SkyLink\Customers\Customer;
 use RetailExpress\SkyLink\Customers\CustomerId;
+use RetailExpress\SkyLink\Customers\DeliveryAddress;
+use RetailExpress\SkyLink\Customers\Email;
 use RetailExpress\SkyLink\Customers\V2CustomerRepository;
 use RetailExpress\SkyLink\Products\ProductId;
 use RetailExpress\SkyLink\Products\V2ProductRepository;
@@ -22,6 +26,8 @@ class FeatureContext implements Context, SnippetAcceptingContext
     private $customerRepository;
 
     private $customer;
+
+    private $pendingCustomerInformation = [];
 
     private $productRepository;
 
@@ -66,7 +72,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function iShouldSeeThatTheirFirstNameIs($expectedFirstName)
     {
-        $actualFirstName = $this->customer->getFirstName();
+        $actualFirstName = $this->customer->getBillingAddress()->getFirstName();
 
         if ($actualFirstName !== $expectedFirstName) {
             throw new Exception("The customer's first name was \"{$actualFirstName}\".");
@@ -78,7 +84,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function iShouldSeeThatTheirLastNameIs($expectedLastName)
     {
-        $actualLastName = $this->customer->getLastName();
+        $actualLastName = $this->customer->getBillingAddress()->getLastName();
 
         if ($actualLastName !== $expectedLastName) {
             throw new Exception("The customer's last name was \"{$actualLastName}\".");
@@ -105,7 +111,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
         $actualCompany = $this->customer->getBillingAddress()->getCompany();
 
         if ($actualCompany === null) {
-            throw new Exception("The customer does not work for any company.");
+            throw new Exception('The customer does not work for any company.');
         }
 
         $actualCompanyName = $actualCompany->getName();
@@ -139,14 +145,14 @@ MESSAGE
         $actualPhoneNumbers = $this->customer->getBillingAddress()->getPhones();
 
         if (count($actualPhoneNumbers) === 0) {
-            throw new Exception("The customer does not have any phone numbers.");
+            throw new Exception('The customer does not have any phone numbers.');
         }
 
         if (!in_array($expectedPhoneNumber, $actualPhoneNumbers)) {
             $message = "The customer's phone numbers are:\n";
 
             foreach ($actualPhoneNumbers as $actualPhoneType => $actualPhoneNumber) {
-                $message.= "- {$actualPhoneType}: {$actualPhoneNumber}\n";
+                $message .= "- {$actualPhoneType}: {$actualPhoneNumber}\n";
             }
 
             throw new Exception($message);
@@ -154,11 +160,50 @@ MESSAGE
     }
 
     /**
-     * @Then I should be able to update their first name to :arg1
+     * @Given I use a unique email based on :arg1 and a password :arg2
      */
-    public function iShouldBeAbleToUpdateTheirFirstNameTo($firstName)
+    public function iUseAUniqueEmailBasedOnAndAPassword($email, $password)
     {
-        throw new PendingException();
+        // We'll append the current date to the email recipient
+        $email = preg_replace('/(.*)@(.*)/', '$1+'.date('Y-m-d-H-i-s').'@$2', $email);
+
+        $this->pendingCustomerInformation = [
+            'email' => new Email($email),
+            'password' => $password,
+        ];
+    }
+
+    /**
+     * @Given I use :arg1 and :arg2 as the first and last name respectively
+     */
+    public function iUseAndAsTheFirstAndLastNameRespectively($firstName, $lastName)
+    {
+        $this->pendingCustomerInformation['firstName'] = $firstName;
+        $this->pendingCustomerInformation['lastName'] = $lastName;
+    }
+
+    /**
+     * @Then I should be able to register a customer based on these details
+     */
+    public function iShouldBeAbleToRegisterACustomerBasedOnTheseDetails()
+    {
+        extract($this->pendingCustomerInformation);
+
+        $this->customer = Customer::register(
+            $email,
+            $password,
+            BillingAddress::forIndividual($firstName, $lastName),
+            DeliveryAddress::forIndividual($firstName, $lastName),
+            true
+        );
+    }
+
+    /**
+     * @Then I should be able to add the customer to Retail Express
+     */
+    public function iShouldBeAbleToAddTheCustomerToRetailExpress()
+    {
+        $this->customerRepository->add($this->customer);
     }
 
     /**

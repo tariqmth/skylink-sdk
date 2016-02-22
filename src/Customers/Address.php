@@ -27,6 +27,9 @@ abstract class Address implements ValueObject
 
     private $company;
 
+    /**
+     * @todo Switch the order of postcode and state
+     */
     public function __construct(
         $firstName,
         $lastName,

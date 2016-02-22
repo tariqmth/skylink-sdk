@@ -16,6 +16,11 @@ class Website implements ValueObject
         $this->url = (string) $url;
     }
 
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
     public function equals(ValueObject $other)
     {
         return $other->url === $this->url;
@@ -29,6 +34,7 @@ class Website implements ValueObject
      * @link https://www.dropbox.com/s/d86cniqgaypjyqw/Screenshot%202016-02-22%2011.33.19.png?dl=0
      *
      * @param string $url
+     *
      * @throws InvalidArgumentException
      */
     private function assertValidUrl($url)

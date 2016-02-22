@@ -3,16 +3,14 @@
 namespace RetailExpress\SkyLink\Customers;
 
 use Sabre\Xml\XmlDeserializable;
+use Sabre\Xml\XmlSerializable;
 
-class Customer implements XmlDeserializable
+class Customer implements XmlDeserializable, XmlSerializable
 {
     use V2CustomerDeserializer;
+    use V2CustomerSerializer;
 
     private $email;
-
-    private $firstName;
-
-    private $lastName;
 
     private $billingAddress;
 
@@ -24,10 +22,11 @@ class Customer implements XmlDeserializable
 
     private $password;
 
+    /**
+     * @todo Investigate ordering, currently only delivery address is required with API
+     */
     private function __construct(
         Email $email,
-        $firstName,
-        $lastName,
         Address $billingAddress,
         Address $deliveryAddress,
         $subscribedToNewsletter,
@@ -35,8 +34,6 @@ class Customer implements XmlDeserializable
         $password = null
     ) {
         $this->email = $email;
-        $this->firstName = trim((string) $firstName);
-        $this->lastName = trim((string) $lastName);
         $this->billingAddress = $billingAddress;
         $this->deliveryAddress = $deliveryAddress;
         $this->subscribedToNewsletter = (bool) $subscribedToNewsletter;
@@ -47,16 +44,12 @@ class Customer implements XmlDeserializable
     public static function existing(
         CustomerId $id,
         Email $email,
-        $firstName,
-        $lastName,
         Address $billingAddress,
         Address $deliveryAddress,
         $subscribedToNewsletter
     ) {
         return new self(
             $email,
-            $firstName,
-            $lastName,
             $billingAddress,
             $deliveryAddress,
             $subscribedToNewsletter,
@@ -67,16 +60,12 @@ class Customer implements XmlDeserializable
     public static function register(
         Email $email,
         $password,
-        $firstName,
-        $lastName,
         Address $billingAddress,
         Address $deliveryAddress,
         $subscribedToNewsletter
     ) {
         return new self(
             $email,
-            $firstName,
-            $lastName,
             $billingAddress,
             $deliveryAddress,
             $subscribedToNewsletter,
@@ -93,16 +82,6 @@ class Customer implements XmlDeserializable
     public function getEmail()
     {
         return $this->email;
-    }
-
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    public function getLastName()
-    {
-        return $this->lastName;
     }
 
     public function getBillingAddress()

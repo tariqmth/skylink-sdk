@@ -7,12 +7,10 @@ use Sabre\Xml\Reader as XmlReader;
 
 trait V2CustomerDeserializer
 {
-    /**
-     * @todo Implement company logic (delivery companies are just a name, billing include ABN, etc)
-     */
     public static function xmlDeserialize(XmlReader $xmlReader)
     {
         $payload = XmlDeserializer\keyValue($xmlReader, '');
+        dd($payload);
 
         if (isset($payload['BillCompany'])) {
             $billingAddress = BillingAddress::forCompany(
@@ -104,8 +102,6 @@ trait V2CustomerDeserializer
         $customer = static::existing(
             new CustomerId($payload['CustomerId']),
             new Email(array_get($payload, 'BillEmail', "{$payload['CustomerId']}@example.com")),
-            $payload['BillFirstName'],
-            $payload['BillLastName'],
             $billingAddress,
             $deliveryAddress,
             $payload['ReceivesNews']
