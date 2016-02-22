@@ -8,8 +8,6 @@ class Customer implements XmlDeserializable
 {
     use V2CustomerDeserializer;
 
-    private $id;
-
     private $email;
 
     private $firstName;
@@ -22,26 +20,31 @@ class Customer implements XmlDeserializable
 
     private $subscribedToNewsletter;
 
+    private $id;
+
+    private $password;
+
     private function __construct(
-        CustomerId $id,
         Email $email,
         $firstName,
         $lastName,
         Address $billingAddress,
         Address $deliveryAddress,
-        $subscribedToNewsletter
-    )
-    {
-        $this->id = $id;
+        $subscribedToNewsletter,
+        CustomerId $id = null,
+        $password = null
+    ) {
         $this->email = $email;
-        $this->firstName = (string) $firstName;
-        $this->lastName = (string) $lastName;
+        $this->firstName = trim((string) $firstName);
+        $this->lastName = trim((string) $lastName);
         $this->billingAddress = $billingAddress;
         $this->deliveryAddress = $deliveryAddress;
         $this->subscribedToNewsletter = (bool) $subscribedToNewsletter;
+        $this->id = $id;
+        $this->password = isset($password) ? trim((string) $password) : null;
     }
 
-    public static function create(
+    public static function existing(
         CustomerId $id,
         Email $email,
         $firstName,
@@ -49,22 +52,47 @@ class Customer implements XmlDeserializable
         Address $billingAddress,
         Address $deliveryAddress,
         $subscribedToNewsletter
-    )
-    {
+    ) {
         return new self(
-            $id,
             $email,
             $firstName,
             $lastName,
             $billingAddress,
             $deliveryAddress,
-            $subscribedToNewsletter
+            $subscribedToNewsletter,
+            $id
+        );
+    }
+
+    public static function register(
+        Email $email,
+        $password,
+        $firstName,
+        $lastName,
+        Address $billingAddress,
+        Address $deliveryAddress,
+        $subscribedToNewsletter
+    ) {
+        return new self(
+            $email,
+            $firstName,
+            $lastName,
+            $billingAddress,
+            $deliveryAddress,
+            $subscribedToNewsletter,
+            null,
+            $password
         );
     }
 
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     public function getFirstName()
@@ -75,5 +103,20 @@ class Customer implements XmlDeserializable
     public function getLastName()
     {
         return $this->lastName;
+    }
+
+    public function getBillingAddress()
+    {
+        return $this->billingAddress;
+    }
+
+    public function getDeliveryAddress()
+    {
+        return $this->deliveryAddress;
+    }
+
+    public function isSubsribedToNewsletter()
+    {
+        return $this->subscribedToNewsletter;
     }
 }

@@ -64,21 +64,101 @@ class FeatureContext implements Context, SnippetAcceptingContext
     /**
      * @Then I should see that their first name is :arg1
      */
-    public function iShouldSeeThatTheirFirstNameIs($firstName)
+    public function iShouldSeeThatTheirFirstNameIs($expectedFirstName)
     {
-        if ($this->customer->getFirstName() !== $firstName) {
-            throw new Exception("The customer's first name was \"{$firstName}\".");
+        $actualFirstName = $this->customer->getFirstName();
+
+        if ($actualFirstName !== $expectedFirstName) {
+            throw new Exception("The customer's first name was \"{$actualFirstName}\".");
         }
     }
 
     /**
      * @Then I should see that their last name is :arg1
      */
-    public function iShouldSeeThatTheirLastNameIs($lastName)
+    public function iShouldSeeThatTheirLastNameIs($expectedLastName)
     {
-        if ($this->customer->getLastName() !== $lastName) {
-            throw new Exception("The customer's last name was \"{$lastName}\".");
+        $actualLastName = $this->customer->getLastName();
+
+        if ($actualLastName !== $expectedLastName) {
+            throw new Exception("The customer's last name was \"{$actualLastName}\".");
         }
+    }
+
+    /**
+     * @Then I should see their email is :arg1
+     */
+    public function iShouldSeeTheirEmailIs($expectedEmail)
+    {
+        $actualEmail = $this->customer->getEmail()->toString();
+
+        if ($actualEmail !== $expectedEmail) {
+            throw new Exception("The customer's email was \"{$actualEmail}\".");
+        }
+    }
+
+    /**
+     * @Then I should see they work for :arg1
+     */
+    public function iShouldSeeTheyWorkFor($expectedCompanyName)
+    {
+        $actualCompany = $this->customer->getBillingAddress()->getCompany();
+
+        if ($actualCompany === null) {
+            throw new Exception("The customer does not work for any company.");
+        }
+
+        $actualCompanyName = $actualCompany->getName();
+
+        if ($actualCompanyName !== $expectedCompanyName) {
+            throw new Exception("The customer works for \"{$actualCompanyName}\".");
+        }
+    }
+
+    /**
+     * @Then I should see their billing address is:
+     */
+    public function iShouldSeeTheirBillingAddressIs(PyStringNode $expectedBillingAddress)
+    {
+        $actualBillingAddress = $this->customer->getBillingAddress()->toString();
+
+        if ($actualBillingAddress !== $expectedBillingAddress->getRaw()) {
+            throw new Exception(<<<MESSAGE
+The customer's address was:
+{$actualBillingAddress}
+MESSAGE
+            );
+        }
+    }
+
+    /**
+     * @Then I should see they can be contacted by calling :arg1
+     */
+    public function iShouldSeeTheyCanBeContactedByCalling($expectedPhoneNumber)
+    {
+        $actualPhoneNumbers = $this->customer->getBillingAddress()->getPhones();
+
+        if (count($actualPhoneNumbers) === 0) {
+            throw new Exception("The customer does not have any phone numbers.");
+        }
+
+        if (!in_array($expectedPhoneNumber, $actualPhoneNumbers)) {
+            $message = "The customer's phone numbers are:\n";
+
+            foreach ($actualPhoneNumbers as $actualPhoneType => $actualPhoneNumber) {
+                $message.= "- {$actualPhoneType}: {$actualPhoneNumber}\n";
+            }
+
+            throw new Exception($message);
+        }
+    }
+
+    /**
+     * @Then I should be able to update their first name to :arg1
+     */
+    public function iShouldBeAbleToUpdateTheirFirstNameTo($firstName)
+    {
+        throw new PendingException();
     }
 
     /**

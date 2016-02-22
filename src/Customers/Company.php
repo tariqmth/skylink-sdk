@@ -14,9 +14,24 @@ class Company implements ValueObject
 
     public function __construct($name, Abn $abn = null, Website $website = null)
     {
-        $this->name = (string) $name;
+        $this->name = trim((string) $name);
         $this->abn = $abn;
         $this->website = $website;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getAbn()
+    {
+        return $this->abn;
+    }
+
+    public function getWebsite()
+    {
+        return $this->website;
     }
 
     public function equals(ValueObject $other)

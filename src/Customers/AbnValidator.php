@@ -110,7 +110,7 @@ class AbnValidator
             $complement = '0';
         }
 
-        return ($acn[8] === $complement);
+        return $acn[8] === $complement;
     }
 }
 

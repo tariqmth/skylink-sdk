@@ -14,6 +14,10 @@ class V2CustomerRepository implements CustomerRepository
         $this->api = $api;
     }
 
+    public function all()
+    {
+    }
+
     public function find(CustomerId $customerId)
     {
         $rawResponse = $this->api->call('CustomerGetDetails', [
@@ -29,5 +33,9 @@ class V2CustomerRepository implements CustomerRepository
 
         // Bypass all the schema definition junk
         return array_get($parsedResponse, '0.value.1.value');
+    }
+
+    public function add(Customer $customer)
+    {
     }
 }

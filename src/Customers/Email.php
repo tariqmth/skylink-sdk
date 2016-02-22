@@ -13,7 +13,12 @@ class Email implements ValueObject
     {
         $this->assertValidEmail($email);
 
-        $this->email = $email;
+        $this->email = (string) $email;
+    }
+
+    public function toString()
+    {
+        return $this->email;
     }
 
     public function equals(ValueObject $other)

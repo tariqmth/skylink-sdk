@@ -2,7 +2,6 @@
 
 namespace RetailExpress\SkyLink\Customers;
 
-use RetailExpress\SkyLink\XmlKeySanitiser;
 use Sabre\Xml\Deserializer as XmlDeserializer;
 use Sabre\Xml\Reader as XmlReader;
 
@@ -20,22 +19,22 @@ trait V2CustomerDeserializer
                 new Company(
                     $payload['BillCompany'],
                     isset($payload['BillABN']) ? new Abn($payload['BillABN']) : null,
-                    $payload['BillWebsite']
+                    isset($payload['BillWebsite']) ? new Website($payload['BillWebsite']) : null
                 ),
                 $payload['BillFirstName'],
                 $payload['BillLastName'],
                 [
-                    $payload['BillAddress'],
-                    $payload['BillAddress2'],
+                    array_get($payload, 'BillAddress'),
+                    array_get($payload, 'BillAddress2'),
                 ],
-                $payload['BillSuburb'],
-                $payload['BillPostCode'],
-                $payload['BillState'],
-                $payload['BillCountry'],
+                array_get($payload, 'BillSuburb'),
+                array_get($payload, 'BillPostCode'),
+                array_get($payload, 'BillState'),
+                array_get($payload, 'BillCountry'),
                 [
-                    'phone' => $payload['BillPhone'],
-                    'mobile' => $payload['BillMobile'],
-                    'fax' => $payload['BillFax'],
+                    'phone' => array_get($payload, 'BillPhone'),
+                    'mobile' => array_get($payload, 'BillMobile'),
+                    'fax' => array_get($payload, 'BillFax'),
                 ]
             );
         } else {
@@ -43,22 +42,27 @@ trait V2CustomerDeserializer
                 $payload['BillFirstName'],
                 $payload['BillLastName'],
                 [
-                    $payload['BillAddress'],
-                    $payload['BillAddress2'],
+                    array_get($payload, 'BillAddress'),
+                    array_get($payload, 'BillAddress2'),
                 ],
-                $payload['BillSuburb'],
-                $payload['BillPostCode'],
-                $payload['BillState'],
-                $payload['BillCountry'],
+                array_get($payload, 'BillSuburb'),
+                array_get($payload, 'BillPostCode'),
+                array_get($payload, 'BillState'),
+                array_get($payload, 'BillCountry'),
                 [
-                    'phone' => $payload['BillPhone'],
-                    'mobile' => $payload['BillMobile'],
-                    'fax' => $payload['BillFax'],
+                    'phone' => array_get($payload, 'BillPhone'),
+                    'mobile' => array_get($payload, 'BillMobile'),
+                    'fax' => array_get($payload, 'BillFax'),
                 ]
             );
         }
 
-        list($deliveryFirstName, $deliveryLastName) = self::splitDeliveryName($payload['DelName'], [$payload['BillFirstName'], $payload['BillLastName']]);
+        if (isset($payload['DelName'])) {
+            list($deliveryFirstName, $deliveryLastName) = self::splitDeliveryName($payload['DelName'], [$payload['BillFirstName'], $payload['BillLastName']]);
+        } else {
+            $deliveryFirstName = null;
+            $deliveryLastName = null;
+        }
 
         if (isset($payload['DelCompany'])) {
             $deliveryAddress = DeliveryAddress::forCompany(
@@ -66,16 +70,16 @@ trait V2CustomerDeserializer
                 $deliveryFirstName,
                 $deliveryLastName,
                 [
-                    $payload['DelAddress'],
-                    $payload['DelAddress2'],
+                    array_get($payload, 'DelAddress'),
+                    array_get($payload, 'DelAddress2'),
                 ],
-                $payload['DelSuburb'],
-                $payload['DelPostCode'],
-                $payload['DelState'],
-                $payload['DelCountry'],
+                array_get($payload, 'DelSuburb'),
+                array_get($payload, 'DelPostCode'),
+                array_get($payload, 'DelState'),
+                array_get($payload, 'DelCountry'),
                 [
-                    'phone' => $payload['DelPhone'],
-                    'mobile' => $payload['DelMobile'],
+                    'phone' => array_get($payload, 'DelPhone'),
+                    'mobile' => array_get($payload, 'DelMobile'),
                 ]
             );
         } else {
@@ -83,23 +87,23 @@ trait V2CustomerDeserializer
                 $deliveryFirstName,
                 $deliveryLastName,
                 [
-                    $payload['DelAddress'],
-                    $payload['DelAddress2'],
+                    array_get($payload, 'DelAddress'),
+                    array_get($payload, 'DelAddress2'),
                 ],
-                $payload['DelSuburb'],
-                $payload['DelPostCode'],
-                $payload['DelState'],
-                $payload['DelCountry'],
+                array_get($payload, 'DelSuburb'),
+                array_get($payload, 'DelPostCode'),
+                array_get($payload, 'DelState'),
+                array_get($payload, 'DelCountry'),
                 [
-                    'phone' => $payload['DelPhone'],
-                    'mobile' => $payload['DelMobile'],
+                    'phone' => array_get($payload, 'DelPhone'),
+                    'mobile' => array_get($payload, 'DelMobile'),
                 ]
             );
         }
 
-        $customer = static::create(
+        $customer = static::existing(
             new CustomerId($payload['CustomerId']),
-            new Email($payload['BillEmail']),
+            new Email(array_get($payload, 'BillEmail', "{$payload['CustomerId']}@example.com")),
             $payload['BillFirstName'],
             $payload['BillLastName'],
             $billingAddress,
