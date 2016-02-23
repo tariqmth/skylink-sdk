@@ -22,9 +22,6 @@ class Customer implements XmlDeserializable, XmlSerializable
 
     private $password;
 
-    /**
-     * @todo Investigate ordering, currently only delivery address is required with API
-     */
     private function __construct(
         Email $email,
         Address $billingAddress,
