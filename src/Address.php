@@ -89,7 +89,43 @@ abstract class Address implements ValueObject
             $other->company === $this->company;
     }
 
-    abstract public function toString();
+    /**
+     * Formats the address in a standard Australian format.
+     *
+     * An example of this is as follows:
+     *
+     *   {company name}
+     *   {line 1}
+     *   {line 2}
+     *   {line 3}
+     *   {suburb} {state} {postcode}
+     *   {country}
+     *
+     * @return string
+     */
+    public function toString()
+    {
+        $address = $this->getAddressParts();
+
+        return implode("\n", $address);
+    }
+
+    protected function getAddressParts()
+    {
+        $address = [];
+
+        // These may be null values, so we'll filter the final address array
+        foreach ($this->lines as $line) {
+            array_push($address, $line);
+        }
+
+        $localityLine = array_filter([$this->suburb, $this->state, $this->postcode]);
+        $address[] = implode(' ', $localityLine);
+
+        $address[] = $this->country;
+
+        return $address;
+    }
 
     private function sanitiseLines(array &$lines)
     {

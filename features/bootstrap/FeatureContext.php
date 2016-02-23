@@ -14,6 +14,7 @@ use RetailExpress\SkyLink\Customers\CustomerId;
 use RetailExpress\SkyLink\Customers\ShippingAddress;
 use RetailExpress\SkyLink\Customers\Email;
 use RetailExpress\SkyLink\Customers\V2CustomerRepository;
+use RetailExpress\SkyLink\Outlets\V2OutletRepository;
 use RetailExpress\SkyLink\Products\ProductId;
 use RetailExpress\SkyLink\Products\V2ProductRepository;
 use RetailExpress\SkyLink\SalesChannelId;
@@ -29,9 +30,13 @@ class FeatureContext implements Context, SnippetAcceptingContext
 
     private $pendingCustomerInformation = [];
 
-    private $productRepository;
-
     private $salesChannelId;
+
+    private $outletRepository;
+
+    private $outlets = [];
+
+    private $productRepository;
 
     private $product;
 
@@ -56,6 +61,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
 
         // Initialise the Retail Express V2 Product Repository
         $this->customerRepository = new V2CustomerRepository($api);
+        $this->outletRepository = new V2OutletRepository($api);
         $this->productRepository = new V2ProductRepository($api);
     }
 
@@ -205,6 +211,30 @@ MESSAGE
     public function iAmConnectedToSalesChannel($salesChannelId)
     {
         $this->salesChannelId = new SalesChannelId((int) $salesChannelId);
+    }
+
+    /**
+     * @When I get all outlets
+     */
+    public function iGetAllOutlets()
+    {
+        $this->outlets = $this->outletRepository->all($this->salesChannelId);
+    }
+
+    /**
+     * @Then I should see there are :arg1 outlets
+     */
+    public function iShouldSeeThereAreOutlets($arg1)
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Then outlet :arg1 is known as :arg2
+     */
+    public function outletIsKnownAs($arg1, $arg2)
+    {
+        throw new PendingException();
     }
 
     /**

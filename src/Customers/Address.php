@@ -94,38 +94,22 @@ abstract class Address extends BaseAddress implements ValueObject
         return $this->company;
     }
 
-    /**
-     * Formats the address in a standard Australian format.
-     *
-     * An example of this is as follows:
-     *
-     *   {company name}
-     *   {line 1}
-     *   {line 2}
-     *   {line 3}
-     *   {suburb} {state} {postcode}
-     *   {country}
-     *
-     * @return string
-     */
-    public function toString()
+    public function equals(ValueObject $other)
     {
-        $address = [];
+        return parent::equals($other) &&
+            $other->firstName === $this->firstName &&
+            $other->lastName === $this->lastName &&
+            $other->company === $this->company;
+    }
+
+    protected function getAddressParts()
+    {
+        $address = parent::getAddressParts();
 
         if ($this->company !== null) {
-            $address[] = $this->company->getName();
+            array_unshift($address, $this->company->getName());
         }
 
-        // These may be null values, so we'll filter the final address array
-        foreach ($this->lines as $line) {
-            array_push($address, $line);
-        }
-
-        $localityLine = array_filter([$this->suburb, $this->state, $this->postcode]);
-        $address[] = implode(' ', $localityLine);
-
-        $address[] = $this->country;
-
-        return implode("\n", $address);
+        return $address;
     }
 }
