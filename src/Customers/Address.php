@@ -158,6 +158,7 @@ abstract class Address implements ValueObject
      *   {company name}
      *   {line 1}
      *   {line 2}
+     *   {line 3}
      *   {suburb} {state} {postcode}
      *   {country}
      *
@@ -186,7 +187,15 @@ abstract class Address implements ValueObject
 
     public function equals(ValueObject $other)
     {
-        throw new \Exception('Implement '.__METHOD__);
+        return $other->firstName === $this->firstName &&
+            $other->lastName === $this->lastName &&
+            $other->lines === $this->lines &&
+            $other->suburb === $this->suburb &&
+            $other->postcode === $this->postcode &&
+            $other->state === $this->state &&
+            $other->country === $this->country &&
+            $other->phones === $this->phones &&
+            $other->company === $this->company;
     }
 
     private function sanitiseLines(array &$lines)
@@ -194,9 +203,6 @@ abstract class Address implements ValueObject
         $lines = array_map(function ($line) {
             return trim((string) $line);
         }, array_filter($lines));
-
-        // There is a maximum of two lines
-        $lines = array_slice($lines, 0, 2);
     }
 
     private function validateAndSanitisePhones(array &$phones)
