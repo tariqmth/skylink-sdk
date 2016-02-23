@@ -20,6 +20,7 @@ trait V2CustomerSerializer
 
         $payload['BillFirstName'] = $this->billingAddress->getFirstName();
         $payload['BillLastName'] = $this->billingAddress->getLastName();
+        $payload['BillEmail'] = $this->email->toString();
 
         /*
          * @todo Refactor getLines() into getLine1() and getLine2()

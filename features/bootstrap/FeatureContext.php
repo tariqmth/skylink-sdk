@@ -68,23 +68,16 @@ class FeatureContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Then I should see that their first name is :arg1
+     * @Then I should see that their full name is :arg1 :arg2
      */
-    public function iShouldSeeThatTheirFirstNameIs($expectedFirstName)
+    public function iShouldSeeThatTheirFullNameIs($expectedFirstName, $expectedLastName)
     {
         $actualFirstName = $this->customer->getBillingAddress()->getFirstName();
+        $actualLastName = $this->customer->getBillingAddress()->getLastName();
 
         if ($actualFirstName !== $expectedFirstName) {
             throw new Exception("The customer's first name was \"{$actualFirstName}\".");
         }
-    }
-
-    /**
-     * @Then I should see that their last name is :arg1
-     */
-    public function iShouldSeeThatTheirLastNameIs($expectedLastName)
-    {
-        $actualLastName = $this->customer->getBillingAddress()->getLastName();
 
         if ($actualLastName !== $expectedLastName) {
             throw new Exception("The customer's last name was \"{$actualLastName}\".");

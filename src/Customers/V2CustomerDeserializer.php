@@ -10,7 +10,6 @@ trait V2CustomerDeserializer
     public static function xmlDeserialize(XmlReader $xmlReader)
     {
         $payload = XmlDeserializer\keyValue($xmlReader, '');
-        dd($payload);
 
         if (isset($payload['BillCompany'])) {
             $billingAddress = BillingAddress::forCompany(
@@ -101,7 +100,7 @@ trait V2CustomerDeserializer
 
         $customer = static::existing(
             new CustomerId($payload['CustomerId']),
-            new Email(array_get($payload, 'BillEmail', "{$payload['CustomerId']}@example.com")),
+            new Email(isset($payload['BillEmail']) ? $payload['BillEmail'] : "{$payload['CustomerId']}@example.com"),
             $billingAddress,
             $deliveryAddress,
             $payload['ReceivesNews']

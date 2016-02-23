@@ -24,7 +24,7 @@ class V2CustomerRepository implements CustomerRepository
         $xmlService->elementMap = [
             '{}Customer' => Customer::class,
         ];
-        $parsedResponse = $xmlService->parse($rawResponse->CustomerGetDetailsResult->any);
+        $parsedResponse = $xmlService->parse($rawResponse);
 
         // Bypass all the schema definition junk
         return array_get($parsedResponse, '0.value.1.value');
@@ -37,11 +37,9 @@ class V2CustomerRepository implements CustomerRepository
             'Customer' => $customer,
         ]);
 
-        $rawResponse = $this->api->call('CustomerCreateUpdate', [
+        $this->api->call('CustomerCreateUpdate', [
             'CustomerXML' => $xml,
         ]);
-
-        var_dump($rawResponse);
     }
 
     /**

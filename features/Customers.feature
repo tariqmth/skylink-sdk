@@ -1,9 +1,8 @@
-Feature: Products
+Feature: Customers
 
   Scenario: Retrieving a customer with lots of information
     When I find the customer with id "300000"
-    Then I should see that their first name is "Joe"
-     And I should see that their last name is "Bloggs"
+    Then I should see that their full name is "Joe" "Bloggs"
      And I should see their email is "joe@testing.com"
      And I should see they work for "Sample Company"
      And I should see their billing address is:
@@ -18,10 +17,8 @@ Feature: Products
 
   Scenario: Retrieving a customer with bare minimum information
     When I find the customer with id "300001"
-    Then I should see that their first name is "Sarah"
-     And I should see that their last name is "Bloggs"
+    Then I should see that their full name is "Sarah" "Bloggs"
 
-  @run
   Scenario: Registering a new customer with bare minimum information
     Given I use a unique email based on "hello@example.com" and a password "hello123"
       And I use "Ben" and "Corlett" as the first and last name respectively
