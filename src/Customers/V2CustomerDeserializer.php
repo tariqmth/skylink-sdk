@@ -55,14 +55,14 @@ trait V2CustomerDeserializer
         }
 
         if (isset($payload['DelName'])) {
-            list($deliveryFirstName, $deliveryLastName) = self::splitDeliveryName($payload['DelName'], [$payload['BillFirstName'], $payload['BillLastName']]);
+            list($deliveryFirstName, $deliveryLastName) = self::splitShippingName($payload['DelName'], [$payload['BillFirstName'], $payload['BillLastName']]);
         } else {
             $deliveryFirstName = null;
             $deliveryLastName = null;
         }
 
         if (isset($payload['DelCompany'])) {
-            $deliveryAddress = DeliveryAddress::forCompany(
+            $deliveryAddress = ShippingAddress::forCompany(
                 new Company($payload['DelCompany']),
                 $deliveryFirstName,
                 $deliveryLastName,
@@ -80,7 +80,7 @@ trait V2CustomerDeserializer
                 ]
             );
         } else {
-            $deliveryAddress = DeliveryAddress::forIndividual(
+            $deliveryAddress = ShippingAddress::forIndividual(
                 $deliveryFirstName,
                 $deliveryLastName,
                 [
@@ -109,7 +109,7 @@ trait V2CustomerDeserializer
         return $customer;
     }
 
-    private static function splitDeliveryName($deliveryName, array $billingName = null)
+    private static function splitShippingName($deliveryName, array $billingName = null)
     {
         // If we have a billing name, we'll check if the delivery name is simply that as a concatenated string
         if ($billingName !== null) {

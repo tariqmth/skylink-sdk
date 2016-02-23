@@ -11,7 +11,7 @@ use RetailExpress\SkyLink\Apis\V2 as V2Api;
 use RetailExpress\SkyLink\Customers\BillingAddress;
 use RetailExpress\SkyLink\Customers\Customer;
 use RetailExpress\SkyLink\Customers\CustomerId;
-use RetailExpress\SkyLink\Customers\DeliveryAddress;
+use RetailExpress\SkyLink\Customers\ShippingAddress;
 use RetailExpress\SkyLink\Customers\Email;
 use RetailExpress\SkyLink\Customers\V2CustomerRepository;
 use RetailExpress\SkyLink\Products\ProductId;
@@ -186,7 +186,7 @@ MESSAGE
             $email,
             $password,
             BillingAddress::forIndividual($firstName, $lastName),
-            DeliveryAddress::forIndividual($firstName, $lastName),
+            ShippingAddress::forIndividual($firstName, $lastName),
             true
         );
     }

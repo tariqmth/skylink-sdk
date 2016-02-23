@@ -89,7 +89,7 @@ class Customer implements XmlDeserializable, XmlSerializable
         return $this->billingAddress;
     }
 
-    public function getDeliveryAddress()
+    public function getShippingAddress()
     {
         return $this->deliveryAddress;
     }
