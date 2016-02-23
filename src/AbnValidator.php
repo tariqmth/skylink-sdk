@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\Customers;
+namespace RetailExpress\SkyLink;
 
 /**
  * A huge thank you to Paul Ferrett for this useful ABN/ACN validator class.

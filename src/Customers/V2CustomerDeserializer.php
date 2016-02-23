@@ -2,6 +2,9 @@
 
 namespace RetailExpress\SkyLink\Customers;
 
+use RetailExpress\SkyLink\Abn;
+use RetailExpress\SkyLink\Company;
+use RetailExpress\SkyLink\Website;
 use Sabre\Xml\Deserializer as XmlDeserializer;
 use Sabre\Xml\Reader as XmlReader;
 

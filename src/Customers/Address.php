@@ -2,61 +2,35 @@
 
 namespace RetailExpress\SkyLink\Customers;
 
+use RetailExpress\SkyLink\Address as BaseAddress;
+use RetailExpress\SkyLink\Company;
 use RetailExpress\SkyLink\ValueObject;
-use InvalidArgumentException;
 
-abstract class Address implements ValueObject
+abstract class Address extends BaseAddress implements ValueObject
 {
-    private static $phoneTypes = ['phone', 'mobile', 'fax'];
-
     private $firstName;
 
     private $lastName;
 
-    private $lines = [];
-
-    private $suburb;
-
-    private $postcode;
-
-    private $state;
-
-    private $country;
-
-    private $phones = [];
-
     private $company;
 
-    /**
-     * @todo Switch the order of postcode and state
-     */
-    public function __construct(
-        $firstName,
-        $lastName,
+    protected function __construct(
         $lines = [],
         $suburb = null,
         $postcode = null,
         $state = null,
         $country = null,
         array $phones = [],
+        $firstName,
+        $lastName,
         Company $company = null
     ) {
+        parent::__construct($lines, $suburb, $postcode, $state, $country, $phones);
+
         $this->firstName = trim((string) $firstName);
         $this->lastName = trim((string) $lastName);
 
-        $lines = (array) $lines;
-        $this->sanitiseLines($lines);
-        $this->lines = $lines;
-
-        $this->suburb = isset($suburb) ? trim((string) $suburb) : null;
-        $this->postcode = isset($postcode) ? trim((string) $postcode) : null;
-        $this->state = isset($state) ? trim((string) $state) : null;
-        $this->country = isset($country) ? trim((string) $country) : null;
-
-        $this->validateAndSanitisePhones($phones);
-        $this->phones = $phones;
-
-        $this->company = isset($company) ? $company : null;
+        $this->company = $company;
     }
 
     public static function forIndividual(
@@ -70,14 +44,14 @@ abstract class Address implements ValueObject
         array $phones = []
     ) {
         return new static(
-            $firstName,
-            $lastName,
             $lines,
             $suburb,
             $postcode,
             $state,
             $country,
-            $phones
+            $phones,
+            $firstName,
+            $lastName
         );
     }
 
@@ -93,14 +67,14 @@ abstract class Address implements ValueObject
         array $phones = []
     ) {
         return new static(
-            $firstName,
-            $lastName,
             $lines,
             $suburb,
             $postcode,
             $state,
             $country,
             $phones,
+            $firstName,
+            $lastName,
             $company
         );
     }
@@ -113,36 +87,6 @@ abstract class Address implements ValueObject
     public function getLastName()
     {
         return $this->lastName;
-    }
-
-    public function getLines()
-    {
-        return $this->lines;
-    }
-
-    public function getSuburb()
-    {
-        return $this->suburb;
-    }
-
-    public function getPostcode()
-    {
-        return $this->postcode;
-    }
-
-    public function getState()
-    {
-        return $this->state;
-    }
-
-    public function getCountry()
-    {
-        return $this->country;
-    }
-
-    public function getPhones()
-    {
-        return $this->phones;
     }
 
     public function getCompany()
@@ -183,36 +127,5 @@ abstract class Address implements ValueObject
         $address[] = $this->country;
 
         return implode("\n", $address);
-    }
-
-    public function equals(ValueObject $other)
-    {
-        return $other->firstName === $this->firstName &&
-            $other->lastName === $this->lastName &&
-            $other->lines === $this->lines &&
-            $other->suburb === $this->suburb &&
-            $other->postcode === $this->postcode &&
-            $other->state === $this->state &&
-            $other->country === $this->country &&
-            $other->phones === $this->phones &&
-            $other->company === $this->company;
-    }
-
-    private function sanitiseLines(array &$lines)
-    {
-        $lines = array_map(function ($line) {
-            return trim((string) $line);
-        }, array_filter($lines));
-    }
-
-    private function validateAndSanitisePhones(array &$phones)
-    {
-        foreach ($phones as $type => $number) {
-            if (!in_array($type, self::$phoneTypes)) {
-                throw new InvalidArgumentException("Phone type \"{$type}\" is not valid.");
-            }
-
-            $phones[$type] = trim((string) $number);
-        }
     }
 }

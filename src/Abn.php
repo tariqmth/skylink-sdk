@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\Customers;
+namespace RetailExpress\SkyLink;
 
 use RetailExpress\SkyLink\ValueObject;
 use InvalidArgumentException;
@@ -9,11 +9,14 @@ class Abn implements ValueObject
 {
     private $number;
 
-    public function __construct($number)
+    private $label;
+
+    public function __construct($number, $label = 'ABN')
     {
         $this->assertValidAbnOrAcn($number);
 
         $this->number = trim((string) $number);
+        $this->label = $label;
     }
 
     public function getNumber()
@@ -21,9 +24,15 @@ class Abn implements ValueObject
         return $this->number;
     }
 
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
     public function equals(ValueObject $other)
     {
-        return $other->number === $this->number;
+        return $other->number === $this->number &&
+            $other->label === $this->label;
     }
 
     /**

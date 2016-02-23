@@ -1,8 +1,7 @@
 <?php
 
-namespace RetailExpress\SkyLink\Customers;
+namespace RetailExpress\SkyLink;
 
-use RetailExpress\SkyLink\ValueObject;
 use InvalidArgumentException;
 
 class Website implements ValueObject
