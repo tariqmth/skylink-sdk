@@ -3,7 +3,6 @@
 namespace RetailExpress\SkyLink\Customers;
 
 use RetailExpress\SkyLink\Apis\V2 as V2Api;
-use Sabre\Xml\Service as XmlService;
 
 class V2CustomerRepository implements CustomerRepository
 {
@@ -20,7 +19,7 @@ class V2CustomerRepository implements CustomerRepository
             'CustomerId' => $customerId->toInt(),
         ]);
 
-        $xmlService = $this->getXmlService();
+        $xmlService = $this->api->getXmlService();
         $xmlService->elementMap = [
             '{}Customer' => Customer::class,
         ];
@@ -32,7 +31,7 @@ class V2CustomerRepository implements CustomerRepository
 
     public function add(Customer $customer)
     {
-        $xmlService = $this->getXmlService();
+        $xmlService = $this->api->getXmlService();
         $xml = $xmlService->write('Customers', [
             'Customer' => $customer,
         ]);
@@ -40,13 +39,5 @@ class V2CustomerRepository implements CustomerRepository
         $this->api->call('CustomerCreateUpdate', [
             'CustomerXML' => $xml,
         ]);
-    }
-
-    /**
-     * @todo Extract this do DI.
-     */
-    private function getXmlService()
-    {
-        return new XmlService();
     }
 }
