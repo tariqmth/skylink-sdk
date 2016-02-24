@@ -8,11 +8,11 @@ use Behat\Gherkin\Node\TableNode;
 use Dotenv\Dotenv;
 use Ramsey\Uuid\Uuid;
 use RetailExpress\SkyLink\Apis\V2 as V2Api;
-use RetailExpress\SkyLink\Customers\BillingAddress;
+use RetailExpress\SkyLink\Customers\BillingContact;
 use RetailExpress\SkyLink\Customers\Customer;
 use RetailExpress\SkyLink\Customers\CustomerId;
-use RetailExpress\SkyLink\Customers\ShippingAddress;
-use RetailExpress\SkyLink\Customers\Email;
+use RetailExpress\SkyLink\Customers\NewsletterSubscription;
+use RetailExpress\SkyLink\Customers\ShippingContact;
 use RetailExpress\SkyLink\Customers\V2CustomerRepository;
 use RetailExpress\SkyLink\Outlets\V2OutletRepository;
 use RetailExpress\SkyLink\Products\ProductId;
@@ -162,13 +162,13 @@ MESSAGE
     /**
      * @Given I use a unique email based on :arg1 and a password :arg2
      */
-    public function iUseAUniqueEmailBasedOnAndAPassword($email, $password)
+    public function iUseAUniqueEmailBasedOnAndAPassword($emailAddress, $password)
     {
         // We'll append the current date to the email recipient
-        $email = preg_replace('/(.*)@(.*)/', '$1+'.date('Y-m-d-H-i-s').'@$2', $email);
+        $emailAddress = preg_replace('/(.*)@(.*)/', '$1+'.date('Y-m-d-H-i-s').'@$2', $emailAddress);
 
         $this->pendingCustomerInformation = [
-            'email' => new Email($email),
+            'emailAddress' => $emailAddress,
             'password' => $password,
         ];
     }
@@ -190,11 +190,10 @@ MESSAGE
         extract($this->pendingCustomerInformation);
 
         $this->customer = Customer::register(
-            $email,
-            $password,
-            BillingAddress::forIndividual($firstName, $lastName),
-            ShippingAddress::forIndividual($firstName, $lastName),
-            true
+            new StringLiteral($password),
+            BillingContact::fromNative($firstName, $lastName, $emailAddress),
+            ShippingContact::fromNative(),
+            new NewsletterSubscription(true)
         );
     }
 

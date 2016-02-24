@@ -205,7 +205,7 @@ class Address implements ValueObjectInterface
      */
     public function getCountry()
     {
-        return clone $this->country;
+        return isset($this->country) ? clone $this->country : null;
     }
 
     /**

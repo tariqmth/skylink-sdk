@@ -18,9 +18,11 @@ class V2OutletRepository implements OutletRepository
 
     public function all(SalesChannelId $salesChannelId)
     {
-        // $rawResponse = $this->api->call('OutletsGetByChannel', [
-        //     'ChannelId' => $salesChannelId->toInt(),
-        // ]);
+        $rawResponse = $this->api->call('OutletsGetByChannel', [
+            'ChannelId' => $salesChannelId->toInt(),
+        ]);
+
+        dd($rawResponse);
 
         $outletA = Outlet::existing(
             new OutletId(123),
@@ -43,7 +45,7 @@ class V2OutletRepository implements OutletRepository
         );
 
         $outletB = Outlet::existing(
-            New OutletId(124),
+            new OutletId(124),
             'Outlet B',
             Address::newInstance([], null, null, null, 'Australia')
         );

@@ -10,68 +10,35 @@ trait V2CustomerSerializer
     {
         $payload = [];
 
-        if ($this->id !== null) {
-            $payload['CustomerId'] = $this->id->toInt();
+        if (null !== $this->id) {
+            $payload['CustomerId'] = $this->id->toInteger();
         }
 
-        if ($this->password !== null) {
-            $payload['Password'] = $this->password;
+        if (null !== $this->getPassword()) {
+            $payload['Password'] = (string) $this->getPassword();
         }
 
-        $payload['BillFirstName'] = $this->billingAddress->getFirstName();
-        $payload['BillLastName'] = $this->billingAddress->getLastName();
-        $payload['BillEmail'] = $this->email->toString();
+        $payload['BillFirstName'] = (string) $this->getBillingContact()->getName()->getFirstName();
+        $payload['BillLastName'] = (string) $this->getBillingContact()->getName()->getLastName();
 
-        /*
-         * @todo Refactor getLines() into getLine1() and getLine2()
-         */
-        foreach ($this->billingAddress->getLines() as $index => $line) {
-            $payload['BillAddress'.($index === 1 ? '2' : '')] = $line;
-        }
+        $payload['BillAddress'] = (string) $this->getBillingContact()->getAddress()->getLine1();
+        $payload['BillAddress2'] = (string) $this->getBillingContact()->getAddress()->getLine2();
+        $payload['BillCompany'] = (string) $this->getBillingContact()->getCompanyName();
+        $payload['BillSuburb'] = (string) $this->getBillingContact()->getAddress()->getCity();
+        $payload['BillPostCode'] = (string) $this->getBillingContact()->getAddress()->getPostcode();
+        $payload['BillState'] = (string) $this->getBillingContact()->getAddress()->getState();
+        $payload['BillCountry'] = (string) $this->getBillingContact()->getAddress()->getCountry();
 
-        $payload['BillSuburb'] = $this->billingAddress->getSuburb();
-        $payload['BillPostCode'] = $this->billingAddress->getPostcode();
-        $payload['BillState'] = $this->billingAddress->getState();
-        $payload['BillCountry'] = $this->billingAddress->getCountry();
+        $payload['BillEmail'] = (string) $this->getBillingContact()->getEmailAddress();
 
-        foreach ($this->billingAddress->getPhones() as $type => $number) {
-            $payload['Bill'.ucfirst($type)] = $number;
-        }
+        $payload['DelAddress'] = (string) $this->getShippingContact()->getAddress()->getLine1();
+        $payload['DelAddress2'] = (string) $this->getShippingContact()->getAddress()->getLine2();
+        $payload['DelSuburb'] = (string) $this->getShippingContact()->getAddress()->getCity();
+        $payload['DelPostCode'] = (string) $this->getShippingContact()->getAddress()->getPostcode();
+        $payload['DelState'] = (string) $this->getShippingContact()->getAddress()->getState();
+        $payload['DelCountry'] = (string) $this->getShippingContact()->getAddress()->getCountry();
 
-        $billingCompany = $this->billingAddress->getCompany();
-        if ($billingCompany !== null) {
-            $payload['ACN'] = $billingCompany->getAbn()->getNumber();
-            $payload['BillCompany'] = $billingCompany->getName();
-
-            if ($billingCompany->getWebsite() !== null) {
-                $payload['BillWebsite'] = $billingCompany->getWebsite()->getUrl();
-            }
-        }
-
-        foreach ($this->deliveryAddress->getLines() as $index => $line) {
-            $payload['DelAddress'.($index === 1 ? '2' : '')] = $line;
-        }
-
-        $payload['DelSuburb'] = $this->deliveryAddress->getSuburb();
-        $payload['DelPostCode'] = $this->deliveryAddress->getPostcode();
-        $payload['DelState'] = $this->deliveryAddress->getState();
-        $payload['DelCountry'] = $this->deliveryAddress->getCountry();
-
-        foreach ($this->deliveryAddress->getPhones() as $type => $number) {
-            $payload['Del'.ucfirst($type)] = $number;
-        }
-
-        $deliveryCompany = $this->deliveryAddress->getCompany();
-        if ($deliveryCompany !== null) {
-            $payload['DelCompany'] = $deliveryCompany->getName();
-        }
-
-        $payload['ReceivesNews'] = (int) $this->isSubsribedToNewsletter();
-
-        // Filter out empty nodes
-        $payload = array_filter($payload, function ($value) {
-            return $value !== null;
-        });
+        $payload['ReceivesNews'] = (string) $this->getNewsletterSubscription();
 
         $xmlReader->write($payload);
     }

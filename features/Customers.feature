@@ -1,6 +1,5 @@
 Feature: Customers
 
-  @run
   Scenario: Retrieving a customer with lots of information
     When I find the customer with id "300000"
     Then I should see that their full name is "Joe" "Bloggs"
@@ -17,11 +16,11 @@ Feature: Customers
      """
      # And I should see they can be contacted by calling "(07) 1111 1111"
 
-  @run
   Scenario: Retrieving a customer with bare minimum information
     When I find the customer with id "300001"
     Then I should see that their full name is "Sarah" "Bloggs"
 
+  @run
   Scenario: Registering a new customer with bare minimum information
     Given I use a unique email based on "hello@example.com" and a password "hello123"
       And I use "Ben" and "Corlett" as the first and last name respectively

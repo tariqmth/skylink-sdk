@@ -38,14 +38,22 @@ class BillingContact implements ValueObjectInterface
     {
         $args = func_get_args();
 
-        if (count($args) !== 10) {
-            throw new BadMethodCallException('You must provide exactly 10 arguments: 1) first name, 2) last name, 3) email address, 4) company name, 5) address line 1, 6) address line 2, 7) address city, 8) address state, 9) address postcode, 10) address country.');
+        if (count($args) < 3) {
+            throw new BadMethodCallException('You must provide at least 3 arguments: 1) first name, 2) last name, 3) email address');
         }
 
         $name = Name::fromNative($args[0], $args[1]);
         $emailAddress = new EmailAddress($args[2]);
-        $companyName = new StringLiteral($args[3]);
-        $address = Address::fromNative($args[4], $args[5], '', $args[6], $args[7], $args[8], $args[9]);
+        $companyName = new StringLiteral(array_get($args, 3, ''));
+        $address = Address::fromNative(
+            array_get($args, 4, ''),
+            array_get($args, 5, ''),
+            '',
+            array_get($args, 6, ''),
+            array_get($args, 7, ''),
+            array_get($args, 8, ''),
+            array_get($args, 9, '')
+        );
 
         return new self($name, $emailAddress, $companyName, $address);
     }

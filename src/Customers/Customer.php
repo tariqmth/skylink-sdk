@@ -4,7 +4,11 @@ namespace RetailExpress\SkyLink\Customers;
 
 use Sabre\Xml\XmlDeserializable;
 use Sabre\Xml\XmlSerializable;
+use ValueObjects\StringLiteral\StringLiteral;
 
+/**
+ * @todo Reimplement contact phone numbers.
+ */
 class Customer implements XmlDeserializable, XmlSerializable
 {
     use V2CustomerDeserializer;
@@ -25,13 +29,13 @@ class Customer implements XmlDeserializable, XmlSerializable
         ShippingContact $shippingContact,
         NewsletterSubscription $newsletterSubscription,
         CustomerId $id = null,
-        $password = null
+        StringLiteral $password = null
     ) {
         $this->billingContact = $billingContact;
         $this->shippingContact = $shippingContact;
         $this->newsletterSubscription = $newsletterSubscription;
         $this->id = $id;
-        $this->password = isset($password) ? trim((string) $password) : null;
+        $this->password = $password;
     }
 
     public static function existing(
@@ -49,7 +53,7 @@ class Customer implements XmlDeserializable, XmlSerializable
     }
 
     public static function register(
-        $password,
+        StringLiteral $password,
         BillingContact $billingContact,
         ShippingContact $shippingContact,
         NewsletterSubscription $newsletterSubscription

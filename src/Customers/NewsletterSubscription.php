@@ -66,6 +66,6 @@ class NewsletterSubscription implements ValueObjectInterface
      */
     public function __toString()
     {
-        return $this->toNative();
+        return (string) $this->toNative();
     }
 }

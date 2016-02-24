@@ -34,13 +34,17 @@ class ShippingContact implements ValueObjectInterface
     {
         $args = func_get_args();
 
-        if (count($args) !== 9) {
-            throw new BadMethodCallException('You must provide exactly 9 arguments: 1) first name, 2) last name, 3) company name, 4) address line 1, 5) address line 2, 6) address city, 7) address state, 8) address postcode, 9) address country.');
-        }
-
-        $name = Name::fromNative($args[0], $args[1]);
-        $companyName = new StringLiteral($args[2]);
-        $address = Address::fromNative($args[3], $args[4], '', $args[5], $args[6], $args[7], $args[8]);
+        $name = Name::fromNative(array_get($args, 0, ''), array_get($args, 1, ''));
+        $companyName = new StringLiteral(array_get($args, 2, ''));
+        $address = Address::fromNative(
+            array_get($args, 3, ''),
+            array_get($args, 4, ''),
+            '',
+            array_get($args, 5, ''),
+            array_get($args, 6, ''),
+            array_get($args, 7, ''),
+            array_get($args, 8, '')
+        );
 
         return new self($name, $companyName, $address);
     }
