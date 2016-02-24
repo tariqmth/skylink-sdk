@@ -15,32 +15,28 @@ trait V2CustomerDeserializer
             $payload['BillFirstName'],
             $payload['BillLastName'],
             array_get_notempty($payload, 'BillEmail', "{$payload['CustomerId']}@example.com"),
-            array_get($payload, 'BillCompany'),
-            array_get($payload, 'BillAddress'),
-            array_get($payload, 'BillAddress2'),
-            array_get($payload, 'BillSuburb'),
-            array_get($payload, 'BillState'),
-            trim(array_get($payload, 'BillPostCode')), // Retail Express pads this to 30 characters
-            array_get($payload, 'BillCountry')
+            array_get_notempty($payload, 'BillCompany', ''),
+            array_get_notempty($payload, 'BillAddress', ''),
+            array_get_notempty($payload, 'BillAddress2', ''),
+            array_get_notempty($payload, 'BillSuburb', ''),
+            array_get_notempty($payload, 'BillState', ''),
+            trim(array_get_notempty($payload, 'BillPostCode', '')), // Retail Express pads this to 30 characters
+            array_get_notempty($payload, 'BillCountry', '')
         );
 
         // The shipping name comes back as a singular field, so we'll try split it out!
-        $shippingFirstName = null;
-        $shippingLastName = null;
-        if (isset($payload['DelName'])) {
-            list($shippingFirstName, $shippingLastName) = self::splitShippingName($payload['DelName'], [$payload['BillFirstName'], $payload['BillLastName']]);
-        }
+        list($shippingFirstName, $shippingLastName) = self::splitShippingName($payload['DelName'], [$payload['BillFirstName'], $payload['BillLastName']]);
 
         $shippingContact = ShippingContact::fromNative(
             $shippingFirstName,
             $shippingLastName,
-            array_get($payload, 'DelCompany'),
-            array_get($payload, 'DelAddress'),
-            array_get($payload, 'DelAddress2'),
-            array_get($payload, 'DelSuburb'),
-            array_get($payload, 'DelState'),
-            trim(array_get($payload, 'DelPostCode')),
-            array_get($payload, 'DelCountry')
+            array_get_notempty($payload, 'DelCompany', ''),
+            array_get_notempty($payload, 'DelAddress', ''),
+            array_get_notempty($payload, 'DelAddress2', ''),
+            array_get_notempty($payload, 'DelSuburb', ''),
+            array_get_notempty($payload, 'DelState', ''),
+            trim(array_get_notempty($payload, 'DelPostCode', '')),
+            array_get_notempty($payload, 'DelCountry', '')
         );
 
         $customer = static::existing(
@@ -65,14 +61,17 @@ trait V2CustomerDeserializer
      */
     private static function splitShippingName($shippingName, array $billingName = null)
     {
-        if ($billingName !== null) {
-            $concatenatedBillingName = implode(' ', $billingName);
+        $concatenatedBillingName = implode(' ', $billingName);
 
-            if ($concatenatedBillingName === $shippingName) {
-                return $billingName;
-            }
+        if ($concatenatedBillingName === $shippingName) {
+            return $billingName;
         }
 
-        return explode(' ', $shippingName, 2);
+        $split = explode(' ', $shippingName, 2);
+        if (count($split) !== 2) {
+            return ['', ''];
+        }
+
+        return $split;
     }
 }

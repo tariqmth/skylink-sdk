@@ -128,8 +128,6 @@ class FeatureContext implements Context, SnippetAcceptingContext
     {
         $actualBillingAddress = (string) $this->customer->getBillingContact();
 
-        dd($actualBillingAddress);
-
         if ($actualBillingAddress !== $expectedBillingAddress->getRaw()) {
             throw new Exception(<<<MESSAGE
 The customer's address was:
