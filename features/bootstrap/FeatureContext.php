@@ -18,6 +18,7 @@ use RetailExpress\SkyLink\Outlets\V2OutletRepository;
 use RetailExpress\SkyLink\Products\ProductId;
 use RetailExpress\SkyLink\Products\V2ProductRepository;
 use RetailExpress\SkyLink\SalesChannelId;
+use ValueObjects\Web\EmailAddress;
 
 /**
  * Defines application features from the specific context.
@@ -93,12 +94,12 @@ class FeatureContext implements Context, SnippetAcceptingContext
     /**
      * @Then I should see their email is :arg1
      */
-    public function iShouldSeeTheirEmailIs($expectedEmail)
+    public function iShouldSeeTheirEmailIs($expectedEmailAddress)
     {
-        $actualEmail = $this->customer->getEmail()->toString();
+        $customerEmailAddress = $this->customer->getEmailAddress();
 
-        if ($actualEmail !== $expectedEmail) {
-            throw new Exception("The customer's email was \"{$actualEmail}\".");
+        if (!$customerEmailAddress->sameValueAs(new EmailAddress($expectedEmailAddress))) {
+            throw new Exception("The customer's email was \"{$customerEmailAddress}\".");
         }
     }
 

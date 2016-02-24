@@ -4,13 +4,14 @@ namespace RetailExpress\SkyLink\Customers;
 
 use Sabre\Xml\XmlDeserializable;
 use Sabre\Xml\XmlSerializable;
+use ValueObjects\Web\EmailAddress;
 
 class Customer implements XmlDeserializable, XmlSerializable
 {
     use V2CustomerDeserializer;
     use V2CustomerSerializer;
 
-    private $email;
+    private $emailAddress;
 
     private $billingAddress;
 
@@ -23,14 +24,14 @@ class Customer implements XmlDeserializable, XmlSerializable
     private $password;
 
     private function __construct(
-        Email $email,
+        EmailAddress $emailAddress,
         Address $billingAddress,
         Address $deliveryAddress,
         $subscribedToNewsletter,
         CustomerId $id = null,
         $password = null
     ) {
-        $this->email = $email;
+        $this->emailAddress = $emailAddress;
         $this->billingAddress = $billingAddress;
         $this->deliveryAddress = $deliveryAddress;
         $this->subscribedToNewsletter = (bool) $subscribedToNewsletter;
@@ -40,13 +41,13 @@ class Customer implements XmlDeserializable, XmlSerializable
 
     public static function existing(
         CustomerId $id,
-        Email $email,
+        EmailAddress $emailAddress,
         Address $billingAddress,
         Address $deliveryAddress,
         $subscribedToNewsletter
     ) {
         return new self(
-            $email,
+            $emailAddress,
             $billingAddress,
             $deliveryAddress,
             $subscribedToNewsletter,
@@ -55,14 +56,14 @@ class Customer implements XmlDeserializable, XmlSerializable
     }
 
     public static function register(
-        Email $email,
+        EmailAddress $emailAddress,
         $password,
         Address $billingAddress,
         Address $deliveryAddress,
         $subscribedToNewsletter
     ) {
         return new self(
-            $email,
+            $emailAddress,
             $billingAddress,
             $deliveryAddress,
             $subscribedToNewsletter,
@@ -76,9 +77,9 @@ class Customer implements XmlDeserializable, XmlSerializable
         return $this->id;
     }
 
-    public function getEmail()
+    public function getEmailAddress()
     {
-        return $this->email;
+        return $this->emailAddress;
     }
 
     public function getBillingAddress()

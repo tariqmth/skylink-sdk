@@ -7,6 +7,7 @@ use RetailExpress\SkyLink\Company;
 use RetailExpress\SkyLink\Website;
 use Sabre\Xml\Deserializer as XmlDeserializer;
 use Sabre\Xml\Reader as XmlReader;
+use ValueObjects\Web\EmailAddress;
 
 trait V2CustomerDeserializer
 {
@@ -103,7 +104,7 @@ trait V2CustomerDeserializer
 
         $customer = static::existing(
             new CustomerId($payload['CustomerId']),
-            new Email(isset($payload['BillEmail']) ? $payload['BillEmail'] : "{$payload['CustomerId']}@example.com"),
+            new EmailAddress(isset($payload['BillEmail']) ? $payload['BillEmail'] : "{$payload['CustomerId']}@example.com"),
             $billingAddress,
             $deliveryAddress,
             $payload['ReceivesNews']
