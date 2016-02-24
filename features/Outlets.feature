@@ -1,4 +1,3 @@
-@run
 Feature: Outlets
 
   Scenario: Retrieving all outlets

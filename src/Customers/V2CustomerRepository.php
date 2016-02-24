@@ -16,7 +16,7 @@ class V2CustomerRepository implements CustomerRepository
     public function find(CustomerId $customerId)
     {
         $rawResponse = $this->api->call('CustomerGetDetails', [
-            'CustomerId' => $customerId->toInt(),
+            'CustomerId' => $customerId->toNative(),
         ]);
 
         $xmlService = $this->api->getXmlService();

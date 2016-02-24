@@ -4,96 +4,87 @@ namespace RetailExpress\SkyLink\Customers;
 
 use Sabre\Xml\XmlDeserializable;
 use Sabre\Xml\XmlSerializable;
-use ValueObjects\Web\EmailAddress;
 
 class Customer implements XmlDeserializable, XmlSerializable
 {
     use V2CustomerDeserializer;
     use V2CustomerSerializer;
 
-    private $emailAddress;
+    private $billingContact;
 
-    private $billingAddress;
+    private $shippingContact;
 
-    private $deliveryAddress;
-
-    private $subscribedToNewsletter;
+    private $newsletterSubscription;
 
     private $id;
 
     private $password;
 
     private function __construct(
-        EmailAddress $emailAddress,
-        Address $billingAddress,
-        Address $deliveryAddress,
-        $subscribedToNewsletter,
+        BillingContact $billingContact,
+        ShippingContact $shippingContact,
+        NewsletterSubscription $newsletterSubscription,
         CustomerId $id = null,
         $password = null
     ) {
-        $this->emailAddress = $emailAddress;
-        $this->billingAddress = $billingAddress;
-        $this->deliveryAddress = $deliveryAddress;
-        $this->subscribedToNewsletter = (bool) $subscribedToNewsletter;
+        $this->billingContact = $billingContact;
+        $this->shippingContact = $shippingContact;
+        $this->newsletterSubscription = $newsletterSubscription;
         $this->id = $id;
         $this->password = isset($password) ? trim((string) $password) : null;
     }
 
     public static function existing(
         CustomerId $id,
-        EmailAddress $emailAddress,
-        Address $billingAddress,
-        Address $deliveryAddress,
-        $subscribedToNewsletter
+        BillingContact $billingContact,
+        ShippingContact $shippingContact,
+        NewsletterSubscription $newsletterSubscription
     ) {
         return new self(
-            $emailAddress,
-            $billingAddress,
-            $deliveryAddress,
-            $subscribedToNewsletter,
+            $billingContact,
+            $shippingContact,
+            $newsletterSubscription,
             $id
         );
     }
 
     public static function register(
-        EmailAddress $emailAddress,
         $password,
-        Address $billingAddress,
-        Address $deliveryAddress,
-        $subscribedToNewsletter
+        BillingContact $billingContact,
+        ShippingContact $shippingContact,
+        NewsletterSubscription $newsletterSubscription
     ) {
         return new self(
-            $emailAddress,
-            $billingAddress,
-            $deliveryAddress,
-            $subscribedToNewsletter,
+            $billingContact,
+            $shippingContact,
+            $newsletterSubscription,
             null,
             $password
         );
     }
 
+    public function getBillingContact()
+    {
+        return clone $this->billingContact;
+    }
+
+    public function getShippingContact()
+    {
+        return clone $this->shippingContact;
+    }
+
+    public function getNewsletterSubscription()
+    {
+        return clone $this->newsletterSubscription;
+    }
+
     public function getId()
     {
-        return $this->id;
+        return clone $this->id;
     }
 
-    public function getEmailAddress()
+    public function getPassword()
     {
-        return $this->emailAddress;
-    }
-
-    public function getBillingAddress()
-    {
-        return $this->billingAddress;
-    }
-
-    public function getShippingAddress()
-    {
-        return $this->deliveryAddress;
-    }
-
-    public function isSubsribedToNewsletter()
-    {
-        return $this->subscribedToNewsletter;
+        return clone $this->password;
     }
 }

@@ -2,12 +2,8 @@
 
 namespace RetailExpress\SkyLink\Customers;
 
-use RetailExpress\SkyLink\Abn;
-use RetailExpress\SkyLink\Company;
-use RetailExpress\SkyLink\Website;
 use Sabre\Xml\Deserializer as XmlDeserializer;
 use Sabre\Xml\Reader as XmlReader;
-use ValueObjects\Web\EmailAddress;
 
 trait V2CustomerDeserializer
 {
@@ -15,117 +11,68 @@ trait V2CustomerDeserializer
     {
         $payload = XmlDeserializer\keyValue($xmlReader, '');
 
-        if (isset($payload['BillCompany'])) {
-            $billingAddress = BillingAddress::forCompany(
-                new Company(
-                    $payload['BillCompany'],
-                    isset($payload['BillABN']) ? new Abn($payload['BillABN']) : null,
-                    isset($payload['BillWebsite']) ? new Website($payload['BillWebsite']) : null
-                ),
-                $payload['BillFirstName'],
-                $payload['BillLastName'],
-                [
-                    array_get($payload, 'BillAddress'),
-                    array_get($payload, 'BillAddress2'),
-                ],
-                array_get($payload, 'BillSuburb'),
-                array_get($payload, 'BillPostCode'),
-                array_get($payload, 'BillState'),
-                array_get($payload, 'BillCountry'),
-                [
-                    'phone' => array_get($payload, 'BillPhone'),
-                    'mobile' => array_get($payload, 'BillMobile'),
-                    'fax' => array_get($payload, 'BillFax'),
-                ]
-            );
-        } else {
-            $billingAddress = BillingAddress::forIndividual(
-                $payload['BillFirstName'],
-                $payload['BillLastName'],
-                [
-                    array_get($payload, 'BillAddress'),
-                    array_get($payload, 'BillAddress2'),
-                ],
-                array_get($payload, 'BillSuburb'),
-                array_get($payload, 'BillPostCode'),
-                array_get($payload, 'BillState'),
-                array_get($payload, 'BillCountry'),
-                [
-                    'phone' => array_get($payload, 'BillPhone'),
-                    'mobile' => array_get($payload, 'BillMobile'),
-                    'fax' => array_get($payload, 'BillFax'),
-                ]
-            );
-        }
+        $billingContact = BillingContact::fromNative(
+            $payload['BillFirstName'],
+            $payload['BillLastName'],
+            array_get_notempty($payload, 'BillEmail', "{$payload['CustomerId']}@example.com"),
+            array_get($payload, 'BillCompany'),
+            array_get($payload, 'BillAddress'),
+            array_get($payload, 'BillAddress2'),
+            array_get($payload, 'BillSuburb'),
+            array_get($payload, 'BillState'),
+            trim(array_get($payload, 'BillPostCode')), // Retail Express pads this to 30 characters
+            array_get($payload, 'BillCountry')
+        );
 
+        // The shipping name comes back as a singular field, so we'll try split it out!
+        $shippingFirstName = null;
+        $shippingLastName = null;
         if (isset($payload['DelName'])) {
-            list($deliveryFirstName, $deliveryLastName) = self::splitShippingName($payload['DelName'], [$payload['BillFirstName'], $payload['BillLastName']]);
-        } else {
-            $deliveryFirstName = null;
-            $deliveryLastName = null;
+            list($shippingFirstName, $shippingLastName) = self::splitShippingName($payload['DelName'], [$payload['BillFirstName'], $payload['BillLastName']]);
         }
 
-        if (isset($payload['DelCompany'])) {
-            $deliveryAddress = ShippingAddress::forCompany(
-                new Company($payload['DelCompany']),
-                $deliveryFirstName,
-                $deliveryLastName,
-                [
-                    array_get($payload, 'DelAddress'),
-                    array_get($payload, 'DelAddress2'),
-                ],
-                array_get($payload, 'DelSuburb'),
-                array_get($payload, 'DelPostCode'),
-                array_get($payload, 'DelState'),
-                array_get($payload, 'DelCountry'),
-                [
-                    'phone' => array_get($payload, 'DelPhone'),
-                    'mobile' => array_get($payload, 'DelMobile'),
-                ]
-            );
-        } else {
-            $deliveryAddress = ShippingAddress::forIndividual(
-                $deliveryFirstName,
-                $deliveryLastName,
-                [
-                    array_get($payload, 'DelAddress'),
-                    array_get($payload, 'DelAddress2'),
-                ],
-                array_get($payload, 'DelSuburb'),
-                array_get($payload, 'DelPostCode'),
-                array_get($payload, 'DelState'),
-                array_get($payload, 'DelCountry'),
-                [
-                    'phone' => array_get($payload, 'DelPhone'),
-                    'mobile' => array_get($payload, 'DelMobile'),
-                ]
-            );
-        }
+        $shippingContact = ShippingContact::fromNative(
+            $shippingFirstName,
+            $shippingLastName,
+            array_get($payload, 'DelCompany'),
+            array_get($payload, 'DelAddress'),
+            array_get($payload, 'DelAddress2'),
+            array_get($payload, 'DelSuburb'),
+            array_get($payload, 'DelState'),
+            trim(array_get($payload, 'DelPostCode')),
+            array_get($payload, 'DelCountry')
+        );
 
         $customer = static::existing(
             new CustomerId($payload['CustomerId']),
-            new EmailAddress(isset($payload['BillEmail']) ? $payload['BillEmail'] : "{$payload['CustomerId']}@example.com"),
-            $billingAddress,
-            $deliveryAddress,
-            $payload['ReceivesNews']
+            $billingContact,
+            $shippingContact,
+            new NewsletterSubscription($payload['ReceivesNews'])
         );
 
         return $customer;
     }
 
-    private static function splitShippingName($deliveryName, array $billingName = null)
+    /**
+     * Takes the given combined shipping name and attempts to see if it matches the billing name.
+     * If it matches, this method simply returns the billing name. If not, it will split the
+     * first and last name by the first occurance of a space.
+     *
+     * @param string $shippingName
+     * @param array  $billingName
+     *
+     * @return array
+     */
+    private static function splitShippingName($shippingName, array $billingName = null)
     {
-        // If we have a billing name, we'll check if the delivery name is simply that as a concatenated string
         if ($billingName !== null) {
             $concatenatedBillingName = implode(' ', $billingName);
 
-            // If they match, we know it's safe to just return the billing name
-            if ($deliveryName === $concatenatedBillingName) {
+            if ($concatenatedBillingName === $shippingName) {
                 return $billingName;
             }
         }
 
-        // Otherwise, we'll just use the first blank space as the placeholder for first and last name
-        return explode(' ', $deliveryName, 2);
+        return explode(' ', $shippingName, 2);
     }
 }

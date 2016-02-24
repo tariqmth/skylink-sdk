@@ -2,8 +2,6 @@
 
 namespace RetailExpress\SkyLink;
 
-use RetailExpress\SkyLink\ValueObject;
-
 class Company implements ValueObject
 {
     private $name;

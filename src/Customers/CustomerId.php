@@ -2,9 +2,8 @@
 
 namespace RetailExpress\SkyLink\Customers;
 
-use RetailExpress\SkyLink\NumericId;
-use RetailExpress\SkyLink\ValueObject;
+use ValueObjects\Number\Integer;
 
-class CustomerId extends NumericId implements ValueObject
+class CustomerId extends Integer
 {
 }

@@ -18,6 +18,7 @@ use RetailExpress\SkyLink\Outlets\V2OutletRepository;
 use RetailExpress\SkyLink\Products\ProductId;
 use RetailExpress\SkyLink\Products\V2ProductRepository;
 use RetailExpress\SkyLink\SalesChannelId;
+use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\EmailAddress;
 
 /**
@@ -79,15 +80,16 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function iShouldSeeThatTheirFullNameIs($expectedFirstName, $expectedLastName)
     {
-        $actualFirstName = $this->customer->getBillingAddress()->getFirstName();
-        $actualLastName = $this->customer->getBillingAddress()->getLastName();
+        $name = $this->customer->getBillingContact()->getName();
+        $actualFirstName = $name->getFirstName();
+        $actualLastName = $name->getLastName();
 
-        if ($actualFirstName !== $expectedFirstName) {
+        if (!$actualFirstName->sameValueAs(new StringLiteral($expectedFirstName))) {
             throw new Exception("The customer's first name was \"{$actualFirstName}\".");
         }
 
-        if ($actualLastName !== $expectedLastName) {
-            throw new Exception("The customer's last name was \"{$actualLastName}\".");
+        if (!$actualLastName->sameValueAs(new StringLiteral($expectedLastName))) {
+            throw new Exception("The customer's first name was \"{$actualLastName}\".");
         }
     }
 
@@ -96,10 +98,10 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function iShouldSeeTheirEmailIs($expectedEmailAddress)
     {
-        $customerEmailAddress = $this->customer->getEmailAddress();
+        $actualEmailAddress = $this->customer->getBillingContact()->getEmailAddress();
 
-        if (!$customerEmailAddress->sameValueAs(new EmailAddress($expectedEmailAddress))) {
-            throw new Exception("The customer's email was \"{$customerEmailAddress}\".");
+        if (!$actualEmailAddress->sameValueAs(new EmailAddress($expectedEmailAddress))) {
+            throw new Exception("The customer's email was \"{$actualEmailAddress}\".");
         }
     }
 
@@ -108,25 +110,25 @@ class FeatureContext implements Context, SnippetAcceptingContext
      */
     public function iShouldSeeTheyWorkFor($expectedCompanyName)
     {
-        $actualCompany = $this->customer->getBillingAddress()->getCompany();
+        $actualCompanyName = $this->customer->getBillingContact()->getCompanyName();
 
-        if ($actualCompany === null) {
+        if ($actualCompanyName->isEmpty()) {
             throw new Exception('The customer does not work for any company.');
         }
 
-        $actualCompanyName = $actualCompany->getName();
-
-        if ($actualCompanyName !== $expectedCompanyName) {
+        if (!$actualCompanyName->sameValueAs(new StringLiteral($expectedCompanyName))) {
             throw new Exception("The customer works for \"{$actualCompanyName}\".");
         }
     }
 
     /**
-     * @Then I should see their billing address is:
+     * @Then I should see their billing contact is:
      */
-    public function iShouldSeeTheirBillingAddressIs(PyStringNode $expectedBillingAddress)
+    public function iShouldSeeTheirBillingContactIs(PyStringNode $expectedBillingAddress)
     {
-        $actualBillingAddress = $this->customer->getBillingAddress()->toString();
+        $actualBillingAddress = (string) $this->customer->getBillingContact();
+
+        dd($actualBillingAddress);
 
         if ($actualBillingAddress !== $expectedBillingAddress->getRaw()) {
             throw new Exception(<<<MESSAGE

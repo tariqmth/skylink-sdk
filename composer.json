@@ -15,9 +15,13 @@
   "autoload": {
     "psr-4": {
       "RetailExpress\\SkyLink\\": "src/"
-    }
+    },
+    "files": [
+      "src/helpers.php"
+    ]
   },
   "require": {
+    "php": ">=5.5.0",
     "illuminate/support": "^5.1",
     "ramsey/uuid": "^3.0",
     "sabre/xml": "^1.4",
