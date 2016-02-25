@@ -39,6 +39,16 @@ trait Contact
     }
 
     /**
+     * Returns the phone number.
+     *
+     * @return StringLiteral
+     */
+    public function getPhoneNumber()
+    {
+        return clone $this->phoneNumber;
+    }
+
+    /**
      * Returns a string representation of the billing contact.
      *
      * @return string

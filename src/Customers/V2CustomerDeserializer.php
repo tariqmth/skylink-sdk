@@ -21,7 +21,9 @@ trait V2CustomerDeserializer
             array_get_notempty($payload, 'BillSuburb', ''),
             array_get_notempty($payload, 'BillState', ''),
             trim(array_get_notempty($payload, 'BillPostCode', '')), // Retail Express pads this to 30 characters
-            array_get_notempty($payload, 'BillCountry', '')
+            array_get_notempty($payload, 'BillCountry', ''),
+            array_get_notempty($payload, 'BillPhone', ''),
+            array_get_notempty($payload, 'BillFax', '')
         );
 
         // The shipping name comes back as a singular field, so we'll try split it out!
@@ -36,7 +38,8 @@ trait V2CustomerDeserializer
             array_get_notempty($payload, 'DelSuburb', ''),
             array_get_notempty($payload, 'DelState', ''),
             trim(array_get_notempty($payload, 'DelPostCode', '')),
-            array_get_notempty($payload, 'DelCountry', '')
+            array_get_notempty($payload, 'DelCountry', ''),
+            array_get_notempty($payload, 'DelPhone', '')
         );
 
         $customer = static::existing(

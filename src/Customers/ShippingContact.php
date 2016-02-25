@@ -2,7 +2,6 @@
 
 namespace RetailExpress\SkyLink\Customers;
 
-use BadMethodCallException;
 use RetailExpress\SkyLink\ValueObjects\Geography\Address;
 use RetailExpress\SkyLink\ValueObjects\Person\Name;
 use ValueObjects\StringLiteral\StringLiteral;
@@ -17,6 +16,8 @@ class ShippingContact implements ValueObjectInterface
 
     private $address;
 
+    private $phoneNumber;
+
     /**
      * Returns a new Billing Contact object from native PHP arguments.
      *
@@ -29,6 +30,7 @@ class ShippingContact implements ValueObjectInterface
      * @param string $addressState
      * @param string $addressPostcode
      * @param string $addressCountry
+     * @param string $phoneNumber
      */
     public static function fromNative()
     {
@@ -46,14 +48,20 @@ class ShippingContact implements ValueObjectInterface
             array_get($args, 8, '')
         );
 
-        return new self($name, $companyName, $address);
+        return new self(
+            $name,
+            $companyName,
+            $address,
+            new StringLiteral(array_get($args, 9, ''))
+        );
     }
 
-    public function __construct(Name $name, StringLiteral $companyName, Address $address)
+    public function __construct(Name $name, StringLiteral $companyName, Address $address, StringLiteral $phoneNumber)
     {
         $this->name = $name;
         $this->companyName = $companyName;
         $this->address = $address;
+        $this->phoneNumber = $phoneNumber;
     }
 
     /**
@@ -71,6 +79,7 @@ class ShippingContact implements ValueObjectInterface
 
         return $this->getName()->sameValueAs($billingContact->getName()) &&
             $this->getCompanyName()->sameValueAs($billingContact->getCompanyName()) &&
-            $this->getAddress()->sameValueAs($billingContact->getAddress());
+            $this->getAddress()->sameValueAs($billingContact->getAddress()) &&
+            $this->getPhoneNumber()->sameValueAs($billingContact->getPhoneNumber());
     }
 }

@@ -142,20 +142,10 @@ MESSAGE
      */
     public function iShouldSeeTheyCanBeContactedByCalling($expectedPhoneNumber)
     {
-        $actualPhoneNumbers = $this->customer->getBillingAddress()->getPhones();
+        $actualPhoneNumber = $this->customer->getBillingContact()->getPhoneNumber();
 
-        if (count($actualPhoneNumbers) === 0) {
-            throw new Exception('The customer does not have any phone numbers.');
-        }
-
-        if (!in_array($expectedPhoneNumber, $actualPhoneNumbers)) {
-            $message = "The customer's phone numbers are:\n";
-
-            foreach ($actualPhoneNumbers as $actualPhoneType => $actualPhoneNumber) {
-                $message .= "- {$actualPhoneType}: {$actualPhoneNumber}\n";
-            }
-
-            throw new Exception($message);
+        if (!$actualPhoneNumber->sameValueAs(new StringLiteral($expectedPhoneNumber))) {
+            throw new Exception("The customer's phone number was \"{$actualPhoneNumber}\".");
         }
     }
 

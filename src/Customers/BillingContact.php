@@ -20,6 +20,10 @@ class BillingContact implements ValueObjectInterface
 
     private $address;
 
+    private $phoneNumber;
+
+    private $faxNumber;
+
     /**
      * Returns a new Billing Contact object from native PHP arguments.
      *
@@ -33,6 +37,8 @@ class BillingContact implements ValueObjectInterface
      * @param string $addressState
      * @param string $addressPostcode
      * @param string $addressCountry
+     * @param string $phoneNumber
+     * @param string $faxNumber
      */
     public static function fromNative()
     {
@@ -55,15 +61,24 @@ class BillingContact implements ValueObjectInterface
             array_get($args, 9, '')
         );
 
-        return new self($name, $emailAddress, $companyName, $address);
+        return new self(
+            $name,
+            $emailAddress,
+            $companyName,
+            $address,
+            new StringLiteral(array_get($args, 10, '')),
+            new StringLiteral(array_get($args, 11, ''))
+        );
     }
 
-    public function __construct(Name $name, EmailAddress $emailAddress, StringLiteral $companyName, Address $address)
+    public function __construct(Name $name, EmailAddress $emailAddress, StringLiteral $companyName, Address $address, StringLiteral $phoneNumber, StringLiteral $faxNumber)
     {
         $this->name = $name;
         $this->emailAddress = $emailAddress;
         $this->companyName = $companyName;
         $this->address = $address;
+        $this->phoneNumber = $phoneNumber;
+        $this->faxNumber = $faxNumber;
     }
 
     /**
@@ -74,6 +89,16 @@ class BillingContact implements ValueObjectInterface
     public function getEmailAddress()
     {
         return clone $this->emailAddress;
+    }
+
+    /**
+     * Returns the fax number.
+     *
+     * @return StringLiteral
+     */
+    public function getFaxNumber()
+    {
+        return clone $this->fax;
     }
 
     /**
@@ -92,6 +117,8 @@ class BillingContact implements ValueObjectInterface
         return $this->getName()->sameValueAs($billingContact->getName()) &&
             $this->getEmailAddress()->sameValueAs($billingContact->getEmailAddress()) &&
             $this->getCompanyName()->sameValueAs($billingContact->getCompanyName()) &&
-            $this->getAddress()->sameValueAs($billingContact->getAddress());
+            $this->getAddress()->sameValueAs($billingContact->getAddress()) &&
+            $this->getPhoneNumber()->sameValueAs($billingContact->getPhoneNumber()) &&
+            $this->getFaxNumber()->sameValueAs($billingContact->getFaxNumber());
     }
 }
