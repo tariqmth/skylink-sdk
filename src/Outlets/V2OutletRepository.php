@@ -19,35 +19,21 @@ class V2OutletRepository implements OutletRepository
     public function all(SalesChannelId $salesChannelId)
     {
         $rawResponse = $this->api->call('OutletsGetByChannel', [
-            'ChannelId' => $salesChannelId->toInt(),
+            'ChannelId' => $salesChannelId->toNative(),
         ]);
 
-        dd($rawResponse);
+        $xmlService = $this->api->getXmlService();
+        $xmlService->elementMap = [
+            '{}Outlet' => Outlet::class,
+        ];
+        $parsedResponse = $xmlService->parse($rawResponse);
 
-        $outletA = Outlet::existing(
-            new OutletId(123),
-            'Outlet A',
-            Address::newInstance(
-                ['Unit 5', 'Level 5', '192 Ann St'],
-                'Brisbane',
-                '4000',
-                'Queensland',
-                'Australia',
-                [
-                    'phone' => '(02) 1111 1111',
-                    'fax' => '(02) 2222 2222',
-                ]
-            ),
-            new Company(
-                'Ben Co Ltd',
-                new Abn(123456789, 'ABN')
-            )
-        );
+        $outlets = [];
 
-        $outletB = Outlet::existing(
-            new OutletId(124),
-            'Outlet B',
-            Address::newInstance([], null, null, null, 'Australia')
-        );
+        foreach (array_get($parsedResponse, '0.value') as $outletResponse) {
+            $outlets[] = $outletResponse['value'];
+        }
+
+        return $outlets;
     }
 }

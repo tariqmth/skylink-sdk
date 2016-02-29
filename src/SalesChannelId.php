@@ -2,6 +2,8 @@
 
 namespace RetailExpress\SkyLink;
 
-class SalesChannelId extends NumericId implements ValueObject
+use ValueObjects\Number\Integer;
+
+class SalesChannelId extends Integer
 {
 }

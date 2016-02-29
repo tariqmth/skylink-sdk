@@ -1,6 +1,6 @@
+@completed
 Feature: Customers
 
-  @run
   Scenario: Retrieving a customer with lots of information
     When I find the customer with id "300000"
     Then I should see that their full name is "Joe" "Bloggs"

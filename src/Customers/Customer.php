@@ -6,9 +6,6 @@ use Sabre\Xml\XmlDeserializable;
 use Sabre\Xml\XmlSerializable;
 use ValueObjects\StringLiteral\StringLiteral;
 
-/**
- * @todo Reimplement contact phone numbers.
- */
 class Customer implements XmlDeserializable, XmlSerializable
 {
     use V2CustomerDeserializer;

@@ -6,7 +6,7 @@ use Sabre\Xml\Writer as XmlWriter;
 
 trait V2CustomerSerializer
 {
-    public function xmlSerialize(XmlWriter $xmlReader)
+    public function xmlSerialize(XmlWriter $xmlWriter)
     {
         $payload = [];
 
@@ -40,6 +40,6 @@ trait V2CustomerSerializer
 
         $payload['ReceivesNews'] = (string) $this->getNewsletterSubscription();
 
-        $xmlReader->write($payload);
+        $xmlWriter->write($payload);
     }
 }

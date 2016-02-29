@@ -60,14 +60,16 @@ class BillingContact implements ValueObjectInterface
             array_get($args, 8, ''),
             array_get($args, 9, '')
         );
+        $phoneNumber = new StringLiteral(array_get($args, 10, ''));
+        $faxNumber = new StringLiteral(array_get($args, 11, ''));
 
         return new self(
             $name,
             $emailAddress,
             $companyName,
             $address,
-            new StringLiteral(array_get($args, 10, '')),
-            new StringLiteral(array_get($args, 11, ''))
+            $phoneNumber,
+            $faxNumber
         );
     }
 

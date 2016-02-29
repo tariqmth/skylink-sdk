@@ -14,6 +14,7 @@ use RetailExpress\SkyLink\Customers\CustomerId;
 use RetailExpress\SkyLink\Customers\NewsletterSubscription;
 use RetailExpress\SkyLink\Customers\ShippingContact;
 use RetailExpress\SkyLink\Customers\V2CustomerRepository;
+use RetailExpress\SkyLink\Outlets\OutletId;
 use RetailExpress\SkyLink\Outlets\V2OutletRepository;
 use RetailExpress\SkyLink\Products\ProductId;
 use RetailExpress\SkyLink\Products\V2ProductRepository;
@@ -214,17 +215,33 @@ MESSAGE
     /**
      * @Then I should see there are :arg1 outlets
      */
-    public function iShouldSeeThereAreOutlets($arg1)
+    public function iShouldSeeThereAreOutlets($count)
     {
-        throw new PendingException();
+        $outletsCount = count($this->outlets);
+
+        if ((int) $count !== $outletsCount) {
+            throw new Exception("There were {$outletsCount} outlets.");
+        }
     }
 
     /**
      * @Then outlet :arg1 is known as :arg2
      */
-    public function outletIsKnownAs($arg1, $arg2)
+    public function outletIsKnownAs($outletId, $name)
     {
-        throw new PendingException();
+        foreach ($this->outlets as $outlet) {
+            if (!$outlet->getId()->sameValueAs(new OutletId($outletId))) {
+                continue;
+            }
+
+            if ($outlet->getName()->sameValueAs(new StringLiteral($name))) {
+                return;
+            }
+
+            throw new Exception("The outlet's name was {$outlet->getName()}.");
+        }
+
+        throw new Exception("Could not find outlet {$outletId}.");
     }
 
     /**

@@ -1,3 +1,4 @@
+@completed
 Feature: Outlets
 
   Scenario: Retrieving all outlets

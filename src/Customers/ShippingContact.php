@@ -47,12 +47,13 @@ class ShippingContact implements ValueObjectInterface
             array_get($args, 7, ''),
             array_get($args, 8, '')
         );
+        $phoneNumber = new StringLiteral(array_get($args, 9, ''));
 
         return new self(
             $name,
             $companyName,
             $address,
-            new StringLiteral(array_get($args, 9, ''))
+            $phoneNumber
         );
     }
 
