@@ -27,7 +27,8 @@
     "nicolopignatelli/valueobjects": "^4.0"
   },
   "require-dev": {
-    "behat/behat": "^3.0"
+    "behat/behat": "^3.0",
+    "vlucas/phpdotenv": "^2.2"
   },
   "extra": {
     "branch-alias": {
