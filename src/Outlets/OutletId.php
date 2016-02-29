@@ -2,9 +2,8 @@
 
 namespace RetailExpress\SkyLink\Outlets;
 
-use RetailExpress\SkyLink\NumericId;
-use RetailExpress\SkyLink\ValueObject;
+use ValueObjects\Number\Integer;
 
-class OutletId extends NumericId implements ValueObject
+class OutletId extends Integer
 {
 }

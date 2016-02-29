@@ -2,7 +2,8 @@
 
 namespace RetailExpress\SkyLink\Outlets;
 
-use RetailExpress\SkyLink\Company;
+use RetailExpress\SkyLink\ValueObjects\Geography\Address;
+use ValueObjects\StringLiteral\StringLiteral;
 
 class Outlet
 {
@@ -12,18 +13,25 @@ class Outlet
 
     private $address;
 
-    private $company;
+    private $phoneNumber;
 
-    private function __construct(OutletId $id, $name, Address $address, Company $company = null)
+    private $faxNumber;
+
+    public static function fromNative()
     {
-        $this->id = $id;
-        $this->name = (string) $name;
-        $this->address = $address;
-        $this->company = $company;
+        $args = func_get_args();
+
+        if (count($args) < 2) {
+            throw new BadMethodCallException('You must provide at least 2 arguments: 1) id, 2) name');
+        }
     }
 
-    public static function existing(OutletId $id, $name, Address $address, Company $company = null)
+    public function __construct(OutletId $id, StringLiteral $name, Address $address, StringLiteral $phoneNumber, StringLiteral $faxNumber)
     {
-        return new self($id, $name, $address, $company);
+        $this->id = $id;
+        $this->name = $name;
+        $this->address = $address;
+        $this->phoneNumber = $phoneNumber;
+        $this->faxNumber = $faxNumber;
     }
 }
