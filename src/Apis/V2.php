@@ -5,8 +5,8 @@ namespace RetailExpress\SkyLink\Apis;
 use Ramsey\Uuid\Uuid;
 use Sabre\Xml\Service as XmlService;
 use SoapClient;
+use SoapFault;
 use SoapHeader;
-use stdClass;
 
 class V2
 {
@@ -24,7 +24,22 @@ class V2
 
     public function call($method, array $arguments = [])
     {
-        $response = $this->soapClient->__soapCall($method, [$arguments]);
+        try {
+            $response = $this->soapClient->__soapCall($method, [$arguments]);
+        } catch (SoapFault $e) {
+
+            // To determine if the response is valid XML or not, we'll look for the presence of
+            // the XML opening tag. If it does not exist, we know we are dealing with a zipped
+            // response instead, at which point we'll write the response to a temporary file
+            // and return a resource pointing to the temporary file so that it's contents
+            // may be parsed without hindering on memory too badly.
+            $response = $this->soapClient->__getLastResponse();
+            if (starts_with($response, '<?xml version="1.0" encoding="utf-8"?>')) {
+                throw $e;
+            }
+
+            $response = $this->unzipReponse($response);
+        }
 
         return $this->dissectApiResponse($response);
     }
@@ -34,29 +49,64 @@ class V2
         return new XmlService();
     }
 
+    private function unzipReponse($response)
+    {
+
+        // Write the response to a temporary file
+        $zippedFile = $this->getTemporaryFileResource();
+        fwrite($zippedFile, $response);
+
+        // Grab the filename and close the handle
+        $zippedFilename = stream_get_meta_data($zippedFile)['uri'];
+
+        $response = '';
+
+        // Open a new unzipped file handle based on the zipped file we just wrote
+        $unzippedFile = gzopen($zippedFilename, 'r');
+
+        while(!gzeof($unzippedFile)) {
+            $response .= gzgetc($unzippedFile);
+        }
+
+        fclose($zippedFile);
+        gzclose($unzippedFile);
+
+        return $response;
+    }
+
+    private function getTemporaryFileResource()
+    {
+        return tmpfile();
+    }
+
     /**
      * Retail Express returns API responses and errors in a few formats. This method is designed
      * to inspect responses for errors as well as return response paylaods rather than the junk
      * that wraps them.
      *
+     * @param string|stdClass $response
      * @return string
      *
      * @throws V2ApiException
      */
-    private function dissectApiResponse(stdClass $response)
+    private function dissectApiResponse($response)
     {
-        $responseAsArray = get_object_vars($response);
+        if (is_object($response)) {
+            $responseAsArray = get_object_vars($response);
 
-        // If we ever encounter a situation where there's more than one element in our response
-        // then we'll look into using array_first() with logic for finding the element that
-        // we need. Until that time, we'll just throw an exception so we don't have any
-        // strange behaviour leaking out and producing strange bugs.
-        $responseElements = count($responseAsArray);
-        if ($responseElements !== 1) {
-            throw new V2ApiException("Expected 1 element in an API response, however received {$responseElements}.");
+            // If we ever encounter a situation where there's more than one element in our response
+            // then we'll look into using array_first() with logic for finding the element that
+            // we need. Until that time, we'll just throw an exception so we don't have any
+            // strange behaviour leaking out and producing strange bugs.
+            $responseElements = count($responseAsArray);
+            if ($responseElements !== 1) {
+                throw new V2ApiException("Expected 1 element in an API response, however received {$responseElements}.");
+            }
+
+            $payload = array_shift($responseAsArray)->any;
+        } else {
+            $payload = $response;
         }
-
-        $payload = array_shift($responseAsArray)->any;
 
         $this->checkPayloadForErrors($payload);
 
