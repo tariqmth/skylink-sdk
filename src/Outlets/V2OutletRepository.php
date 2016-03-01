@@ -5,7 +5,7 @@ namespace RetailExpress\SkyLink\Outlets;
 use RetailExpress\SkyLink\Abn;
 use RetailExpress\SkyLink\Apis\V2 as V2Api;
 use RetailExpress\SkyLink\Company;
-use RetailExpress\SkyLink\SalesChannelId;
+use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
 
 class V2OutletRepository implements OutletRepository
 {

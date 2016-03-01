@@ -3,7 +3,7 @@
 namespace RetailExpress\SkyLink\Products;
 
 use RetailExpress\SkyLink\Customers\CustomerGroupId;
-use RetailExpress\SkyLink\SalesChannelId;
+use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
 
 interface ProductRepository
 {

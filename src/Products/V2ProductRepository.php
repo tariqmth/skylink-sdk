@@ -4,7 +4,7 @@ namespace RetailExpress\SkyLink\Products;
 
 use RetailExpress\SkyLink\Apis\V2 as V2Api;
 use RetailExpress\SkyLink\Customers\CustomerGroupId;
-use RetailExpress\SkyLink\SalesChannelId;
+use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
 use Sabre\Xml\Reader as XmlReader;
 
 class V2ProductRepository implements ProductRepository

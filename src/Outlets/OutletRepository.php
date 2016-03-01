@@ -2,7 +2,7 @@
 
 namespace RetailExpress\SkyLink\Outlets;
 
-use RetailExpress\SkyLink\SalesChannelId;
+use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
 
 interface OutletRepository
 {

@@ -18,7 +18,7 @@ use RetailExpress\SkyLink\Outlets\OutletId;
 use RetailExpress\SkyLink\Outlets\V2OutletRepository;
 use RetailExpress\SkyLink\Products\ProductId;
 use RetailExpress\SkyLink\Products\V2ProductRepository;
-use RetailExpress\SkyLink\SalesChannelId;
+use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\EmailAddress;
 
