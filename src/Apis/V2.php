@@ -115,6 +115,9 @@ class V2
 
     private function checkPayloadForErrors($rawPayload)
     {
+        // @todo Reimplement error handling
+        return;
+
         $xmlService = $this->getXmlService();
         $xmlService->elementMap = [
             '{}Response' => 'Sabre\Xml\Deserializer\keyValue',

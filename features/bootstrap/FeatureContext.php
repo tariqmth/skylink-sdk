@@ -16,6 +16,8 @@ use RetailExpress\SkyLink\Customers\ShippingContact;
 use RetailExpress\SkyLink\Customers\V2CustomerRepository;
 use RetailExpress\SkyLink\Outlets\OutletId;
 use RetailExpress\SkyLink\Outlets\V2OutletRepository;
+use RetailExpress\SkyLink\Products\AttributeCode;
+use RetailExpress\SkyLink\Products\V2AttributeRepository;
 use RetailExpress\SkyLink\Products\ProductId;
 use RetailExpress\SkyLink\Products\V2ProductRepository;
 use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
@@ -38,6 +40,8 @@ class FeatureContext implements Context, SnippetAcceptingContext
     private $outletRepository;
 
     private $outlets = [];
+
+    private $attributeRepository;
 
     private $productRepository;
 
@@ -65,6 +69,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
         // Initialise the Retail Express V2 Product Repository
         $this->customerRepository = new V2CustomerRepository($api);
         $this->outletRepository = new V2OutletRepository($api);
+        $this->attributeRepository = new V2AttributeRepository($api);
         $this->productRepository = new V2ProductRepository($api);
     }
 
@@ -242,6 +247,26 @@ MESSAGE
         }
 
         throw new Exception("Could not find outlet {$outletId}.");
+    }
+
+    /**
+     * @When I get all brands
+     */
+    public function iGetAllBrands()
+    {
+        $attributeCode = AttributeCode::fromNative('brand');
+
+        dd(
+            $this->attributeRepository->allByCode($attributeCode, $this->salesChannelId)
+        );
+    }
+
+    /**
+     * @Then I should see there are :arg1 brands
+     */
+    public function iShouldSeeThereAreBrands($arg1)
+    {
+        throw new PendingException();
     }
 
     /**
