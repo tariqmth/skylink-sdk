@@ -26,6 +26,12 @@ class V2ProductRepository implements ProductRepository
             'ChannelId' => $salesChannelId->toNative(),
         ]);
 
-        dd($rawResponse);
+        $xmlService = $this->api->getXmlService();
+        $xmlService->elementMap = [
+            '{}Product' => V2ProductDeserializer::class,
+        ];
+        $parsedResponse = $xmlService->parse($rawResponse);
+
+        dd($parsedResponse);
     }
 }

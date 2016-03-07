@@ -24,12 +24,7 @@ class NewsletterSubscription implements ValueObjectInterface
 
     public function __construct($subscribed)
     {
-        $subscribed = filter_var($subscribed, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-
-        if (null === $subscribed) {
-            throw new InvalidNativeArgumentException($value, array('bool'));
-        }
-
+        $this->assertSubscribedArgument($subscribed);
         $this->subscribed = boolval($subscribed);
     }
 
@@ -67,5 +62,14 @@ class NewsletterSubscription implements ValueObjectInterface
     public function __toString()
     {
         return (string) $this->toNative();
+    }
+
+    private function assertSubscribedArgument($subscribed)
+    {
+        $subscribed = filter_var($subscribed, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+        if (null === $subscribed) {
+            throw new InvalidNativeArgumentException($subscribed, array('bool'));
+        }
     }
 }
