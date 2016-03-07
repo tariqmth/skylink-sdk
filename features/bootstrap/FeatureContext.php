@@ -43,6 +43,8 @@ class FeatureContext implements Context, SnippetAcceptingContext
 
     private $attributeRepository;
 
+    private $brands = [];
+
     private $productRepository;
 
     private $product;
@@ -256,17 +258,19 @@ MESSAGE
     {
         $attributeCode = AttributeCode::fromNative('brand');
 
-        dd(
-            $this->attributeRepository->allByCode($attributeCode, $this->salesChannelId)
-        );
+        $this->brands = $this->attributeRepository->allValuesByCode($attributeCode, $this->salesChannelId);
     }
 
     /**
      * @Then I should see there are :arg1 brands
      */
-    public function iShouldSeeThereAreBrands($arg1)
+    public function iShouldSeeThereAreBrands($count)
     {
-        throw new PendingException();
+        $brandsCount = count($this->brands);
+
+        if ((int) $count !== $brandsCount) {
+            throw new Exception("There were {$brandsCount} brands.");
+        }
     }
 
     /**
