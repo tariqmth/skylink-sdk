@@ -23,18 +23,18 @@ class V2AttributeRepository implements AttributeRepository
 
         $xmlService = $this->api->getXmlService();
         $xmlService->elementMap = [
-            '{}Brand' => AttributeValue::class,
-            '{}Colour' => AttributeValue::class,
-            '{}Season' => AttributeValue::class,
-            '{}Size' => AttributeValue::class,
-            '{}ProductType' => AttributeValue::class,
+            '{}Brand' => AttributeOption::class,
+            '{}Colour' => AttributeOption::class,
+            '{}Season' => AttributeOption::class,
+            '{}Size' => AttributeOption::class,
+            '{}ProductType' => AttributeOption::class,
         ];
         $parsedResponse = $xmlService->parse($rawResponse);
 
         $flattenedParsedResponse = array_flatten($parsedResponse);
 
         $values = array_filter($flattenedParsedResponse, function ($payload) use ($attributeCode) {
-            return $payload instanceof AttributeValue && $payload->getCode()->sameValueAs($attributeCode);
+            return $payload instanceof AttributeOption && $payload->getCode()->sameValueAs($attributeCode);
         });
 
         return array_values($values);
