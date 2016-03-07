@@ -25,7 +25,6 @@ class V2CustomerRepository implements CustomerRepository
         ];
         $parsedResponse = $xmlService->parse($rawResponse);
 
-        // Bypass all the schema definition junk
         return array_get($parsedResponse, '0.value.1.value');
     }
 
