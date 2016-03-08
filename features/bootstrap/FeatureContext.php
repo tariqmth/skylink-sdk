@@ -291,10 +291,12 @@ MESSAGE
     /**
      * @Then I should see that its sku is :arg1
      */
-    public function iShouldSeeThatItsSkuIs($sku)
+    public function iShouldSeeThatItsSkuIs($expectedSku)
     {
-        if ($this->product->getSku() !== $sku) {
-            throw new Exception("SKU \"{$this->product->getSku()}\" was found.");
+        $actualSku = $this->product->getSku();
+
+        if (!$actualSku->sameValueAs(new StringLiteral($expectedSku))) {
+            throw new Exception("SKU \"{$actualSku}\" was found.");
         }
     }
 }

@@ -23,7 +23,7 @@ class InventoryItem implements ValueObjectInterface
         $args = func_get_args();
 
         if (count($args) < 1) {
-            throw new BadMethodCallException('You must provide at least 1 arguments: 1) managed');
+            throw new BadMethodCallException('You must provide at least 1 argument: 1) managed');
         }
 
         return new self($args[0], new Integer($args[1]));

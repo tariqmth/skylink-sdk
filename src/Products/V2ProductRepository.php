@@ -31,7 +31,22 @@ class V2ProductRepository implements ProductRepository
             '{}Product' => V2ProductDeserializer::class,
         ];
         $parsedResponse = $xmlService->parse($rawResponse);
+        $flattenedParsedResponse = array_flatten($parsedResponse);
 
-        dd($parsedResponse);
+        $pendingProducts = array_filter($flattenedParsedResponse, function ($payload) {
+            return $payload instanceof PendingProduct;
+        });
+
+        $pendingProducts = array_values($pendingProducts);
+
+        return $this->getPendingProductConverter()->convert($pendingProducts);
+    }
+
+    /**
+     * @todo Dependency inject this!
+     */
+    private function getPendingProductConverter()
+    {
+        return new PendingProductConverter();
     }
 }

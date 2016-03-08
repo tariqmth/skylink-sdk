@@ -12,22 +12,21 @@ class V2ProductDeserializer implements XmlDeserializable
     {
         $payload = XmlDeserializer\keyValue($xmlReader, '');
 
-        $inventoryItem = InventoryItem::fromNative($payload['ManageStock'], $payload['StockOnHand']);
+        $pendingConfigurableProductState = 'none';
+        if (isset($payload['MatrixProduct'])) {
+            throw new \Exception("Find if MatrixProduct is a string or integer.");
+            $pendingConfigurableProductState = $payload['MatrixProduct'] === 1 ? 'parent' : 'child';
+        }
 
-        $product = Product::fromNative(
+        return PendingProduct::fromNative(
             $payload['ProductId'],
             $payload['SKU'],
             $payload['Description'],
+            $payload['DefaultPrice'],
+            $payload['DiscountedPrice'],
             $payload['ManageStock'],
-            $payload['StockAvailable']
+            $payload['StockAvailable'],
+            $pendingConfigurableProductState
         );
-
-        dd($payload, $product);
-
-        // Pass the payload to a function to determine the product type:
-        // 1. SimpleProduct
-        // 2. ConfigurableProduct
-        // 3. DownloadableProduct (need information from Retail Express)
-        // 4. VirtualProduct      ( ^ ditto )
     }
 }
