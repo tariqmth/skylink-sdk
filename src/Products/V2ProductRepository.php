@@ -39,6 +39,10 @@ class V2ProductRepository implements ProductRepository
 
         $pendingProducts = array_values($pendingProducts);
 
+        if (count($pendingProducts) === 0) {
+            return;
+        }
+
         return $this->getPendingProductConverter()->convert($pendingProducts);
     }
 

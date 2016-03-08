@@ -13,13 +13,14 @@ class PendingProductConverter
         // then is must not be part of a configurable product. Let's check that
         // out
         if (count($pendingProducts) === 1) {
-            $configurableState = $pendingProducts[0]->getPendingConfigurableProductState();
+            $pendingProduct = $pendingProducts[0];
+            $configurableState = $pendingProduct->getPendingConfigurableProductState();
 
             if (!$configurableState->sameValueAs(PendingConfigurableProductState::fromNative('none'))) {
-                throw new InvalidArgumentException("Only one product was returned from the API and was expected to be a single, simple product, however {$pendingProducts[0]->getSku()} did not conform to this rule.");
+                throw new InvalidArgumentException("Only one product was returned from the API and was expected to be a single, simple product, however {$pendingProduct->getSku()} did not conform to this rule.");
             }
 
-            return SimpleProduct::fromPendingProduct($pendingProducts[0]);
+            return SimpleProduct::fromPendingProduct($pendingProduct);
         }
 
         throw new BadMethodCallException('Finish implementing '.__METHOD__);

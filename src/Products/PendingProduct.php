@@ -18,6 +18,8 @@ class PendingProduct
 
     private $inventoryItem;
 
+    private $physicalPackage;
+
     private $pendingConfigurableProductState;
 
     /**
@@ -34,7 +36,8 @@ class PendingProduct
         $name = new StringLiteral($args[2]);
         $pricingStructure = PricingStructure::fromNative($args[3], $args[4]);
         $inventoryItem = InventoryItem::fromNative($args[5], $args[6]);
-        $pendingConfigurableProductState = PendingConfigurableProductState::fromNative($args[7]);
+        $physicalPackage = physicalPackage::fromNative($args[7], $args[8], $args[9], $args[10], $args[11]);
+        $pendingConfigurableProductState = PendingConfigurableProductState::fromNative($args[12]);
 
         return new self(
             $id,
@@ -42,6 +45,7 @@ class PendingProduct
             $name,
             $pricingStructure,
             $inventoryItem,
+            $physicalPackage,
             $pendingConfigurableProductState
         );
     }
@@ -52,6 +56,7 @@ class PendingProduct
         StringLiteral $name,
         PricingStructure $pricingStructure,
         InventoryItem $inventoryItem,
+        PhysicalPackage $physicalPackage,
         PendingConfigurableProductState $pendingConfigurableProductState
     ) {
         $this->id = $id;
@@ -59,6 +64,7 @@ class PendingProduct
         $this->name = $name;
         $this->pricingStructure = $pricingStructure;
         $this->inventoryItem = $inventoryItem;
+        $this->physicalPackage = $physicalPackage;
         $this->pendingConfigurableProductState = $pendingConfigurableProductState;
     }
 

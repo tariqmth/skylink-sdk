@@ -26,6 +26,11 @@ class V2ProductDeserializer implements XmlDeserializable
             $payload['DiscountedPrice'],
             $payload['ManageStock'],
             $payload['StockAvailable'],
+            array_get_notempty($payload, 'Weight', 0),
+            array_get_notempty($payload, 'Length', 0),
+            array_get_notempty($payload, 'Breadth', 0),
+            array_get_notempty($payload, 'Depth', 0),
+            array_get_notempty($payload, 'ShippingCubic'),
             $pendingConfigurableProductState
         );
     }

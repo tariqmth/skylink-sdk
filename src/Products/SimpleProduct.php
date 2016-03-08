@@ -21,6 +21,8 @@ class SimpleProduct
 
     private $inventoryItem;
 
+    private $physicalPackage;
+
     public static function fromPendingProduct(PendingProduct $pendingProduct)
     {
         return new self(
@@ -28,7 +30,8 @@ class SimpleProduct
             $pendingProduct->getSku(),
             $pendingProduct->getName(),
             $pendingProduct->getPricingStructure(),
-            $pendingProduct->getInventoryItem()
+            $pendingProduct->getInventoryItem(),
+            $pendingProduct->getPhysicalPackage()
         );
     }
 
@@ -37,12 +40,14 @@ class SimpleProduct
         StringLiteral $sku,
         StringLiteral $name,
         PricingStructure $pricingStructure,
-        InventoryItem $inventoryItem
+        InventoryItem $inventoryItem,
+        PhysicalPackage $physicalPackage
     ) {
         $this->id = $id;
         $this->sku = $sku;
         $this->name = $name;
         $this->pricingStructure = $pricingStructure;
         $this->inventoryItem = $inventoryItem;
+        $this->physicalPackage = $physicalPackage;
     }
 }

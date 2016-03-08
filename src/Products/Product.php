@@ -28,4 +28,9 @@ trait Product
     {
         return clone $this->inventoryItem;
     }
+
+    public function getPhysicalPackage()
+    {
+        return clone $this->physicalPackage;
+    }
 }
