@@ -23,7 +23,7 @@ class Outlet implements XmlDeserializable
     /**
      * Creats a new Outlet object from native PHP arguments.
      *
-     * @param int $id
+     * @param int    $id
      * @param string $name
      * @param string $addressLine1
      * @param string $addressLine2

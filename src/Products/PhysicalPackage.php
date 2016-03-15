@@ -67,7 +67,8 @@ class PhysicalPackage
      * supported by the majority of couriers known to me).
      *
      * @link http://auspost.com.au/media/documents/APO0208_How_to_Cube_Guide_A4_V10.pdf
-     * @return Real
+     *
+     * @return float
      */
     public function getCubicWeight()
     {
