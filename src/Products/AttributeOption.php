@@ -27,15 +27,15 @@ class AttributeOption implements ValueObjectInterface, XmlDeserializable
     {
         $args = func_get_args();
 
-        if (count($args) < 3) {
-            throw new BadMethodCallException('You must provide at least 3 arguments: 1) attribute code, 2) attribute option id, 3) label');
+        if (count($args) < 2) {
+            throw new BadMethodCallException('You must provide at least 3 arguments: 1) attribute code, 2) label');
         }
 
         $attribute = new Attribute(AttributeCode::fromNative($args[0]));
         $label = new StringLiteral($args[1]);
         $id = new StringLiteral(array_get($args, 2, $args[1]));
 
-        return new self($code, $label, $id);
+        return new self($attribute, $label, $id);
     }
 
     public function __construct(Attribute $attribute, StringLiteral $label, StringLiteral $id)
@@ -79,7 +79,7 @@ class AttributeOption implements ValueObjectInterface, XmlDeserializable
     }
 
     /**
-     * Returns a string representation of the object
+     * Returns a string representation of the object.
      *
      * @return string
      */

@@ -12,7 +12,18 @@ trait V2AttributeOptionDeserializer
     {
         $payload = XmlDeserializer\keyValue($xmlReader, '');
 
-        $attributeCodes = AttributeCode::getConstants();
+        if (!array_key_exists('ProductId', $payload)) {
+            return self::decodePredefinedAttribute($payload);
+        }
+
+        return self::decodeProductAttribute($payload);
+    }
+
+    private static function decodePredefinedAttribute(array $payload)
+    {
+        $attributeCodes = array_filter(AttributeCode::getConstants(), function ($value) {
+            return !str_is('custom_*', $value);
+        });
 
         foreach ($attributeCodes as $attributeCode) {
             $studlyAttributeCode = studly_case($attributeCode);
@@ -35,5 +46,26 @@ trait V2AttributeOptionDeserializer
             'Found attribute in payload that did not match available defined attributes: %s.',
             implode(', ', $attributeCodes)
         ));
+    }
+
+    private static function decodeProductAttribute(array $payload)
+    {
+        $attributeCodes = array_filter(AttributeCode::getConstants(), function ($value) {
+            return str_is('custom_*', $value);
+        });
+
+        $options = [];
+
+        foreach ($attributeCodes as $attributeCode) {
+            $studlyAttributeCode = studly_case($attributeCode);
+
+            if (!array_key_exists($studlyAttributeCode, $payload)) {
+                continue;
+            }
+
+            $options[] = self::fromNative($attributeCode, $payload[$studlyAttributeCode]);
+        }
+
+        return $options;
     }
 }

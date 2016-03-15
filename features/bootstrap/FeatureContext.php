@@ -258,7 +258,7 @@ MESSAGE
     {
         $attributeCode = AttributeCode::fromNative('brand');
 
-        $this->brands = $this->attributeRepository->allValuesByCode($attributeCode, $this->salesChannelId);
+        $this->brands = $this->attributeRepository->get($attributeCode, $this->salesChannelId);
     }
 
     /**

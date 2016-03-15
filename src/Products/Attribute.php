@@ -20,6 +20,7 @@ class Attribute
      *
      * @param string $code
      * @param array  $options
+     *
      * @return Attribute
      */
     public static function fromNative()
@@ -71,5 +72,15 @@ class Attribute
         $new->options = [];
 
         return $new;
+    }
+
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    public function getOptions()
+    {
+        return clone $this->options;
     }
 }

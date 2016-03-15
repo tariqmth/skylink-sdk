@@ -17,11 +17,11 @@ class V2AttributeRepository implements AttributeRepository
         $this->api = $api;
     }
 
-    public function allValuesByCode(AttributeCode $attributeCode, SalesChannelId $salesChannelId)
+    public function get(AttributeCode $attributeCode, SalesChannelId $salesChannelId)
     {
         $rawResponse = $this->api->call('ProductsGetBulkDetailsByChannel', [
             'ChannelId' => $salesChannelId->toNative(),
-            'LastUpdated' => date('Y-m-d\TH:i:s.000\Z')
+            'LastUpdated' => '2000-01-01T00:00:00.000',
         ]);
 
         $xmlService = $this->api->getXmlService();
@@ -31,13 +31,28 @@ class V2AttributeRepository implements AttributeRepository
             '{}Season' => AttributeOption::class,
             '{}Size' => AttributeOption::class,
             '{}ProductType' => AttributeOption::class,
+            '{}Product' => AttributeOption::class,
         ];
         $parsedResponse = $xmlService->parse($rawResponse);
 
         $flattenedParsedResponse = array_flatten($parsedResponse);
 
-        $values = array_filter($flattenedParsedResponse, function ($payload) use ($attributeCode) {
-            return $payload instanceof AttributeOption && $payload->getCode()->sameValueAs($attributeCode);
+        $uniqueValues = [];
+        $values = array_filter($flattenedParsedResponse, function ($payload) use ($attributeCode, &$uniqueValues) {
+
+            // Check the attribute option is applicable
+            if (!$payload instanceof AttributeOption || !$payload->getAttribute()->getCode()->sameValueAs($attributeCode)) {
+                return false;
+            }
+
+            // Check we haven't already added the attribute (in the case of custom product atttributes)
+            if (in_array((string) $payload->getId(), $uniqueValues)) {
+                return false;
+            }
+
+            $uniqueValues[] = (string) $payload->getId();
+
+            return true;
         });
 
         return array_values($values);
