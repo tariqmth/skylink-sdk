@@ -12,11 +12,11 @@ class AttributeOption implements ValueObjectInterface, XmlDeserializable
 {
     use V2AttributeOptionDeserializer;
 
-    private $code;
-
-    private $optionId;
+    private $attribute;
 
     private $label;
+
+    private $id;
 
     /**
      * Returns an Attribute Option object taking PHP native options as arguments.
@@ -31,33 +31,33 @@ class AttributeOption implements ValueObjectInterface, XmlDeserializable
             throw new BadMethodCallException('You must provide at least 3 arguments: 1) attribute code, 2) attribute option id, 3) label');
         }
 
-        $code = AttributeCode::fromNative($args[0]);
-        $optionId = new AttributeOptionId($args[1]);
-        $label = new StringLiteral($args[2]);
+        $attribute = new Attribute(AttributeCode::fromNative($args[0]));
+        $label = new StringLiteral($args[1]);
+        $id = new StringLiteral(array_get($args, 2, $args[1]));
 
-        return new self($code, $optionId, $label);
+        return new self($code, $label, $id);
     }
 
-    public function __construct(AttributeCode $code, AttributeOptionId $optionId, StringLiteral $label)
+    public function __construct(Attribute $attribute, StringLiteral $label, StringLiteral $id)
     {
-        $this->code = $code;
-        $this->optionId = $optionId;
+        $this->attribute = $attribute;
         $this->label = $label;
+        $this->id = $id;
     }
 
-    public function getCode()
+    public function getAttribute()
     {
-        return $this->code;
-    }
-
-    public function getOptionId()
-    {
-        return clone $this->optionId;
+        return $this->attribute;
     }
 
     public function getLabel()
     {
         return clone $this->label;
+    }
+
+    public function getId()
+    {
+        return clone $this->id;
     }
 
     /**
@@ -73,9 +73,9 @@ class AttributeOption implements ValueObjectInterface, XmlDeserializable
             return false;
         }
 
-        return $this->getCode()->sameOptionAs($attributeOption->getCode()) &&
-            $this->getOptionId()->sameOptionAs($attributeOption->getOptionId()) &&
-            $this->getLabel()->sameOptionAs($attributeOption->getLabel());
+        return $this->getAttribute()->sameOptionAs($attributeOption->getAttribute()) &&
+            $this->getLabel()->sameOptionAs($attributeOption->getLabel()) &&
+            $this->getId()->sameOptionAs($attributeOption->getId());
     }
 
     /**
