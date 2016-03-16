@@ -64,7 +64,7 @@ class V2
         // Open a new unzipped file handle based on the zipped file we just wrote
         $unzippedFile = gzopen($zippedFilename, 'r');
 
-        while(!gzeof($unzippedFile)) {
+        while (!gzeof($unzippedFile)) {
             $response .= gzgetc($unzippedFile);
         }
 
@@ -85,6 +85,7 @@ class V2
      * that wraps them.
      *
      * @param string|stdClass $response
+     *
      * @return string
      *
      * @throws V2ApiException

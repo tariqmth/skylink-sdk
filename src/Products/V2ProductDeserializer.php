@@ -14,7 +14,7 @@ class V2ProductDeserializer implements XmlDeserializable
 
         $pendingConfigurableProductState = 'none';
         if (isset($payload['MatrixProduct'])) {
-            throw new \Exception("Find if MatrixProduct is a string or integer.");
+            throw new \Exception('Find if MatrixProduct is a string or integer.');
             $pendingConfigurableProductState = $payload['MatrixProduct'] === 1 ? 'parent' : 'child';
         }
 
