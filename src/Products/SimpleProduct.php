@@ -4,13 +4,8 @@ namespace RetailExpress\SkyLink\Products;
 
 use ValueObjects\StringLiteral\StringLiteral;
 
-/**
- * @todo Create interface for converting from pending product.
- */
-class SimpleProduct
+class Product
 {
-    use Product;
-
     private $id;
 
     private $sku;
@@ -49,5 +44,35 @@ class SimpleProduct
         $this->pricingStructure = $pricingStructure;
         $this->inventoryItem = $inventoryItem;
         $this->physicalPackage = $physicalPackage;
+    }
+
+    public function getId()
+    {
+        return clone $this->id;
+    }
+
+    public function getSku()
+    {
+        return clone $this->sku;
+    }
+
+    public function getName()
+    {
+        return clone $this->name;
+    }
+
+    public function getPricingStructure()
+    {
+        return clone $this->pricingStructure;
+    }
+
+    public function getInventoryItem()
+    {
+        return clone $this->inventoryItem;
+    }
+
+    public function getPhysicalPackage()
+    {
+        return clone $this->physicalPackage;
     }
 }

@@ -29,6 +29,10 @@ class Attribute
 
         $attribute = new self(AttributeCode::fromNative($args[0]));
 
+        if (!isset($args[1]) || !is_array($args[1])) {
+            return $attribute;
+        }
+
         foreach ($args[1] as $option) {
             if (is_array($option)) {
                 $label = (string) current(array_keys($option));
