@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\Products;
+namespace RetailExpress\SkyLink\Catalogue\Attributes;
 
 use RetailExpress\SkyLink\Apis\V2 as V2Api;
 use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
@@ -19,20 +19,24 @@ class V2AttributeRepository implements AttributeRepository
 
     public function get(AttributeCode $attributeCode, SalesChannelId $salesChannelId)
     {
+        // We do not require all products if the attribute code is predefined
+        $LastUpdated = $attributeCode->isPredefined() ? date('Y-m-d\TH:i:s.000') : '2000-01-01T00:00:00.000';
+
         $rawResponse = $this->api->call('ProductsGetBulkDetailsByChannel', [
             'ChannelId' => $salesChannelId->toNative(),
-            'LastUpdated' => '2000-01-01T00:00:00.000',
+            'LastUpdated' => $LastUpdated,
         ]);
 
         $xmlService = $this->api->getXmlService();
         $xmlService->elementMap = [
-            '{}Brand' => AttributeOption::class,
-            '{}Colour' => AttributeOption::class,
-            '{}Season' => AttributeOption::class,
-            '{}Size' => AttributeOption::class,
-            '{}ProductType' => AttributeOption::class,
-            '{}Product' => AttributeOption::class,
+            '{}Brand' => V2PredefinedAttributeOptionDeserializer::class,
+            '{}Colour' => V2PredefinedAttributeOptionDeserializer::class,
+            '{}Season' => V2PredefinedAttributeOptionDeserializer::class,
+            '{}Size' => V2PredefinedAttributeOptionDeserializer::class,
+            '{}ProductType' => V2PredefinedAttributeOptionDeserializer::class,
+            '{}Product' => V2AdhocAttributeOptionDeserializer::class,
         ];
+
         $parsedResponse = $xmlService->parse($rawResponse);
 
         $flattenedParsedResponse = array_flatten($parsedResponse);

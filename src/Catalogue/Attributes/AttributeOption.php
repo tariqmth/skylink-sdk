@@ -1,25 +1,22 @@
 <?php
 
-namespace RetailExpress\SkyLink\Products;
+namespace RetailExpress\SkyLink\Catalogue\Attributes;
 
 use BadMethodCallException;
-use Sabre\Xml\XmlDeserializable;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Util\Util;
 use ValueObjects\ValueObjectInterface;
 
-class AttributeOption implements ValueObjectInterface, XmlDeserializable
+class AttributeOption implements ValueObjectInterface
 {
-    use V2AttributeOptionDeserializer;
-
     private $attribute;
-
-    private $label;
 
     private $id;
 
+    private $label;
+
     /**
-     * Returns an Attribute Option object taking PHP native options as arguments.
+     * Returns an Attribute Value object taking PHP native values as arguments.
      *
      * @return AttributeOption
      */
@@ -32,17 +29,17 @@ class AttributeOption implements ValueObjectInterface, XmlDeserializable
         }
 
         $attribute = new Attribute(AttributeCode::fromNative($args[0]));
-        $label = new StringLiteral($args[1]);
-        $id = new StringLiteral(array_get($args, 2, $args[1]));
+        $id = new StringLiteral($args[1]);
+        $label = new StringLiteral($args[2]);
 
-        return new self($attribute, $label, $id);
+        return new self($attribute, $id, $label);
     }
 
-    public function __construct(Attribute $attribute, StringLiteral $label, StringLiteral $id)
+    public function __construct(Attribute $attribute, StringLiteral $id, StringLiteral $label)
     {
         $this->attribute = $attribute;
-        $this->label = $label;
         $this->id = $id;
+        $this->label = $label;
     }
 
     public function getAttribute()
@@ -63,7 +60,7 @@ class AttributeOption implements ValueObjectInterface, XmlDeserializable
     /**
      * Tells whether two Attribute Option instances are equal.
      *
-     * @param ValueObjectInterface $object
+     * @param ValueObjectInterface $attributeOption
      *
      * @return bool
      */
@@ -73,9 +70,9 @@ class AttributeOption implements ValueObjectInterface, XmlDeserializable
             return false;
         }
 
-        return $this->getAttribute()->sameOptionAs($attributeOption->getAttribute()) &&
-            $this->getLabel()->sameOptionAs($attributeOption->getLabel()) &&
-            $this->getId()->sameOptionAs($attributeOption->getId());
+        return $this->getAttribute()->sameValueAs($attributeOption->getAttribute()) &&
+            $this->getLabel()->sameValueAs($attributeOption->getLabel()) &&
+            $this->getId()->sameValueAs($attributeOption->getId());
     }
 
     /**

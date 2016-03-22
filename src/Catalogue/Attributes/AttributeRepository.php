@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\Products;
+namespace RetailExpress\SkyLink\Catalogue\Attributes;
 
 use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
 
