@@ -11,7 +11,7 @@ class V2ProductRepository implements ProductRepository
 
     private $api;
 
-    public function __construct(matrixPolicyMapper $matrixPolicyMapper, V2Api $api)
+    public function __construct(MatrixPolicyMapper $matrixPolicyMapper, V2Api $api)
     {
         $this->matrixPolicyMapper = $matrixPolicyMapper;
         $this->api = $api;
@@ -39,23 +39,20 @@ class V2ProductRepository implements ProductRepository
             return $payload instanceof Product;
         });
 
-        if (count($products) === 0) {
-            return;
-        }
-
         // If there is more than one product, we're dealing with a product matrix
         if (count($products) > 1) {
-            dd($products);
+            return $this->buildProductMatrix($products);
         } elseif (count($products) === 1) {
             return current($products);
         }
     }
 
-    /**
-     * @todo Dependency inject this!
-     */
-    private function getPendingProductConverter()
+    private function buildProductMatrix(array $products)
     {
-        return new PendingProductConverter();
+        $firstProduct = current($products);
+
+        $matrixPolicy = $this->matrixPolicyMapper->getPolicyForProductTYpe($firstProduct->getProductType());
+
+        return new Matrix($matrixPolicy, $products);
     }
 }

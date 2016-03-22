@@ -2,7 +2,8 @@
 
 namespace RetailExpress\SkyLink\Catalogue\Products;
 
-use RetailExpress\SkyLink\Catalogue\AttributeOption;
+use RetailExpress\SkyLink\Catalogue\Attributes\AttributeCode;
+use RetailExpress\SkyLink\Catalogue\Attributes\AttributeOption;
 use Sabre\Xml\XmlDeserializable;
 use ValueObjects\StringLiteral\StringLiteral;
 
@@ -23,33 +24,6 @@ class Product implements XmlDeserializable
     private $physicalPackage;
 
     private $attributeOptions = [];
-
-    /**
-     * Returns an Product taking PHP native values as arguments.
-     *
-     * @return ValueObjectInterface
-     */
-    public static function fromNative()
-    {
-        $args = func_get_args();
-
-        $id = new ProductId($args[0]);
-        $sku = new StringLiteral($args[1]);
-        $name = new StringLiteral($args[2]);
-        $pricingStructure = PricingStructure::fromNative($args[3], $args[4]);
-        $inventoryItem = InventoryItem::fromNative($args[5], $args[6]);
-        $physicalPackage = physicalPackage::fromNative($args[7], $args[8], $args[9], $args[10], $args[11]);
-
-        return new self(
-            $id,
-            $sku,
-            $name,
-            $pricingStructure,
-            $inventoryItem,
-            $physicalPackage,
-            []
-        );
-    }
 
     public function __construct(
         ProductId $id,
@@ -107,5 +81,19 @@ class Product implements XmlDeserializable
         return array_map(function (AttributeOption $attributeOption) {
             return clone $attributeOption;
         }, $this->attributeOptions);
+    }
+
+    public function getAttributeOption(AttributeCode $attributeCode)
+    {
+        foreach ($this->getAttributeOptions() as $attributeOption) {
+            if ($attributeOption->getAttribute()->getCode()->sameValueAs($attributeCode)) {
+                return $attributeOption;
+            }
+        }
+    }
+
+    public function getProductType()
+    {
+        return $this->getAttributeOption(AttributeCode::fromNative('product_type'));
     }
 }

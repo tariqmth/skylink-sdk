@@ -3,6 +3,8 @@
 namespace RetailExpress\SkyLink\Catalogue\Products;
 
 use InvalidArgumentException;
+use RetailExpress\SkyLink\Catalogue\Attributes\AttributeCode;
+use RetailExpress\SkyLink\Catalogue\Attributes\AttributeOption;
 
 class MatrixPolicyMapper
 {

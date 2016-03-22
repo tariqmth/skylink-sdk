@@ -25,17 +25,17 @@ class AttributeOption implements ValueObjectInterface
         $args = func_get_args();
 
         if (count($args) < 2) {
-            throw new BadMethodCallException('You must provide at least 3 arguments: 1) attribute code, 2) label');
+            throw new BadMethodCallException('You must provide at least 2 arguments: 1) attribute code, 2) id');
         }
 
         $attribute = new Attribute(AttributeCode::fromNative($args[0]));
         $id = new StringLiteral($args[1]);
-        $label = new StringLiteral($args[2]);
+        $label = isset($args[2]) ? new StringLiteral($args[2]) : null;
 
         return new self($attribute, $id, $label);
     }
 
-    public function __construct(Attribute $attribute, StringLiteral $id, StringLiteral $label)
+    public function __construct(Attribute $attribute, StringLiteral $id, StringLiteral $label = null)
     {
         $this->attribute = $attribute;
         $this->id = $id;

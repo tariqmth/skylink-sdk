@@ -4,13 +4,13 @@ namespace RetailExpress\SkyLink\Catalogue\Products;
 
 use ValueObjects\ValueObjectInterface;
 
-class Matrix implements ValueObjectInterface
+class Matrix
 {
     private $policy;
 
     private $products = [];
 
-    public static function __construct(MatrixPolicy $policy, array $products)
+    public function __construct(MatrixPolicy $policy, array $products)
     {
         $this->policy = $policy;
 
