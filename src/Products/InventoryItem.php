@@ -49,7 +49,7 @@ class InventoryItem implements ValueObjectInterface
     /**
      * Compare two Inventory Item instances and tells whether they can be considered equal.
      *
-     * @param ValueObjectInterface $object
+     * @param ValueObjectInterface $inventoryItem
      *
      * @return bool
      */
