@@ -106,7 +106,7 @@ class BillingContact implements ValueObjectInterface
     /**
      * Tells whether two Billing Contact instances are equal.
      *
-     * @param ValueObjectInterface $object
+     * @param ValueObjectInterface $billingContact
      *
      * @return bool
      */

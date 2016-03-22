@@ -47,7 +47,7 @@ class PricingStructure implements ValueObjectInterface
     /**
      * Compare two Pricing Structure instances and tells whether they can be considered equal.
      *
-     * @param ValueObjectInterface $object
+     * @param ValueObjectInterface $pricingStructure
      *
      * @return bool
      */

@@ -119,7 +119,7 @@ class Address implements ValueObjectInterface
     /**
      * Tells whether two Address instances are equal.
      *
-     * @param ValueObjectInterface $object
+     * @param ValueObjectInterface $address
      *
      * @return bool
      */

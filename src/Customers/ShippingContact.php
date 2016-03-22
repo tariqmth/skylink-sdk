@@ -19,7 +19,7 @@ class ShippingContact implements ValueObjectInterface
     private $phoneNumber;
 
     /**
-     * Returns a new Billing Contact object from native PHP arguments.
+     * Returns a new Shipping Contact object from native PHP arguments.
      *
      * @param string $firstName
      * @param string $lastName
@@ -66,21 +66,21 @@ class ShippingContact implements ValueObjectInterface
     }
 
     /**
-     * Tells whether two Billing Contact instances are equal.
+     * Tells whether two Shipping Contact instances are equal.
      *
-     * @param ValueObjectInterface $object
+     * @param ValueObjectInterface $shippingContact
      *
      * @return bool
      */
-    public function sameValueAs(ValueObjectInterface $billingContact)
+    public function sameValueAs(ValueObjectInterface $shippingContact)
     {
-        if (false === Util::classEquals($this, $billingContact)) {
+        if (false === Util::classEquals($this, $shippingContact)) {
             return false;
         }
 
-        return $this->getName()->sameValueAs($billingContact->getName()) &&
-            $this->getCompanyName()->sameValueAs($billingContact->getCompanyName()) &&
-            $this->getAddress()->sameValueAs($billingContact->getAddress()) &&
-            $this->getPhoneNumber()->sameValueAs($billingContact->getPhoneNumber());
+        return $this->getName()->sameValueAs($shippingContact->getName()) &&
+            $this->getCompanyName()->sameValueAs($shippingContact->getCompanyName()) &&
+            $this->getAddress()->sameValueAs($shippingContact->getAddress()) &&
+            $this->getPhoneNumber()->sameValueAs($shippingContact->getPhoneNumber());
     }
 }
