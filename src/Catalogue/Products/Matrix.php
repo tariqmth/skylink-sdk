@@ -2,8 +2,6 @@
 
 namespace RetailExpress\SkyLink\Catalogue\Products;
 
-use ValueObjects\ValueObjectInterface;
-
 class Matrix
 {
     private $policy;

@@ -3,7 +3,6 @@
 namespace RetailExpress\SkyLink\Catalogue\Attributes;
 
 use BadMethodCallException;
-use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Util\Util;
 use ValueObjects\ValueObjectInterface;
 
@@ -45,9 +44,10 @@ class Attribute implements ValueObjectInterface
     }
 
     /**
-     * Compare two ValueObjectInterface and tells whether they can be considered equal
+     * Compare two ValueObjectInterface and tells whether they can be considered equal.
      *
-     * @param  ValueObjectInterface $otherAttribute
+     * @param ValueObjectInterface $otherAttribute
+     *
      * @return bool
      */
     public function sameValueAs(ValueObjectInterface $otherAttribute)
