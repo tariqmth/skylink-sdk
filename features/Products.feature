@@ -9,12 +9,10 @@ Feature: Products
   @completed
   Scenario: Retrieving a simple product with minimal information
     Given I am connected to sales channel "1"
-     When I find the product with id "124001"
-     Then I should see that its sku is "01761C684"
+     When I find the product with id "124005"
+     Then I should see that its sku is "HB0011OSFA"
 
   @wip
-  Scenario: Retrieving a simple product with lots of information
+  Scenario: Retrieving a configurable product
     Given I am connected to sales channel "1"
-     When I find the product with id "124002"
-     Then I should see that its sku is "01901D039"
-     # @todo many, many more assertions here!
+     When I find the product with id "124007"

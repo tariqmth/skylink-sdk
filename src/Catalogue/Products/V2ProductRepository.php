@@ -1,16 +1,19 @@
 <?php
 
-namespace RetailExpress\SkyLink\Products;
+namespace RetailExpress\SkyLink\Catalogue\Products;
 
 use RetailExpress\SkyLink\Apis\V2 as V2Api;
 use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
 
 class V2ProductRepository implements ProductRepository
 {
+    private $matrixPolicyMapper;
+
     private $api;
 
-    public function __construct(V2Api $api)
+    public function __construct(matrixPolicyMapper $matrixPolicyMapper, V2Api $api)
     {
+        $this->matrixPolicyMapper = $matrixPolicyMapper;
         $this->api = $api;
     }
 
@@ -27,22 +30,25 @@ class V2ProductRepository implements ProductRepository
 
         $xmlService = $this->api->getXmlService();
         $xmlService->elementMap = [
-            '{}Product' => V2ProductDeserializer::class,
+            '{}Product' => Product::class,
         ];
         $parsedResponse = $xmlService->parse($rawResponse);
         $flattenedParsedResponse = array_flatten($parsedResponse);
 
-        $pendingProducts = array_filter($flattenedParsedResponse, function ($payload) {
-            return $payload instanceof PendingProduct;
+        $products = array_filter($flattenedParsedResponse, function ($payload) {
+            return $payload instanceof Product;
         });
 
-        $pendingProducts = array_values($pendingProducts);
-
-        if (count($pendingProducts) === 0) {
+        if (count($products) === 0) {
             return;
         }
 
-        return $this->getPendingProductConverter()->convert($pendingProducts);
+        // If there is more than one product, we're dealing with a product matrix
+        if (count($products) > 1) {
+            dd($products);
+        } elseif (count($products) === 1) {
+            return current($products);
+        }
     }
 
     /**

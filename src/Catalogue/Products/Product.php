@@ -1,12 +1,14 @@
 <?php
 
-namespace RetailExpress\SkyLink\Products;
+namespace RetailExpress\SkyLink\Catalogue\Products;
 
+use RetailExpress\SkyLink\Catalogue\AttributeOption;
+use Sabre\Xml\XmlDeserializable;
 use ValueObjects\StringLiteral\StringLiteral;
 
-class PendingProduct
+class Product implements XmlDeserializable
 {
-    use Product;
+    use V2ProductDeserializer;
 
     private $id;
 
@@ -20,10 +22,10 @@ class PendingProduct
 
     private $physicalPackage;
 
-    private $pendingConfigurableProductState;
+    private $attributeOptions = [];
 
     /**
-     * Returns an Inventory Item taking PHP native values as arguments.
+     * Returns an Product taking PHP native values as arguments.
      *
      * @return ValueObjectInterface
      */
@@ -37,7 +39,6 @@ class PendingProduct
         $pricingStructure = PricingStructure::fromNative($args[3], $args[4]);
         $inventoryItem = InventoryItem::fromNative($args[5], $args[6]);
         $physicalPackage = physicalPackage::fromNative($args[7], $args[8], $args[9], $args[10], $args[11]);
-        $pendingConfigurableProductState = PendingConfigurableProductState::fromNative($args[12]);
 
         return new self(
             $id,
@@ -46,7 +47,7 @@ class PendingProduct
             $pricingStructure,
             $inventoryItem,
             $physicalPackage,
-            $pendingConfigurableProductState
+            []
         );
     }
 
@@ -57,7 +58,7 @@ class PendingProduct
         PricingStructure $pricingStructure,
         InventoryItem $inventoryItem,
         PhysicalPackage $physicalPackage,
-        PendingConfigurableProductState $pendingConfigurableProductState
+        array $attributeOptions
     ) {
         $this->id = $id;
         $this->sku = $sku;
@@ -65,11 +66,46 @@ class PendingProduct
         $this->pricingStructure = $pricingStructure;
         $this->inventoryItem = $inventoryItem;
         $this->physicalPackage = $physicalPackage;
-        $this->pendingConfigurableProductState = $pendingConfigurableProductState;
+
+        $this->attributeOptions = array_map(function (AttributeOption $attributeOption) {
+            return $attributeOption;
+        }, $attributeOptions);
     }
 
-    public function getPendingConfigurableProductState()
+    public function getId()
     {
-        return $this->pendingConfigurableProductState;
+        return clone $this->id;
+    }
+
+    public function getSku()
+    {
+        return clone $this->sku;
+    }
+
+    public function getName()
+    {
+        return clone $this->name;
+    }
+
+    public function getPricingStructure()
+    {
+        return clone $this->pricingStructure;
+    }
+
+    public function getInventoryItem()
+    {
+        return clone $this->inventoryItem;
+    }
+
+    public function getPhysicalPackage()
+    {
+        return clone $this->physicalPackage;
+    }
+
+    public function getAttributeOptions()
+    {
+        return array_map(function (AttributeOption $attributeOption) {
+            return clone $attributeOption;
+        }, $this->attributeOptions);
     }
 }

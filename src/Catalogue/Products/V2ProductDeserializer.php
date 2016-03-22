@@ -1,24 +1,17 @@
 <?php
 
-namespace RetailExpress\SkyLink\Products;
+namespace RetailExpress\SkyLink\Catalogue\Products;
 
 use Sabre\Xml\Deserializer as XmlDeserializer;
 use Sabre\Xml\Reader as XmlReader;
-use Sabre\Xml\XmlDeserializable;
 
-class V2ProductDeserializer implements XmlDeserializable
+trait V2ProductDeserializer
 {
     public static function xmlDeserialize(XmlReader $xmlReader)
     {
         $payload = XmlDeserializer\keyValue($xmlReader, '');
 
-        $pendingConfigurableProductState = 'none';
-        if (isset($payload['MatrixProduct'])) {
-            throw new \Exception('Find if MatrixProduct is a string or integer.');
-            $pendingConfigurableProductState = $payload['MatrixProduct'] === 1 ? 'parent' : 'child';
-        }
-
-        return PendingProduct::fromNative(
+        return self::fromNative(
             $payload['ProductId'],
             $payload['SKU'],
             $payload['Description'],
@@ -30,8 +23,7 @@ class V2ProductDeserializer implements XmlDeserializable
             array_get_notempty($payload, 'Length', 0),
             array_get_notempty($payload, 'Breadth', 0),
             array_get_notempty($payload, 'Depth', 0),
-            array_get_notempty($payload, 'ShippingCubic'),
-            $pendingConfigurableProductState
+            array_get_notempty($payload, 'ShippingCubic')
         );
     }
 }

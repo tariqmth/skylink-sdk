@@ -23,7 +23,7 @@ class Attribute implements ValueObjectInterface
         $args = func_get_args();
 
         if (count($args) < 1) {
-            throw new BadMethodCallException('You must provide at least an attribute code to initiate an attribute.');
+            throw new BadMethodCallException('You must provide at least 1 argument: 1) attribute code');
         }
 
         $attributeCode = AttributeCode::fromNative($args[0]);

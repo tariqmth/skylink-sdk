@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\Products;
+namespace RetailExpress\SkyLink\Catalogue\Products;
 
 use ValueObjects\Number\Real;
 

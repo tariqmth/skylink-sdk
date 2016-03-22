@@ -16,10 +16,11 @@ use RetailExpress\SkyLink\Customers\ShippingContact;
 use RetailExpress\SkyLink\Customers\V2CustomerRepository;
 use RetailExpress\SkyLink\Outlets\OutletId;
 use RetailExpress\SkyLink\Outlets\V2OutletRepository;
-use RetailExpress\SkyLink\Products\ProductId;
-use RetailExpress\SkyLink\Products\V2ProductRepository;
 use RetailExpress\SkyLink\Catalogue\Attributes\AttributeCode;
 use RetailExpress\SkyLink\Catalogue\Attributes\V2AttributeRepository;
+use RetailExpress\SkyLink\Catalogue\Products\MatrixPolicyMapper;
+use RetailExpress\SkyLink\Catalogue\Products\ProductId;
+use RetailExpress\SkyLink\Catalogue\Products\V2ProductRepository;
 use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\EmailAddress;
@@ -72,7 +73,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
         $this->customerRepository = new V2CustomerRepository($api);
         $this->outletRepository = new V2OutletRepository($api);
         $this->attributeRepository = new V2AttributeRepository($api);
-        $this->productRepository = new V2ProductRepository($api);
+        $this->productRepository = new V2ProductRepository(new MatrixPolicyMapper(), $api);
     }
 
     /**
