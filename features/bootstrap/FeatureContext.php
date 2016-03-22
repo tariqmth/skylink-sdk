@@ -43,7 +43,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
 
     private $attributeRepository;
 
-    private $brands = [];
+    private $brandAttribute;
 
     private $productRepository;
 
@@ -258,7 +258,7 @@ MESSAGE
     {
         $attributeCode = AttributeCode::fromNative('brand');
 
-        $this->brands = $this->attributeRepository->get($attributeCode, $this->salesChannelId);
+        $this->brandAttribute = $this->attributeRepository->find($attributeCode, $this->salesChannelId);
     }
 
     /**
@@ -266,7 +266,7 @@ MESSAGE
      */
     public function iShouldSeeThereAreBrands($count)
     {
-        $brandsCount = count($this->brands);
+        $brandsCount = count($this->brandAttribute->getOptions());
 
         if ((int) $count !== $brandsCount) {
             throw new Exception("There were {$brandsCount} brands.");

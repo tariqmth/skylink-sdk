@@ -78,7 +78,9 @@ class Attribute implements ValueObjectInterface
 
     public function getOptions()
     {
-        return clone $this->options;
+        return array_map(function (AttributeOption $option) {
+            return clone $option;
+        }, $this->options);
     }
 
     /**

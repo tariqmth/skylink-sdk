@@ -17,7 +17,7 @@ class V2AttributeRepository implements AttributeRepository
         $this->api = $api;
     }
 
-    public function get(AttributeCode $attributeCode, SalesChannelId $salesChannelId)
+    public function find(AttributeCode $attributeCode, SalesChannelId $salesChannelId)
     {
         // We do not require all products if the attribute code is predefined
         $LastUpdated = $attributeCode->isPredefined() ? date('Y-m-d\TH:i:s.000') : '2000-01-01T00:00:00.000';
@@ -41,8 +41,8 @@ class V2AttributeRepository implements AttributeRepository
 
         $flattenedParsedResponse = array_flatten($parsedResponse);
 
-        $uniqueValues = [];
-        $values = array_filter($flattenedParsedResponse, function ($payload) use ($attributeCode, &$uniqueValues) {
+        $uniqueOptions = [];
+        $options = array_filter($flattenedParsedResponse, function ($payload) use ($attributeCode, &$uniqueOptions) {
 
             // Check the attribute option is applicable
             if (!$payload instanceof AttributeOption || !$payload->getAttribute()->getCode()->sameValueAs($attributeCode)) {
@@ -50,15 +50,21 @@ class V2AttributeRepository implements AttributeRepository
             }
 
             // Check we haven't already added the attribute (in the case of custom product atttributes)
-            if (in_array((string) $payload->getId(), $uniqueValues)) {
+            if (in_array((string) $payload->getId(), $uniqueOptions)) {
                 return false;
             }
 
-            $uniqueValues[] = (string) $payload->getId();
+            $uniqueOptions[] = (string) $payload->getId();
 
             return true;
         });
 
-        return array_values($values);
+        $attribute = new Attribute($attributeCode);
+
+        foreach ($options as $option) {
+            $attribute = $attribute->withOption($option);
+        }
+
+        return $attribute;
     }
 }
