@@ -21,6 +21,8 @@ use RetailExpress\SkyLink\Customers\ShippingContact;
 use RetailExpress\SkyLink\Customers\V2CustomerRepository;
 use RetailExpress\SkyLink\Outlets\OutletId;
 use RetailExpress\SkyLink\Outlets\V2OutletRepository;
+use RetailExpress\SkyLink\Sales\Payments\PaymentMethodId;
+use RetailExpress\SkyLink\Sales\Payments\V2PaymentMethodRepository;
 use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\EmailAddress;
@@ -50,6 +52,10 @@ class FeatureContext implements Context, SnippetAcceptingContext
 
     private $outlets = [];
 
+    private $paymentMethodRepository;
+
+    private $paymentMethods = [];
+
     /**
      * Initializes context.
      *
@@ -74,6 +80,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
         $this->productRepository = new V2ProductRepository(new MatrixPolicyMapper(), $api);
         $this->customerRepository = new V2CustomerRepository($api);
         $this->outletRepository = new V2OutletRepository($api);
+        $this->paymentMethodRepository = new V2PaymentMethodRepository($api);
     }
 
     /**
@@ -299,5 +306,45 @@ MESSAGE
         }
 
         throw new Exception("Could not find outlet {$outletId}.");
+    }
+
+    /**
+     * @When I get all payment methods
+     */
+    public function iGetAllPaymentMethods()
+    {
+        $this->paymentMethods = $this->paymentMethodRepository->all($this->salesChannelId);
+    }
+
+    /**
+     * @Then I should see there are :arg1 payment methods
+     */
+    public function iShouldSeeThereArePaymentMethods($count)
+    {
+        $paymentMethodsCount = count($this->paymentMethods);
+
+        if ((int) $count !== $paymentMethodsCount) {
+            throw new Exception("There were {$paymentMethodsCount} outlets.");
+        }
+    }
+
+    /**
+     * @Then payment method :arg1 is known as :arg2
+     */
+    public function paymentMethodIsKnownAs($paymentMethodId, $name)
+    {
+        foreach ($this->paymentMethods as $paymentMethod) {
+            if (!$paymentMethod->getId()->sameValueAs(new PaymentMethodId($paymentMethodId))) {
+                continue;
+            }
+
+            if ($paymentMethod->getName()->sameValueAs(new StringLiteral($name))) {
+                return;
+            }
+
+            throw new Exception("The payment method's name was {$paymentMethod->getName()}.");
+        }
+
+        throw new Exception("Could not find payment method {$paymentMethodId}.");
     }
 }
