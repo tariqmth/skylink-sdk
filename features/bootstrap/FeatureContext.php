@@ -8,6 +8,11 @@ use Behat\Gherkin\Node\TableNode;
 use Dotenv\Dotenv;
 use Ramsey\Uuid\Uuid;
 use RetailExpress\SkyLink\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Catalogue\Attributes\AttributeCode;
+use RetailExpress\SkyLink\Catalogue\Attributes\V2AttributeRepository;
+use RetailExpress\SkyLink\Catalogue\Products\MatrixPolicyMapper;
+use RetailExpress\SkyLink\Catalogue\Products\ProductId;
+use RetailExpress\SkyLink\Catalogue\Products\V2ProductRepository;
 use RetailExpress\SkyLink\Customers\BillingContact;
 use RetailExpress\SkyLink\Customers\Customer;
 use RetailExpress\SkyLink\Customers\CustomerId;
@@ -16,11 +21,6 @@ use RetailExpress\SkyLink\Customers\ShippingContact;
 use RetailExpress\SkyLink\Customers\V2CustomerRepository;
 use RetailExpress\SkyLink\Outlets\OutletId;
 use RetailExpress\SkyLink\Outlets\V2OutletRepository;
-use RetailExpress\SkyLink\Catalogue\Attributes\AttributeCode;
-use RetailExpress\SkyLink\Catalogue\Attributes\V2AttributeRepository;
-use RetailExpress\SkyLink\Catalogue\Products\MatrixPolicyMapper;
-use RetailExpress\SkyLink\Catalogue\Products\ProductId;
-use RetailExpress\SkyLink\Catalogue\Products\V2ProductRepository;
 use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\EmailAddress;
@@ -30,6 +30,14 @@ use ValueObjects\Web\EmailAddress;
  */
 class FeatureContext implements Context, SnippetAcceptingContext
 {
+    private $attributeRepository;
+
+    private $brandAttribute;
+
+    private $productRepository;
+
+    private $product;
+
     private $customerRepository;
 
     private $customer;
@@ -41,14 +49,6 @@ class FeatureContext implements Context, SnippetAcceptingContext
     private $outletRepository;
 
     private $outlets = [];
-
-    private $attributeRepository;
-
-    private $brandAttribute;
-
-    private $productRepository;
-
-    private $product;
 
     /**
      * Initializes context.
@@ -70,10 +70,59 @@ class FeatureContext implements Context, SnippetAcceptingContext
         );
 
         // Initialise the Retail Express V2 Product Repository
-        $this->customerRepository = new V2CustomerRepository($api);
-        $this->outletRepository = new V2OutletRepository($api);
         $this->attributeRepository = new V2AttributeRepository($api);
         $this->productRepository = new V2ProductRepository(new MatrixPolicyMapper(), $api);
+        $this->customerRepository = new V2CustomerRepository($api);
+        $this->outletRepository = new V2OutletRepository($api);
+    }
+
+    /**
+     * @When I get all brands
+     */
+    public function iGetAllBrands()
+    {
+        $attributeCode = AttributeCode::fromNative('brand');
+
+        $this->brandAttribute = $this->attributeRepository->find($attributeCode, $this->salesChannelId);
+    }
+
+    /**
+     * @Then I should see there are :arg1 brands
+     */
+    public function iShouldSeeThereAreBrands($count)
+    {
+        $brandsCount = count($this->brandAttribute->getOptions());
+
+        if ((int) $count !== $brandsCount) {
+            throw new Exception("There were {$brandsCount} brands.");
+        }
+    }
+
+    /**
+     * @When I find the product with id :arg1
+     */
+    public function iFindTheProductWithId($productId)
+    {
+        $this->product = $this->productRepository->find(
+            new ProductId($productId),
+            $this->salesChannelId
+        );
+
+        if ($this->product === null) {
+            throw new Exception("Failed to retrieve product with ID \"{$productId}\".");
+        }
+    }
+
+    /**
+     * @Then I should see that its sku is :arg1
+     */
+    public function iShouldSeeThatItsSkuIs($expectedSku)
+    {
+        $actualSku = $this->product->getSku();
+
+        if (!$actualSku->sameValueAs(new StringLiteral($expectedSku))) {
+            throw new Exception("SKU \"{$actualSku}\" was found.");
+        }
     }
 
     /**
@@ -250,54 +299,5 @@ MESSAGE
         }
 
         throw new Exception("Could not find outlet {$outletId}.");
-    }
-
-    /**
-     * @When I get all brands
-     */
-    public function iGetAllBrands()
-    {
-        $attributeCode = AttributeCode::fromNative('brand');
-
-        $this->brandAttribute = $this->attributeRepository->find($attributeCode, $this->salesChannelId);
-    }
-
-    /**
-     * @Then I should see there are :arg1 brands
-     */
-    public function iShouldSeeThereAreBrands($count)
-    {
-        $brandsCount = count($this->brandAttribute->getOptions());
-
-        if ((int) $count !== $brandsCount) {
-            throw new Exception("There were {$brandsCount} brands.");
-        }
-    }
-
-    /**
-     * @When I find the product with id :arg1
-     */
-    public function iFindTheProductWithId($productId)
-    {
-        $this->product = $this->productRepository->find(
-            new ProductId($productId),
-            $this->salesChannelId
-        );
-
-        if ($this->product === null) {
-            throw new Exception("Failed to retrieve product with ID \"{$productId}\".");
-        }
-    }
-
-    /**
-     * @Then I should see that its sku is :arg1
-     */
-    public function iShouldSeeThatItsSkuIs($expectedSku)
-    {
-        $actualSku = $this->product->getSku();
-
-        if (!$actualSku->sameValueAs(new StringLiteral($expectedSku))) {
-            throw new Exception("SKU \"{$actualSku}\" was found.");
-        }
     }
 }
