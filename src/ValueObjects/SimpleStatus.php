@@ -35,13 +35,13 @@ class SimpleStatus implements ValueObjectInterface
      *
      * @return bool
      */
-    public function sameValueAs(ValueObjectInterface $newsletterSubscription)
+    public function sameValueAs(ValueObjectInterface $simpleStatus)
     {
-        if (false === Util::classEquals($this, $newsletterSubscription)) {
+        if (false === Util::classEquals($this, $simpleStatus)) {
             return false;
         }
 
-        return $this->toNative() === $newsletterSubscription->toNative();
+        return $this->toNative() === $simpleStatus->toNative();
     }
 
     /**
@@ -69,7 +69,7 @@ class SimpleStatus implements ValueObjectInterface
         $enabled = filter_var($enabled, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
         if (null === $enabled) {
-            throw new InvalidNativeArgumentException($enabled, array('bool'));
+            throw new InvalidArgumentException($enabled, array('bool'));
         }
     }
 }
