@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\Orders;
+namespace RetailExpress\SkyLink\Sales;
 
 interface OrderRepository
 {
