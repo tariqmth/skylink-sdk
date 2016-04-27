@@ -2,6 +2,8 @@
 
 namespace RetailExpress\SkyLink\Catalogue\Products;
 
+use BadMethodCallException;
+use RetailExpress\SkyLink\ValueObjects\TaxRate;
 use ValueObjects\Number\Real;
 use ValueObjects\Util\Util;
 use ValueObjects\ValueObjectInterface;
@@ -12,6 +14,8 @@ class PricingStructure implements ValueObjectInterface
 
     private $specialPrice;
 
+    private $taxRate;
+
     /**
      * Returns an Pricing Structure taking PHP native values as arguments.
      *
@@ -21,17 +25,18 @@ class PricingStructure implements ValueObjectInterface
     {
         $args = func_get_args();
 
-        if (count($args) < 2) {
-            throw new BadMethodCallException('You must provide at least 2 arguments: 1) regular price, 2) special price');
+        if (count($args) < 3) {
+            throw new BadMethodCallException('You must provide at least 2 arguments: 1) regular price, 2) special price, 3) tax rate');
         }
 
-        return new self(new Real($args[0]), new Real($args[1]));
+        return new self(new Real($args[0]), new Real($args[1]), TaxRate::fromNative($args[2]));
     }
 
-    public function __construct(Real $regularPrice, Real $specialPrice)
+    public function __construct(Real $regularPrice, Real $specialPrice, TaxRate $taxRate)
     {
         $this->regularPrice = $regularPrice;
         $this->specialPrice = $specialPrice;
+        $this->taxRate = $taxRate;
     }
 
     public function getRegularPrice()
@@ -42,6 +47,11 @@ class PricingStructure implements ValueObjectInterface
     public function getSpecialPrice()
     {
         return clone $this->specialPrice;
+    }
+
+    public function getTaxRate()
+    {
+        return clone $this->taxRate;
     }
 
     /**
@@ -58,7 +68,8 @@ class PricingStructure implements ValueObjectInterface
         }
 
         return $this->getRegularPrice()->sameValueAs($pricingStructure->getRegularPrice()) &&
-            $this->getSpecialPrice()->sameValueAs($pricingStructure->getSpecialPrice());
+            $this->getSpecialPrice()->sameValueAs($pricingStructure->getSpecialPrice()) &&
+            $this->getTaxRate()->sameValueAs($pricingStructure->getTaxRate());
     }
 
     /**

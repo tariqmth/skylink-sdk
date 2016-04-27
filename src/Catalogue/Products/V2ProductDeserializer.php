@@ -23,7 +23,8 @@ trait V2ProductDeserializer
 
         $pricingStructure = PricingStructure::fromNative(
             $payload['DefaultPrice'],
-            $payload['DiscountedPrice']
+            $payload['DiscountedPrice'],
+            $payload['TaxRate']
         );
 
         $inventoryItem = InventoryItem::fromNative(
