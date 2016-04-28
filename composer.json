@@ -1,6 +1,6 @@
 {
   "name": "retail-express/skylink",
-  "description": "Base synchronisation package for connecting a Magento based website to Retail Express.",
+  "description": "Base package for connecting a PHP application to Retail Express.",
   "license": "proprietary",
   "authors": [
     {
@@ -23,11 +23,12 @@
   "require": {
     "php": ">=5.5.0",
     "illuminate/support": "^5.1",
-    "sabre/xml": "^1.4",
-    "nicolopignatelli/valueobjects": "^4.0"
+    "nicolopignatelli/valueobjects": "^4.0",
+    "sabre/xml": "^1.4"
   },
   "require-dev": {
     "behat/behat": "^3.0",
+    "symfony/var-dumper": "^3.0",
     "vlucas/phpdotenv": "^2.2"
   },
   "extra": {

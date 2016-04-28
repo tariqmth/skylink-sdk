@@ -2,7 +2,9 @@
 
 namespace RetailExpress\SkyLink\Sales\Orders;
 
+use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
+
 interface OrderRepository
 {
-    public function find(CustomerId $customerId);
+    public function add(SalesChannelId $salesChannelId, Order $order);
 }
