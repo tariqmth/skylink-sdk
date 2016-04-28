@@ -20,7 +20,7 @@ class V2AttributeRepository implements AttributeRepository
     public function find(AttributeCode $attributeCode, SalesChannelId $salesChannelId)
     {
         // We do not require all products if the attribute code is predefined
-        $LastUpdated = $attributeCode->isPredefined() ? date('Y-m-d\TH:i:s.000') : '2000-01-01T00:00:00.000';
+        $LastUpdated = date(V2_API_DATE_FORMAT, $attributeCode->isPredefined() ? time() : 0);
 
         $rawResponse = $this->api->call('ProductsGetBulkDetailsByChannel', [
             'ChannelId' => $salesChannelId->toNative(),

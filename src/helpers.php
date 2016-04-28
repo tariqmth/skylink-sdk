@@ -1,5 +1,8 @@
 <?php
 
+// The format of dates in the V2 API (maybe move this?)
+const V2_API_DATE_FORMAT = 'Y-m-d\TH:i:s.000';
+
 /**
  * Returns the value of the given key in an array, providing there is actually a non-empty value there.
  *
