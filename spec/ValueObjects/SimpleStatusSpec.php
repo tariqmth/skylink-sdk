@@ -19,7 +19,7 @@ class SimpleStatusSpec extends ObjectBehavior
 
     function it_asserts_a_boolean_argument()
     {
-        $this->beConstructedThrough('fromNative', ['foo']);
+        $this->beConstructedThrough('fromNative', ['not a boolean']);
         $this->shouldThrow(InvalidNativeArgumentException::class)->duringInstantiation();
     }
 

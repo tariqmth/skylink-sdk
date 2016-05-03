@@ -83,7 +83,7 @@ class AddressSpec extends ObjectBehavior
     function it_ignores_invalid_country_aliases()
     {
         $arguments = $this->get_address_arguments();
-        $arguments[6] = 'foo';
+        $arguments[6] = 'invalid country name';
         $this->beConstructedThrough('fromNative', $arguments);
         $this->getCountry()->shouldBe(null);
     }
@@ -102,7 +102,7 @@ class AddressSpec extends ObjectBehavior
     function its_value_can_be_compared_against_a_non_equal_of_the_same_type()
     {
         $arguments = $this->get_address_arguments();
-        $arguments[0] = 'foo';
+        $arguments[0] = 'different street 1';
 
         $address = forward_static_call_array(
             [Address::class, 'fromNative'],
