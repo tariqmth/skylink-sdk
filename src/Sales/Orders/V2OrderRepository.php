@@ -2,8 +2,9 @@
 
 namespace RetailExpress\SkyLink\Sales\Orders;
 
-use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
 use RetailExpress\SkyLink\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Customers\CustomerId;
+use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
 
 class V2OrderRepository implements OrderRepository
 {
@@ -26,16 +27,25 @@ class V2OrderRepository implements OrderRepository
          */
         $cdataWrappedXml = $this->wrapXmlInCDataTags($xml);
 
-        (new \Illuminate\Support\Debug\Dumper)->dump($xml);
-
-        $response = $this->api->call('OrderCreateByChannel', [
+        $rawResponse = $this->api->call('OrderCreateByChannel', [
             'ChannelId' => $salesChannelId->toNative(),
             'OrderXML' => $xml,
         ]);
 
-        dd($response);
+        $xmlService = $this->api->getXmlService();
+        $xmlService->elementMap = [
+            '{}Customer' => 'Sabre\Xml\Deserializer\keyValue',
+            '{}Order' => 'Sabre\Xml\Deserializer\keyValue',
+        ];
 
-        dd($this->wrapXmlInCDataTags($xml));
+        $parsedResponse = $xmlService->parse($rawResponse);
+
+        // A successful response contains 4 nodes, Customer, Order, OrderItems and OrderPayments
+        $customerParsedResponse = array_get($parsedResponse, '0.value.0.value');
+        $order->setCustomerId(new CustomerId($customerParsedResponse['{}CustomerId']));
+
+        $orderParsedResponse = array_get($parsedResponse, '0.value.1.value');
+        $order->setId(new OrderId($orderParsedResponse['{}OrderId']));
     }
 
     /**

@@ -4,6 +4,7 @@ namespace RetailExpress\SkyLink\Sales\Orders;
 
 use DateTimeImmutable;
 use RetailExpress\SkyLink\Customers\BillingContact;
+use RetailExpress\SkyLink\Customers\CustomerId;
 use RetailExpress\SkyLink\Customers\ShippingContact;
 use RetailExpress\SkyLink\Outlets\OutletId;
 use Sabre\Xml\XmlSerializable;
@@ -13,6 +14,12 @@ use ValueObjects\StringLiteral\StringLiteral;
 class Order implements XmlSerializable
 {
     use V2OrderSerializer;
+
+    private $id;
+
+    private $customerId;
+
+    private $newCustomerPassword;
 
     private $placedAt;
 
@@ -32,13 +39,82 @@ class Order implements XmlSerializable
 
     private $privateComments;
 
-    public function __construct(DateTimeImmutable $placedAt, Status $status, BillingContact $billingContact, ShippingContact $shippingContact, ShippingCharge $shippingCharge)
-    {
+    public static function forCustomerWithId(
+        CustomerId $customerId,
+        DateTimeImmutable $placedAt,
+        Status $status,
+        BillingContact $billingContact,
+        ShippingContact $shippingContact,
+        ShippingCharge $shippingCharge
+    ) {
+        $order = new self(
+            $placedAt,
+            $status,
+            $billingContact,
+            $shippingContact,
+            $shippingCharge
+        );
+
+        $order->setCustomerId($customerId);
+
+        return $order;
+    }
+
+    public static function forNewCustomerWithPassword(
+        StringLiteral $newCustomerPassword,
+        DateTimeImmutable $placedAt,
+        Status $status,
+        BillingContact $billingContact,
+        ShippingContact $shippingContact,
+        ShippingCharge $shippingCharge
+    ) {
+        $order = new self(
+            $placedAt,
+            $status,
+            $billingContact,
+            $shippingContact,
+            $shippingCharge
+        );
+
+        $order->setNewCustomerPassword($newCustomerPassword);
+
+        return $order;
+    }
+
+    private function __construct(
+        DateTimeImmutable $placedAt,
+        Status $status,
+        BillingContact $billingContact,
+        ShippingContact $shippingContact,
+        ShippingCharge $shippingCharge
+    ) {
         $this->placedAt = $placedAt;
         $this->status = $status;
         $this->billingContact = $billingContact;
         $this->shippingContact = $shippingContact;
         $this->shippingCharge = $shippingCharge;
+    }
+
+    /**
+     * This is used by the repository to update the ID of the order once it's
+     * been added, but I'm not sure I'm sold on this, because now there's a
+     * mix of immutability vs mutability in this object.
+     *
+     * @todo Refactor?
+     */
+    public function setId(OrderId $id)
+    {
+        $this->id = $id;
+    }
+
+    public function setCustomerId(CustomerId $customerId)
+    {
+        $this->customerId = $customerId;
+    }
+
+    public function setNewCustomerPassword(StringLiteral $newCustomerPassword)
+    {
+        $this->newCustomerPassword = $newCustomerPassword;
     }
 
     public function withItem(Item $item)
@@ -71,6 +147,29 @@ class Order implements XmlSerializable
         $new->privateComments = $privateComments;
 
         return $new;
+    }
+
+    public function getId()
+    {
+        return clone $this->id;
+    }
+
+    public function getCustomerId()
+    {
+        if (null === $this->customerId) {
+            return;
+        }
+
+        return clone $this->customerId;
+    }
+
+    public function getNewCustomerPassword()
+    {
+        if (null === $this->newCustomerPassword) {
+            return;
+        }
+
+        return clone $this->newCustomerPassword;
     }
 
     public function getPlacedAt()

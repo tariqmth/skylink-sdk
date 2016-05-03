@@ -18,6 +18,12 @@ trait V2OrderSerializer
         $payload['FreightTotal'] = (string) $this->getShippingCharge()->getPrice();
         $payload['OrderStatus'] = $this->getStatus()->toV2Status();
 
+        if (null !== $this->getCustomerId()) {
+            $payload['CustomerId'] = (string) $this->getCustomerId();
+        } else {
+            $payload['Password'] = (string) $this->getNewCustomerPassword();
+        }
+
         $payload = array_merge(
             $payload,
             $this->serializeBillingAndShippingContacts(
