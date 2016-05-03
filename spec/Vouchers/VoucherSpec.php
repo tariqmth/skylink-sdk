@@ -28,9 +28,9 @@ class VoucherSpec extends ObjectBehavior
         $this->getCode()->toNative()->shouldBe('voucher code');
     }
 
-    function it_should_return_the_total()
+    function it_should_return_the_balance()
     {
         $this->beConstructedThrough('fromNative', ['voucher code', 100]);
-        $this->getTotal()->toNative()->shouldBe(100.0);
+        $this->getBalance()->toNative()->shouldBe(100.0);
     }
 }

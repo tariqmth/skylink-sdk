@@ -9,23 +9,23 @@ class Voucher
 {
     private $code;
 
-    private $total;
+    private $balance;
 
     public static function fromNative()
     {
         $args = func_get_args();
 
         if (count($args) < 2) {
-            throw new BadMethodCallException('You must provide at least 2 arguments: 1) code, 2) total');
+            throw new BadMethodCallException('You must provide at least 2 arguments: 1) code, 2) balance');
         }
 
         return new self(new VoucherCode($args[0]), new Real($args[1]));
     }
 
-    public function __construct(VoucherCode $code, Real $total)
+    public function __construct(VoucherCode $code, Real $balance)
     {
         $this->code = $code;
-        $this->total = $total;
+        $this->balance = $balance;
     }
 
     public function getCode()
@@ -33,8 +33,8 @@ class Voucher
         return clone $this->code;
     }
 
-    public function getTotal()
+    public function getBalance()
     {
-        return clone $this->total;
+        return clone $this->balance;
     }
 }

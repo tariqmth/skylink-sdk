@@ -20,6 +20,7 @@ use RetailExpress\SkyLink\Outlets\V2OutletRepository;
 use RetailExpress\SkyLink\Sales\Orders\V2OrderRepository;
 use RetailExpress\SkyLink\Sales\Payments\V2PaymentMethodRepository;
 use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
+use RetailExpress\SkyLink\Vouchers\V2VoucherRepository;
 
 /**
  * Defines application features from the specific context.
@@ -31,6 +32,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
     use OutletFeatureContext;
     use PaymentMethodFeatureContext;
     use ProductFeatureContext;
+    use VoucherFeatureContext;
 
     private $salesChannelId;
 
@@ -62,6 +64,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
         $this->outletRepository = new V2OutletRepository($api);
         $this->orderRepository = new V2OrderRepository($api);
         $this->paymentMethodRepository = new V2PaymentMethodRepository($api);
+        $this->voucherRepository = new V2VoucherRepository($api);
     }
 
     /**
