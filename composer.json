@@ -44,6 +44,7 @@
   "scripts": {
     "phpcs": "./vendor/bin/phpcs --standard=psr2 src",
     "phpcpd": "./vendor/bin/phpcpd src",
+    "phploc-log": "./vendor/bin/phploc --log-csv build/loc.csv --progress --git-repository . src",
     "phploc": "./vendor/bin/phploc src",
     "phpspec": "./vendor/bin/phpspec run --no-interaction",
     "behat": "./vendor/bin/behat --tags '@completed' --no-interaction",
