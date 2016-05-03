@@ -4,8 +4,10 @@ namespace RetailExpress\SkyLink\Customers;
 
 trait V2BillingAndShippingContactSerializer
 {
-    public function serializeBillingAndShippingContacts(BillingContact $billingContact, ShippingContact $shippingContact)
-    {
+    public function serializeBillingAndShippingContacts(
+        BillingContact $billingContact,
+        ShippingContact $shippingContact
+    ) {
         $payload = [];
 
         $payload['BillFirstName'] = (string) $billingContact->getName()->getFirstName();

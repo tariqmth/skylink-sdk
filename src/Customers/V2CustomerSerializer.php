@@ -20,7 +20,13 @@ trait V2CustomerSerializer
             $payload['Password'] = (string) $this->getPassword();
         }
 
-        $payload = array_merge($payload, $this->serializeBillingAndShippingContacts($this->getBillingContact(), $this->getShippingContact()));
+        $payload = array_merge(
+            $payload,
+            $this->serializeBillingAndShippingContacts(
+                $this->getBillingContact(),
+                $this->getShippingContact()
+            )
+        );
 
         $payload['ReceivesNews'] = (string) $this->getNewsletterSubscription();
 

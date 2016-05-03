@@ -45,7 +45,8 @@ class BillingContact implements ValueObjectInterface
         $args = func_get_args();
 
         if (count($args) < 3) {
-            throw new BadMethodCallException('You must provide at least 3 arguments: 1) first name, 2) last name, 3) email address');
+            $message = 'You must provide at least 3 arguments: 1) first name, 2) last name, 3) email address';
+            throw new BadMethodCallException($message);
         }
 
         $name = Name::fromNative($args[0], $args[1]);
@@ -73,8 +74,14 @@ class BillingContact implements ValueObjectInterface
         );
     }
 
-    public function __construct(Name $name, EmailAddress $emailAddress, StringLiteral $companyName, Address $address, StringLiteral $phoneNumber, StringLiteral $faxNumber)
-    {
+    public function __construct(
+        Name $name,
+        EmailAddress $emailAddress,
+        StringLiteral $companyName,
+        Address $address,
+        StringLiteral $phoneNumber,
+        StringLiteral $faxNumber
+    ) {
         $this->name = $name;
         $this->emailAddress = $emailAddress;
         $this->companyName = $companyName;

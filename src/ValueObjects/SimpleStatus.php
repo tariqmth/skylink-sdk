@@ -2,6 +2,7 @@
 
 namespace RetailExpress\SkyLink\ValueObjects;
 
+use ValueObjects\Exception\InvalidNativeArgumentException;
 use ValueObjects\Util\Util;
 use ValueObjects\ValueObjectInterface;
 
@@ -27,6 +28,16 @@ class SimpleStatus implements ValueObjectInterface
         $this->enabled = boolval($enabled);
     }
 
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    public function isDisabled()
+    {
+        return !$this->isEnabled();
+    }
+
     /**
      * Tells whether two Integer are equal by comparing their values.
      *
@@ -46,11 +57,11 @@ class SimpleStatus implements ValueObjectInterface
     /**
      * Returns the value of the newsletter subscription.
      *
-     * @return int
+     * @return bool
      */
     public function toNative()
     {
-        return intval($this->enabled);
+        return $this->enabled;
     }
 
     /**
@@ -60,7 +71,7 @@ class SimpleStatus implements ValueObjectInterface
      */
     public function __toString()
     {
-        return (string) $this->toNative();
+        return (string) intval($this->toNative());
     }
 
     private function assertEnabledArgument($enabled)
@@ -68,7 +79,7 @@ class SimpleStatus implements ValueObjectInterface
         $enabled = filter_var($enabled, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
         if (null === $enabled) {
-            throw new InvalidArgumentException($enabled, array('bool'));
+            throw new InvalidNativeArgumentException($enabled, array('bool'));
         }
     }
 }

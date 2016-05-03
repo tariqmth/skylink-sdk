@@ -27,7 +27,6 @@ class V2
         try {
             $response = $this->soapClient->__soapCall($method, [$arguments]);
         } catch (SoapFault $e) {
-
             // To determine if the response is valid XML or not, we'll look for the presence of
             // the XML opening tag. If it does not exist, we know we are dealing with a zipped
             // response instead, at which point we'll write the response to a temporary file
@@ -101,7 +100,7 @@ class V2
             // strange behaviour leaking out and producing strange bugs.
             $responseElements = count($responseAsArray);
             if ($responseElements !== 1) {
-                throw new V2ApiException("Expected 1 element in an API response, however received {$responseElements}.");
+                throw new V2ApiException("Expected 1 element in an API response, but received {$responseElements}.");
             }
 
             $payload = array_shift($responseAsArray)->any;

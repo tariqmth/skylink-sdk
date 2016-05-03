@@ -1,0 +1,7 @@
+extensions:
+  - PhpSpec\Extension\CodeCoverageExtension
+
+suites:
+  default:
+    namespace: RetailExpress\SkyLink
+    psr4_prefix: RetailExpress\SkyLink

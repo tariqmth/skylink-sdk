@@ -42,7 +42,8 @@ class MatrixPolicyMapper
         $actualCode = $productType->getAttribute()->getCode();
 
         if (!$actualCode->sameValueAs($productTypeCode)) {
-            throw new InvalidArgumentException("Matrix policies work using \"product_type\" attribute options, \"{$productTypeCode}\" given.");
+            $message = "Matrix policies work using \"product_type\" attribute options, \"{$productTypeCode}\" given.";
+            throw new InvalidArgumentException($message);
         }
     }
 

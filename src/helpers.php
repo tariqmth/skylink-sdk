@@ -1,5 +1,7 @@
 <?php
 
+use RetailExpress\SkyLink\Util;
+
 // The format of dates in the V2 API (maybe move this?)
 const V2_API_DATE_FORMAT = 'Y-m-d\TH:i:s.000';
 
@@ -11,14 +13,9 @@ const V2_API_DATE_FORMAT = 'Y-m-d\TH:i:s.000';
  * @param mixed  $default
  *
  * @return mixed
+ * @codeCoverageIgnore
  */
-function array_get_notempty($array, $key, $default = null)
+function array_get_notempty(array $array, $key, $default = null)
 {
-    $flattened = array_dot($array);
-
-    if (isset($flattened[$key]) && !empty($flattened[$key])) {
-        return $flattened[$key];
-    }
-
-    return value($default);
+    return Util::arrayGetNotempty($array, $key, $default);
 }

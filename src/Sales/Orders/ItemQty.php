@@ -89,7 +89,8 @@ class ItemQty implements ValueObjectInterface
         // is make sure the difference between the two is between 0 and the qty ordered, anything else
         // is an invalid fulfillment amount based on the ordered amount
         if ($orderedFloat - $fulfilledFloat < 0 || $orderedFloat - $fulfilledFloat > $orderedFloat) {
-            throw new InvalidArgumentException("Cannot fulfill {$fulfilledFloat} when {$orderedFloat} item(s) were ordered.");
+            $message = "Cannot fulfill {$fulfilledFloat} when {$orderedFloat} item(s) were ordered.";
+            throw new InvalidArgumentException($message);
         }
     }
 }

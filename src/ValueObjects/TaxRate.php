@@ -90,7 +90,8 @@ class TaxRate implements ValueObjectInterface
     private function assertValidRate(Real $rate)
     {
         if ($rate->toNative() >= 1 || $rate->toNative() < 0) {
-            throw new InvalidArgumentException("Tax rate {$rate} must be expressed greater than (or equal to) 0 and less than 1.");
+            $message = "Tax rate {$rate} must be expressed greater than (or equal to) 0 and less than 1.";
+            throw new InvalidArgumentException($message);
         }
     }
 }

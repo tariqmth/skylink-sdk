@@ -60,8 +60,13 @@ class Outlet implements XmlDeserializable
         return new self($id, $name, $address, $phoneNumber, $faxNumber);
     }
 
-    public function __construct(OutletId $id, StringLiteral $name, Address $address, StringLiteral $phoneNumber, StringLiteral $faxNumber)
-    {
+    public function __construct(
+        OutletId $id,
+        StringLiteral $name,
+        Address $address,
+        StringLiteral $phoneNumber,
+        StringLiteral $faxNumber
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->address = $address;

@@ -26,7 +26,8 @@ class PricingStructure implements ValueObjectInterface
         $args = func_get_args();
 
         if (count($args) < 3) {
-            throw new BadMethodCallException('You must provide at least 2 arguments: 1) regular price, 2) special price, 3) tax rate');
+            $message = 'You must provide at least 2 arguments: 1) regular price, 2) special price, 3) tax rate';
+            throw new BadMethodCallException($message);
         }
 
         return new self(new Real($args[0]), new Real($args[1]), TaxRate::fromNative($args[2]));
@@ -79,6 +80,10 @@ class PricingStructure implements ValueObjectInterface
      */
     public function __toString()
     {
-        return (string) $this->getRegularPrice() < $this->getSpecialPrice() ? $this->getRegularPrice() : $this->getSpecialPrice();
+        if ($this->getRegularPrice() < $this->getSpecialPrice()) {
+            return (string) $this->getRegularPrice();
+        }
+
+        return (string) $this->getSpecialPrice();
     }
 }

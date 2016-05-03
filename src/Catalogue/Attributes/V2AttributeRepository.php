@@ -45,7 +45,11 @@ class V2AttributeRepository implements AttributeRepository
         $options = array_filter($flattenedParsedResponse, function ($payload) use ($attributeCode, &$uniqueOptions) {
 
             // Check the attribute option is applicable
-            if (!$payload instanceof AttributeOption || !$payload->getAttribute()->getCode()->sameValueAs($attributeCode)) {
+            if (!$payload instanceof AttributeOption) {
+                return false;
+            }
+
+            if (!$payload->getAttribute()->getCode()->sameValueAs($attributeCode)) {
                 return false;
             }
 

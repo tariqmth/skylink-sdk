@@ -49,7 +49,11 @@ class Address implements ValueObjectInterface
         $args = func_get_args();
 
         if (count($args) !== 7) {
-            throw new BadMethodCallException('You must provide exactly 7 arguments: 1) line 1, 2) line 2, 3) line 3, 4) city, 5) state, 6) postcode, 7) country.');
+            // @codingStandardsIgnoreStart
+            $message = 'You must provide exactly 7 arguments: 1) line 1, 2) line 2, 3) line 3, 4) city, 5) state, 6) postcode, 7) country.';
+            // @codingStandardsIgnoreEnd
+
+            throw new BadMethodCallException($message);
         }
 
         $line1 = new StringLiteral($args[0]);

@@ -28,6 +28,9 @@
   },
   "require-dev": {
     "behat/behat": "^3.0",
+    "henrikbjorn/phpspec-code-coverage": "^2.0",
+    "phpspec/phpspec": "^2.5",
+    "squizlabs/php_codesniffer": "^2.6",
     "symfony/var-dumper": "^3.0",
     "vlucas/phpdotenv": "^2.2"
   },
@@ -35,5 +38,16 @@
     "branch-alias": {
       "dev-master": "1.0.x-dev"
     }
+  },
+  "scripts": {
+    "phpcs": "./vendor/bin/phpcs --standard=psr2 src",
+    "phpspec": "./vendor/bin/phpspec run --no-interaction",
+    "behat": "./vendor/bin/behat --tags '@completed' --no-interaction",
+    "test": [
+      "@composer install",
+      "@phpcs",
+      "@phpspec",
+      "@behat"
+    ]
   }
 }

@@ -24,7 +24,11 @@ class Item
         $args = func_get_args();
 
         if (count($args) < 5) {
-            throw new BadMethodCallException('You must provide at least 5 arguments: 1) product id, 2) qty ordered, 3) qty fulfilled, 4) price, 5) tax rate');
+            // @codingStandardsIgnoreStart
+            $message = 'You must provide at least 5 arguments: 1) product id, 2) qty ordered, 3) qty fulfilled, 4) price, 5) tax rate';
+            // @codingStandardsIgnoreEnd
+
+            throw new BadMethodCallException($message);
         }
 
         $productId = new ProductId($args[0]);
