@@ -57,6 +57,7 @@ class ItemQty implements ValueObjectInterface
      *
      * @param ValueObjectInterface $itemQty
      *itemQty
+     *
      * @return bool
      */
     public function sameValueAs(ValueObjectInterface $itemQty)

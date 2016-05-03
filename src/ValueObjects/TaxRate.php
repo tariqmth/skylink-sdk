@@ -13,7 +13,7 @@ class TaxRate implements ValueObjectInterface
 
     /**
      * Returns a new Tax Rate object from a PHP native, either represented as a
-     * number (decimal)
+     * number (decimal).
      *
      * @return self
      */

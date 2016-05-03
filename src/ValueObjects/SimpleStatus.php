@@ -2,7 +2,6 @@
 
 namespace RetailExpress\SkyLink\ValueObjects;
 
-use ValueObjects\Exception\InvalidNativeArgumentException;
 use ValueObjects\Util\Util;
 use ValueObjects\ValueObjectInterface;
 

@@ -22,7 +22,7 @@ class V2OrderRepository implements OrderRepository
             'Order' => $order,
         ]);
 
-        /**
+        /*
          * @todo Is this still needed?
          */
         $cdataWrappedXml = $this->wrapXmlInCDataTags($xml);
@@ -53,7 +53,8 @@ class V2OrderRepository implements OrderRepository
      * Orders will not be created unless part of the SOAP payload is wrapped
      * (in it's entirety) in CData tags, so that's what we'll do here!
      *
-     * @param  string $xml
+     * @param string $xml
+     *
      * @return string
      */
     private function wrapXmlInCDataTags($xml)

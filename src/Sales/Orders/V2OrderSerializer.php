@@ -36,7 +36,7 @@ trait V2OrderSerializer
         $payload['PublicComments'] = (string) $this->getPublicComments();
         $payload['PrivateComments'] = (string) $this->getPrivateComments();
 
-         if ($this->specifiedOutletIdToFulfillFrom()) {
+        if ($this->specifiedOutletIdToFulfillFrom()) {
             $payload['FulfilmentOutletId'] = (string) $this->getOutletIdToFulfillFrom();
         }
 
