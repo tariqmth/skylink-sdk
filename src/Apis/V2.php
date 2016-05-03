@@ -50,7 +50,6 @@ class V2
 
     private function unzipReponse($response)
     {
-
         // Write the response to a temporary file
         $zippedFile = $this->getTemporaryFileResource();
         fwrite($zippedFile, $response);
