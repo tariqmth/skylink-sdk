@@ -36,8 +36,6 @@ class FeatureContext implements Context, SnippetAcceptingContext
 
     private $salesChannelId;
 
-    private $orderRepository;
-
     /**
      * Initializes context.
      *

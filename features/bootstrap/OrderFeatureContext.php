@@ -16,6 +16,8 @@ use ValueObjects\StringLiteral\StringLiteral;
 
 trait OrderFeatureContext
 {
+    private $orderRepository;
+
     private $pendingOrderInformation = [];
 
     private $order;
