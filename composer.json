@@ -29,7 +29,9 @@
   "require-dev": {
     "behat/behat": "^3.0",
     "henrikbjorn/phpspec-code-coverage": "^2.0",
+    "phploc/phploc": "^3.0",
     "phpspec/phpspec": "^2.5",
+    "sebastian/phpcpd": "^2.0",
     "squizlabs/php_codesniffer": "^2.6",
     "symfony/var-dumper": "^3.0",
     "vlucas/phpdotenv": "^2.2"
@@ -41,11 +43,15 @@
   },
   "scripts": {
     "phpcs": "./vendor/bin/phpcs --standard=psr2 src",
+    "phpcpd": "./vendor/bin/phpcpd src",
+    "phploc": "./vendor/bin/phploc src",
     "phpspec": "./vendor/bin/phpspec run --no-interaction",
     "behat": "./vendor/bin/behat --tags '@completed' --no-interaction",
     "test": [
       "@composer install",
       "@phpcs",
+      "@phpcpd",
+      "@phploc",
       "@phpspec",
       "@behat"
     ]
