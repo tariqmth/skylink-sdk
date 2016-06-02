@@ -2,7 +2,10 @@
 
 namespace RetailExpress\SkyLink\Sales\Orders;
 
+use BadMethodCallException;
+use InvalidArgumentException;
 use ValueObjects\Number\Real;
+use ValueObjects\Util\Util;
 use ValueObjects\ValueObjectInterface;
 
 class ItemQty implements ValueObjectInterface
@@ -35,10 +38,11 @@ class ItemQty implements ValueObjectInterface
         $this->ordered = $ordered;
 
         if (null === $fulfilled) {
-            return;
+            $fulfilled = new Real(0);
+        } else {
+            $this->assertValidFulfilled($fulfilled);
         }
 
-        $this->assertValidFulfilled($fulfilled);
         $this->fulfilled = $fulfilled;
     }
 
