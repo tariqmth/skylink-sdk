@@ -50,7 +50,8 @@ A coverage report will be generated as part of running phpspec, and this will be
 
 To begin, copy `.env.example` to `.env` and substitute real values for:
 
-1. `V2_API_CLIENT_ID`
+1. `V2_API_URL`
+2. `V2_API_CLIENT_ID`
 2. `V2_API_USERNAME`
 3. `V2_API_PASSWORD`
 

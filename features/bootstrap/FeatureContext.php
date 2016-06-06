@@ -50,9 +50,9 @@ class FeatureContext implements Context, SnippetAcceptingContext
         // Load environment variables for sensitive credentials used in testing
         (new Dotenv(__DIR__.'/../..'))->load();
 
-        $api = new V2Api(
-            Uuid::fromString(getenv('V2_API_CLIENT_ID')),
-            getenv('V2_API_DATABASE'),
+        $api = V2Api::fromNative(
+            getenv('V2_API_URL'),
+            getenv('V2_API_CLIENT_ID'),
             getenv('V2_API_USERNAME'),
             getenv('V2_API_PASSWORD')
         );

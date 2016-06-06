@@ -7,18 +7,30 @@ use Sabre\Xml\Service as XmlService;
 use SoapClient;
 use SoapFault;
 use SoapHeader;
+use ValueObjects\StringLiteral\StringLiteral;
+use ValueObjects\Web\Url;
 
 class V2
 {
     public $soapClient;
 
-    public function __construct(Uuid $clientId, $database, $username, $password)
+    public static function fromNative($url, $clientId, $username, $password)
+    {
+        return new self(
+            Url::fromNative($url),
+            Uuid::fromString($clientId),
+            new StringLiteral($username),
+            new StringLiteral($password)
+        );
+    }
+
+    public function __construct(Url $url, Uuid $clientId, StringLiteral $username, StringLiteral $password)
     {
         $this->soapClient = $this->createSoapClient(
+            $url,
             $clientId,
-            $this->determineSoapUrlFromDatabaseName($database),
-            (string) $username,
-            (string) $password
+            $username,
+            $password
         );
     }
 
@@ -145,22 +157,17 @@ class V2
         });
     }
 
-    private function determineSoapUrlFromDatabaseName($database)
+    private function createSoapClient(Url $url, Uuid $clientId, StringLiteral $username, StringLiteral $password)
     {
-        return "https://{$database}.retailexpress.com.au/dotnet/admin/webservices/v2/webstore/service.asmx?wsdl";
-    }
-
-    private function createSoapClient(Uuid $clientId, $url, $username, $password)
-    {
-        $client = new SoapClient($url, [
+        $client = new SoapClient((string) $url, [
             'soap_version' => SOAP_1_2,
             'trace' => true,
         ]);
 
         $header = new SoapHeader('http://retailexpress.com.au/', 'ClientHeader', [
             'ClientID' => (string) $clientId,
-            'UserName' => $username,
-            'Password' => $password,
+            'UserName' => (string) $username,
+            'Password' => (string) $password,
         ]);
 
         $client->__setSoapHeaders($header);
