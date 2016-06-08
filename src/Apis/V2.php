@@ -8,6 +8,7 @@ use SoapClient;
 use SoapFault;
 use SoapHeader;
 use ValueObjects\StringLiteral\StringLiteral;
+use ValueObjects\Web\SchemeName;
 use ValueObjects\Web\Url;
 
 class V2
@@ -26,6 +27,8 @@ class V2
 
     public function __construct(Url $url, Uuid $clientId, StringLiteral $username, StringLiteral $password)
     {
+        $this->assertSecureUrl($url);
+
         $this->soapClient = $this->createSoapClient(
             $url,
             $clientId,
@@ -155,6 +158,13 @@ class V2
                 }
             }
         });
+    }
+
+    private function assertSecureUrl(Url $url)
+    {
+        if (!$url->getScheme()->sameValueAs(new SchemeName('https'))) {
+            throw new V2ApiException("V2 API URL \"{$url}\" does not adhere to secure HTTPS mode.");
+        }
     }
 
     private function createSoapClient(Url $url, Uuid $clientId, StringLiteral $username, StringLiteral $password)
