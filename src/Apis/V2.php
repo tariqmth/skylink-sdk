@@ -41,7 +41,7 @@ class V2
     {
         try {
             $response = $this->soapClient->__soapCall($method, [$arguments]);
-        } catch (SoapFault $e) {
+        } catch (SoapFault $soapFault) {
             // To determine if the response is valid XML or not, we'll look for the presence of
             // the XML opening tag. If it does not exist, we know we are dealing with a zipped
             // response instead, at which point we'll write the response to a temporary file
@@ -49,7 +49,12 @@ class V2
             // may be parsed without hindering on memory too badly.
             $response = $this->soapClient->__getLastResponse();
             if (starts_with($response, '<?xml version="1.0" encoding="utf-8"?>')) {
-                throw $e;
+                $message = $this->extractUsefulSoapFaultMessage($soapFault->getMessage());
+
+                $v2ApiException = new V2ApiException($message);
+                $v2ApiException->setSoapFault($soapFault);
+
+                throw $v2ApiException;
             }
 
             $response = $this->unzipReponse($response);
@@ -183,5 +188,12 @@ class V2
         $client->__setSoapHeaders($header);
 
         return $client;
+    }
+
+    private function extractUsefulSoapFaultMessage($message)
+    {
+        preg_match('/^System.Web.Services.Protocols.SoapException: (.*?)\n/', $message, $matches);
+
+        return count($matches === 2) ? $matches[1] : $message;
     }
 }
