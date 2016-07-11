@@ -6,5 +6,4 @@ use ValueObjects\Number\Natural;
 
 class Loyalty extends Natural
 {
-
 }

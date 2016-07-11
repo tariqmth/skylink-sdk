@@ -3,7 +3,6 @@
 namespace RetailExpress\SkyLink\Vouchers;
 
 use RetailExpress\SkyLink\Apis\V2 as V2Api;
-
 use ValueObjects\Number\Real;
 
 class V2VoucherRepository implements VoucherRepository

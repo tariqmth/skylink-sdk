@@ -3,7 +3,6 @@
 namespace RetailExpress\SkyLink\Sales\Payments;
 
 use DateTimeImmutable;
-use InvalidArgumentException;
 use LogicException;
 use RetailExpress\SkyLink\Vouchers\VoucherCode;
 use ValueObjects\Number\Real;
@@ -117,6 +116,6 @@ class Payment
 
     public function usesVoucherCode()
     {
-        return !!$this->getVoucherCode();
+        return (bool) $this->getVoucherCode();
     }
 }
