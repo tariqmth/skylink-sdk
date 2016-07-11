@@ -25,7 +25,9 @@ class V2CustomerRepository implements CustomerRepository
         ];
         $parsedResponse = $xmlService->parse($rawResponse);
 
-        return array_get($parsedResponse, '0.value.1.value');
+        return array_get($parsedResponse, '0.value.1.value', function () use ($customerId) {
+            throw CustomerNotFoundException::withCustomerId($customerId);
+        });
     }
 
     public function add(Customer $customer)
