@@ -107,7 +107,7 @@ class BillingContact implements ValueObjectInterface
      */
     public function getFaxNumber()
     {
-        return clone $this->fax;
+        return clone $this->faxNumber;
     }
 
     /**
