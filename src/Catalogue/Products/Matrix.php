@@ -2,7 +2,9 @@
 
 namespace RetailExpress\SkyLink\Catalogue\Products;
 
-class Matrix
+use RetailExpress\SkyLink\Catalogue\Attributes\AttributeCode;
+
+class Matrix implements Product
 {
     private $policy;
 
@@ -27,5 +29,52 @@ class Matrix
         return array_map(function (Product $product) {
             return clone $product;
         }, $this->products);
+    }
+
+    public function getId()
+    {
+        return clone $this->getRepresentativeProduct()->getId();
+    }
+
+    public function getSku()
+    {
+        return clone $this->getRepresentativeProduct()->getSku();
+    }
+
+    public function getName()
+    {
+        return clone $this->getRepresentativeProduct()->getName();
+    }
+
+    public function getPricingStructure()
+    {
+        return clone $this->getRepresentativeProduct()->getPricingStructure();
+    }
+
+    public function getInventoryItem()
+    {
+        return clone $this->getRepresentativeProduct()->getInventoryItem();
+    }
+
+    public function getPhysicalPackage()
+    {
+        return clone $this->getRepresentativeProduct()->getPhysicalPackage();
+    }
+
+    public function getAttributeOption(AttributeCode $attributeCode)
+    {
+        return clone $this->getRepresentativeProduct()->getAttributeOption($attributeCode);
+    }
+
+    public function getProductType()
+    {
+        return clone $this->getRepresentativeProduct()->getProductType();
+    }
+
+    private function getRepresentativeProduct()
+    {
+        $products = $this->getProducts();
+
+        return array_shift($products);
     }
 }

@@ -30,13 +30,13 @@ class V2ProductRepository implements ProductRepository
 
         $xmlService = $this->api->getXmlService();
         $xmlService->elementMap = [
-            '{}Product' => Product::class,
+            '{}Product' => SimpleProduct::class,
         ];
         $parsedResponse = $xmlService->parse($rawResponse);
         $flattenedParsedResponse = array_flatten($parsedResponse);
 
         $products = array_filter($flattenedParsedResponse, function ($payload) {
-            return $payload instanceof Product;
+            return $payload instanceof SimpleProduct;
         });
 
         // If there is more than one product, we're dealing with a product matrix
@@ -51,7 +51,7 @@ class V2ProductRepository implements ProductRepository
     {
         $firstProduct = current($products);
 
-        $matrixPolicy = $this->matrixPolicyMapper->getPolicyForProductTYpe($firstProduct->getProductType());
+        $matrixPolicy = $this->matrixPolicyMapper->getPolicyForProductType($firstProduct->getProductType());
 
         return new Matrix($matrixPolicy, $products);
     }
