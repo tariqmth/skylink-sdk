@@ -1,13 +1,13 @@
 <?php
 
-namespace spec\RetailExpress\SkyLink\Sales\Payments;
+namespace spec\RetailExpress\SkyLink\Sdk\Sales\Payments;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 use LogicException;
-use RetailExpress\SkyLink\Sales\Payments\Payment;
-use RetailExpress\SkyLink\Sales\Payments\PaymentMethodId;
+use RetailExpress\SkyLink\Sdk\Sales\Payments\Payment;
+use RetailExpress\SkyLink\Sdk\Sales\Payments\PaymentMethodId;
 
 class PaymentSpec extends ObjectBehavior
 {

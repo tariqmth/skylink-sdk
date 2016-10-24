@@ -1,11 +1,11 @@
 <?php
 
-namespace spec\RetailExpress\SkyLink\ValueObjects\Person;
+namespace spec\RetailExpress\SkyLink\Sdk\ValueObjects\Person;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-use RetailExpress\SkyLink\ValueObjects\Person\Name;
+use RetailExpress\SkyLink\Sdk\ValueObjects\Person\Name;
 
 class NameSpec extends ObjectBehavior
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace RetailExpress\SkyLink\Outlets;
+namespace RetailExpress\SkyLink\Sdk\Outlets;
 
-use RetailExpress\SkyLink\Apis\V2 as V2Api;
-use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
+use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 
 class V2OutletRepository implements OutletRepository
 {

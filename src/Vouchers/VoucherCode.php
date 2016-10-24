@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\Vouchers;
+namespace RetailExpress\SkyLink\Sdk\Vouchers;
 
 use ValueObjects\StringLiteral\StringLiteral;
 

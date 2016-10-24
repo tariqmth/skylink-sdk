@@ -1,8 +1,8 @@
 <?php
 
-namespace RetailExpress\SkyLink\Sales\Orders;
+namespace RetailExpress\SkyLink\Sdk\Sales\Orders;
 
-use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
+use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 
 interface OrderRepository
 {

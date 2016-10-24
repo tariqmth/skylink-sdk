@@ -1,9 +1,9 @@
 <?php
 
-namespace RetailExpress\SkyLink\Catalogue\Products;
+namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
-use RetailExpress\SkyLink\Apis\V2 as V2Api;
-use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
+use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 
 class V2ProductRepository implements ProductRepository
 {

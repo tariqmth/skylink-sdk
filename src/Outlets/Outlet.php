@@ -1,8 +1,8 @@
 <?php
 
-namespace RetailExpress\SkyLink\Outlets;
+namespace RetailExpress\SkyLink\Sdk\Outlets;
 
-use RetailExpress\SkyLink\ValueObjects\Geography\Address;
+use RetailExpress\SkyLink\Sdk\ValueObjects\Geography\Address;
 use Sabre\Xml\XmlDeserializable;
 use ValueObjects\StringLiteral\StringLiteral;
 

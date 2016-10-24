@@ -1,12 +1,12 @@
 <?php
 
-namespace RetailExpress\SkyLink\Sales\Orders;
+namespace RetailExpress\SkyLink\Sdk\Sales\Orders;
 
 use DateTimeImmutable;
-use RetailExpress\SkyLink\Customers\BillingContact;
-use RetailExpress\SkyLink\Customers\CustomerId;
-use RetailExpress\SkyLink\Customers\ShippingContact;
-use RetailExpress\SkyLink\Outlets\OutletId;
+use RetailExpress\SkyLink\Sdk\Customers\BillingContact;
+use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
+use RetailExpress\SkyLink\Sdk\Customers\ShippingContact;
+use RetailExpress\SkyLink\Sdk\Outlets\OutletId;
 use Sabre\Xml\XmlSerializable;
 use ValueObjects\Number\Real;
 use ValueObjects\StringLiteral\StringLiteral;

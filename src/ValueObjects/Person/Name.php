@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\ValueObjects\Person;
+namespace RetailExpress\SkyLink\Sdk\ValueObjects\Person;
 
 use ValueObjects\Person\Name as BaseName;
 use ValueObjects\StringLiteral\StringLiteral;

@@ -1,8 +1,8 @@
 <?php
 
-namespace RetailExpress\SkyLink\Catalogue\Products;
+namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
-use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
+use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 
 interface ProductRepository
 {

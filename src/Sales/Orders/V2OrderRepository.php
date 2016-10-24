@@ -1,10 +1,10 @@
 <?php
 
-namespace RetailExpress\SkyLink\Sales\Orders;
+namespace RetailExpress\SkyLink\Sdk\Sales\Orders;
 
-use RetailExpress\SkyLink\Apis\V2 as V2Api;
-use RetailExpress\SkyLink\Customers\CustomerId;
-use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
+use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
+use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 
 class V2OrderRepository implements OrderRepository
 {

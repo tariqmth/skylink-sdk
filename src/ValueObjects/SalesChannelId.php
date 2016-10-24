@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\ValueObjects;
+namespace RetailExpress\SkyLink\Sdk\ValueObjects;
 
 use ValueObjects\Number\Integer;
 

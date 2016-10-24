@@ -1,9 +1,9 @@
 <?php
 
-namespace RetailExpress\SkyLink\Catalogue\Products;
+namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
 use BadMethodCallException;
-use RetailExpress\SkyLink\Catalogue\Attributes\Attribute;
+use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\Attribute;
 
 class MatrixPolicy
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace RetailExpress\SkyLink\Outlets;
+namespace RetailExpress\SkyLink\Sdk\Outlets;
 
-use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
+use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 
 interface OutletRepository
 {

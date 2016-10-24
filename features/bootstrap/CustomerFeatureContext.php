@@ -6,11 +6,11 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 
-use RetailExpress\SkyLink\Customers\BillingContact;
-use RetailExpress\SkyLink\Customers\Customer;
-use RetailExpress\SkyLink\Customers\CustomerId;
-use RetailExpress\SkyLink\Customers\NewsletterSubscription;
-use RetailExpress\SkyLink\Customers\ShippingContact;
+use RetailExpress\SkyLink\Sdk\Customers\BillingContact;
+use RetailExpress\SkyLink\Sdk\Customers\Customer;
+use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
+use RetailExpress\SkyLink\Sdk\Customers\NewsletterSubscription;
+use RetailExpress\SkyLink\Sdk\Customers\ShippingContact;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\EmailAddress;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace RetailExpress\SkyLink\Sales\Orders;
+namespace RetailExpress\SkyLink\Sdk\Sales\Orders;
 
 use BadMethodCallException;
-use RetailExpress\SkyLink\Catalogue\Products\ProductId;
-use RetailExpress\SkyLink\ValueObjects\TaxRate;
+use RetailExpress\SkyLink\Sdk\Catalogue\Products\ProductId;
+use RetailExpress\SkyLink\Sdk\ValueObjects\TaxRate;
 use ValueObjects\Number\Real;
 
 class Item

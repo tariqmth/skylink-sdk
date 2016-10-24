@@ -1,8 +1,8 @@
 <?php
 
-namespace RetailExpress\SkyLink\Sales\Orders;
+namespace RetailExpress\SkyLink\Sdk\Sales\Orders;
 
-use RetailExpress\SkyLink\Customers\V2BillingAndShippingContactSerializer;
+use RetailExpress\SkyLink\Sdk\Customers\V2BillingAndShippingContactSerializer;
 use Sabre\Xml\Writer as XmlWriter;
 
 trait V2OrderSerializer

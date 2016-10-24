@@ -1,8 +1,8 @@
 <?php
 
-namespace RetailExpress\SkyLink\Loyalty;
+namespace RetailExpress\SkyLink\Sdk\Loyalty;
 
-use RetailExpress\SkyLink\Customers\CustomerId;
+use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
 
 class FakeLoyaltyRepository implements LoyaltyRepository
 {

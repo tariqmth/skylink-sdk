@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\Catalogue\Attributes;
+namespace RetailExpress\SkyLink\Sdk\Catalogue\Attributes;
 
 use ValueObjects\Enum\Enum;
 use ValueObjects\StringLiteral\StringLiteral;

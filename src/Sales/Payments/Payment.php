@@ -1,10 +1,10 @@
 <?php
 
-namespace RetailExpress\SkyLink\Sales\Payments;
+namespace RetailExpress\SkyLink\Sdk\Sales\Payments;
 
 use DateTimeImmutable;
 use LogicException;
-use RetailExpress\SkyLink\Vouchers\VoucherCode;
+use RetailExpress\SkyLink\Sdk\Vouchers\VoucherCode;
 use ValueObjects\Number\Real;
 
 class Payment

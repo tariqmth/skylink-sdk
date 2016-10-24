@@ -1,12 +1,12 @@
 <?php
 
-namespace spec\RetailExpress\SkyLink\Vouchers;
+namespace spec\RetailExpress\SkyLink\Sdk\Vouchers;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 use BadMethodCallException;
-use RetailExpress\SkyLink\Vouchers\Voucher;
+use RetailExpress\SkyLink\Sdk\Vouchers\Voucher;
 
 class VoucherSpec extends ObjectBehavior
 {

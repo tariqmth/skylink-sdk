@@ -6,7 +6,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 
-use RetailExpress\SkyLink\Vouchers\VoucherCode;
+use RetailExpress\SkyLink\Sdk\Vouchers\VoucherCode;
 use ValueObjects\Number\Real;
 
 trait VoucherFeatureContext

@@ -1,10 +1,10 @@
 <?php
 
-namespace RetailExpress\SkyLink\Customers;
+namespace RetailExpress\SkyLink\Sdk\Customers;
 
 use BadMethodCallException;
-use RetailExpress\SkyLink\ValueObjects\Geography\Address;
-use RetailExpress\SkyLink\ValueObjects\Person\Name;
+use RetailExpress\SkyLink\Sdk\ValueObjects\Geography\Address;
+use RetailExpress\SkyLink\Sdk\ValueObjects\Person\Name;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Util\Util;
 use ValueObjects\ValueObjectInterface;

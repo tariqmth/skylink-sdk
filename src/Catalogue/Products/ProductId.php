@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\Catalogue\Products;
+namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
 use ValueObjects\Number\Integer;
 

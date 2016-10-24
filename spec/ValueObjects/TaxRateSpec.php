@@ -1,12 +1,12 @@
 <?php
 
-namespace spec\RetailExpress\SkyLink\ValueObjects;
+namespace spec\RetailExpress\SkyLink\Sdk\ValueObjects;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 use InvalidArgumentException;
-use RetailExpress\SkyLink\ValueObjects\TaxRate;
+use RetailExpress\SkyLink\Sdk\ValueObjects\TaxRate;
 use ValueObjects\NullValue\NullValue;
 
 class TaxRateSpec extends ObjectBehavior

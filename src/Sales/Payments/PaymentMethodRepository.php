@@ -1,8 +1,8 @@
 <?php
 
-namespace RetailExpress\SkyLink\Sales\Payments;
+namespace RetailExpress\SkyLink\Sdk\Sales\Payments;
 
-use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
+use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 
 interface PaymentMethodRepository
 {

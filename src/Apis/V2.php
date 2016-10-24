@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\Apis;
+namespace RetailExpress\SkyLink\Sdk\Apis;
 
 use Ramsey\Uuid\Uuid;
 use Sabre\Xml\Service as XmlService;

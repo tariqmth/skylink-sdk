@@ -1,8 +1,8 @@
 <?php
 
-namespace RetailExpress\SkyLink\Vouchers;
+namespace RetailExpress\SkyLink\Sdk\Vouchers;
 
-use RetailExpress\SkyLink\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
 use ValueObjects\Number\Real;
 
 class V2VoucherRepository implements VoucherRepository

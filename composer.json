@@ -1,6 +1,6 @@
 {
-  "name": "retail-express/skylink",
-  "description": "Base package for connecting a PHP application to Retail Express.",
+  "name": "retail-express/skylink-sdk",
+  "description": "SDK for connecting a PHP application to Retail Express.",
   "license": "proprietary",
   "authors": [
     {
@@ -14,7 +14,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "RetailExpress\\SkyLink\\": "src/"
+      "RetailExpress\\SkyLink\\Sdk\\": "src/"
     },
     "files": [
       "src/helpers.php"

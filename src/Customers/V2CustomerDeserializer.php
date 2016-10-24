@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\Customers;
+namespace RetailExpress\SkyLink\Sdk\Customers;
 
 use Sabre\Xml\Deserializer as XmlDeserializer;
 use Sabre\Xml\Reader as XmlReader;

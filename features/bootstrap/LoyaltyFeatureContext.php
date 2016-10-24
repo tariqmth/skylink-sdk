@@ -6,8 +6,8 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 
-use RetailExpress\SkyLink\Customers\CustomerId;
-use RetailExpress\SkyLink\Loyalty\Loyalty;
+use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
+use RetailExpress\SkyLink\Sdk\Loyalty\Loyalty;
 
 trait LoyaltyFeatureContext
 {

@@ -11,17 +11,17 @@ use Behat\Gherkin\Node\TableNode;
 
 use Dotenv\Dotenv;
 use Ramsey\Uuid\Uuid;
-use RetailExpress\SkyLink\Apis\V2 as V2Api;
-use RetailExpress\SkyLink\Catalogue\Attributes\V2AttributeRepository;
-use RetailExpress\SkyLink\Catalogue\Products\MatrixPolicyMapper;
-use RetailExpress\SkyLink\Catalogue\Products\V2ProductRepository;
-use RetailExpress\SkyLink\Customers\V2CustomerRepository;
-use RetailExpress\SkyLink\Loyalty\FakeLoyaltyRepository;
-use RetailExpress\SkyLink\Outlets\V2OutletRepository;
-use RetailExpress\SkyLink\Sales\Orders\V2OrderRepository;
-use RetailExpress\SkyLink\Sales\Payments\V2PaymentMethodRepository;
-use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
-use RetailExpress\SkyLink\Vouchers\V2VoucherRepository;
+use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\V2AttributeRepository;
+use RetailExpress\SkyLink\Sdk\Catalogue\Products\MatrixPolicyMapper;
+use RetailExpress\SkyLink\Sdk\Catalogue\Products\V2ProductRepository;
+use RetailExpress\SkyLink\Sdk\Customers\V2CustomerRepository;
+use RetailExpress\SkyLink\Sdk\Loyalty\FakeLoyaltyRepository;
+use RetailExpress\SkyLink\Sdk\Outlets\V2OutletRepository;
+use RetailExpress\SkyLink\Sdk\Sales\Orders\V2OrderRepository;
+use RetailExpress\SkyLink\Sdk\Sales\Payments\V2PaymentMethodRepository;
+use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
+use RetailExpress\SkyLink\Sdk\Vouchers\V2VoucherRepository;
 
 /**
  * Defines application features from the specific context.

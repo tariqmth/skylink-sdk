@@ -6,7 +6,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 
-use RetailExpress\SkyLink\Outlets\OutletId;
+use RetailExpress\SkyLink\Sdk\Outlets\OutletId;
 use ValueObjects\StringLiteral\StringLiteral;
 
 trait OutletFeatureContext

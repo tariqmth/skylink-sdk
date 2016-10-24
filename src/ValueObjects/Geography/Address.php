@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\ValueObjects\Geography;
+namespace RetailExpress\SkyLink\Sdk\ValueObjects\Geography;
 
 use BadMethodCallException;
 use ReflectionClass;

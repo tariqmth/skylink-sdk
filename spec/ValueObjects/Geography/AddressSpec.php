@@ -1,12 +1,12 @@
 <?php
 
-namespace spec\RetailExpress\SkyLink\ValueObjects\Geography;
+namespace spec\RetailExpress\SkyLink\Sdk\ValueObjects\Geography;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 use BadMethodCallException;
-use RetailExpress\SkyLink\ValueObjects\Geography\Address;
+use RetailExpress\SkyLink\Sdk\ValueObjects\Geography\Address;
 use ValueObjects\NullValue\NullValue;
 
 class AddressSpec extends ObjectBehavior

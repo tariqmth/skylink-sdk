@@ -1,6 +1,6 @@
 <?php
 
-use RetailExpress\SkyLink\Util;
+use RetailExpress\SkyLink\Sdk\Util;
 
 // The format of dates in the V2 API (maybe move this?)
 const V2_API_DATE_FORMAT = 'Y-m-d\TH:i:s.000';

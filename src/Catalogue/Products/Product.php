@@ -1,6 +1,8 @@
 <?php
 
-use RetailExpress\SkyLink\Catalogue\Attributes\AttributeCode;
+namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
+
+use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeCode;
 
 interface Product
 {

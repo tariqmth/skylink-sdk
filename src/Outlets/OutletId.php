@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\Outlets;
+namespace RetailExpress\SkyLink\Sdk\Outlets;
 
 use ValueObjects\Number\Integer;
 

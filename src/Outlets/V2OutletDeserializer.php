@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\Outlets;
+namespace RetailExpress\SkyLink\Sdk\Outlets;
 
 use Sabre\Xml\Deserializer as XmlDeserializer;
 use Sabre\Xml\Reader as XmlReader;

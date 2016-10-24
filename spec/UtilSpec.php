@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\RetailExpress\SkyLink;
+namespace spec\RetailExpress\SkyLink\Sdk;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -9,7 +9,7 @@ class UtilSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
-        $this->shouldHaveType('RetailExpress\SkyLink\Util');
+        $this->shouldHaveType('RetailExpress\SkyLink\Sdk\Util');
     }
 
     function it_returns_non_empty_values()

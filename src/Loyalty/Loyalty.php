@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\Loyalty;
+namespace RetailExpress\SkyLink\Sdk\Loyalty;
 
 use ValueObjects\Number\Natural;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace RetailExpress\SkyLink\Sales\Payments;
+namespace RetailExpress\SkyLink\Sdk\Sales\Payments;
 
-use RetailExpress\SkyLink\Apis\V2 as V2Api;
-use RetailExpress\SkyLink\ValueObjects\SalesChannelId;
+use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 
 class V2PaymentMethodRepository implements PaymentMethodRepository
 {

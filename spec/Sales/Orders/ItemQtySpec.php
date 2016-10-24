@@ -1,13 +1,13 @@
 <?php
 
-namespace spec\RetailExpress\SkyLink\Sales\Orders;
+namespace spec\RetailExpress\SkyLink\Sdk\Sales\Orders;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 use BadMethodCallException;
 use InvalidArgumentException;
-use RetailExpress\SkyLink\Sales\Orders\ItemQty;
+use RetailExpress\SkyLink\Sdk\Sales\Orders\ItemQty;
 use ValueObjects\NullValue\NullValue;
 
 class ItemQtySpec extends ObjectBehavior

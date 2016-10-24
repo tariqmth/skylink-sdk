@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink;
+namespace RetailExpress\SkyLink\Sdk;
 
 use Illuminate\Support\Arr;
 

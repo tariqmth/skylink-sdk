@@ -1,11 +1,11 @@
 <?php
 
-namespace spec\RetailExpress\SkyLink\ValueObjects;
+namespace spec\RetailExpress\SkyLink\Sdk\ValueObjects;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-use RetailExpress\SkyLink\ValueObjects\SimpleStatus;
+use RetailExpress\SkyLink\Sdk\ValueObjects\SimpleStatus;
 use ValueObjects\Exception\InvalidNativeArgumentException;
 use ValueObjects\NullValue\NullValue;
 

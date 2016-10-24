@@ -1,8 +1,8 @@
 <?php
 
-namespace RetailExpress\SkyLink\Customers;
+namespace RetailExpress\SkyLink\Sdk\Customers;
 
-use RetailExpress\SkyLink\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
 
 class V2CustomerRepository implements CustomerRepository
 {

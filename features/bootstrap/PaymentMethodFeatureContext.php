@@ -6,7 +6,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 
-use RetailExpress\SkyLink\Sales\Payments\PaymentMethodId;
+use RetailExpress\SkyLink\Sdk\Sales\Payments\PaymentMethodId;
 use ValueObjects\StringLiteral\StringLiteral;
 
 trait PaymentMethodFeatureContext

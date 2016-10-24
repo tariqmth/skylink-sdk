@@ -6,8 +6,8 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 
-use RetailExpress\SkyLink\Catalogue\Attributes\AttributeCode;
-use RetailExpress\SkyLink\Catalogue\Products\ProductId;
+use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeCode;
+use RetailExpress\SkyLink\Sdk\Catalogue\Products\ProductId;
 use ValueObjects\StringLiteral\StringLiteral;
 
 trait ProductFeatureContext

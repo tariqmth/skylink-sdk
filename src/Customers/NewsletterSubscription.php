@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailExpress\SkyLink\Customers;
+namespace RetailExpress\SkyLink\Sdk\Customers;
 
 use ValueObjects\Exception\InvalidNativeArgumentException;
 use ValueObjects\Util\Util;

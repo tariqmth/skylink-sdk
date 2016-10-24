@@ -1,8 +1,8 @@
 <?php
 
-namespace RetailExpress\SkyLink\Catalogue\Products;
+namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
-use RetailExpress\SkyLink\Catalogue\Attributes\AttributeCode;
+use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeCode;
 
 class Matrix implements Product
 {

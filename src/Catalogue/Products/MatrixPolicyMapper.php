@@ -1,10 +1,10 @@
 <?php
 
-namespace RetailExpress\SkyLink\Catalogue\Products;
+namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
 use InvalidArgumentException;
-use RetailExpress\SkyLink\Catalogue\Attributes\AttributeCode;
-use RetailExpress\SkyLink\Catalogue\Attributes\AttributeOption;
+use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeCode;
+use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeOption;
 
 class MatrixPolicyMapper
 {
