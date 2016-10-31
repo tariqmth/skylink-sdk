@@ -20,6 +20,8 @@ class PricingStructure implements ValueObjectInterface
      * Returns an Pricing Structure taking PHP native values as arguments.
      *
      * @return ValueObjectInterface
+     *
+     * @todo Special price should be optional, maybe re-order parameters?
      */
     public static function fromNative()
     {

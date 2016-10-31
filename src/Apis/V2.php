@@ -2,11 +2,11 @@
 
 namespace RetailExpress\SkyLink\Sdk\Apis;
 
-use Ramsey\Uuid\Uuid;
 use Sabre\Xml\Service as XmlService;
 use SoapClient;
 use SoapFault;
 use SoapHeader;
+use ValueObjects\Identity\UUID as Uuid;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\SchemeName;
 use ValueObjects\Web\Url;

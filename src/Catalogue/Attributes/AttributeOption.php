@@ -82,6 +82,6 @@ class AttributeOption implements ValueObjectInterface
      */
     public function __toString()
     {
-        return (string) $this->optionId;
+        return (string) $this->getId();
     }
 }
