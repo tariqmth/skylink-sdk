@@ -36,10 +36,11 @@ class InventoryItem implements ValueObjectInterface
         $this->qty = $qty;
     }
 
-    public function getManaged()
+    public function isManaged()
     {
         return $this->managed;
     }
+
 
     public function getQty()
     {
@@ -59,7 +60,7 @@ class InventoryItem implements ValueObjectInterface
             return false;
         }
 
-        return $this->getManaged() === $inventoryItem->getManaged() &&
+        return $this->isManaged() === $inventoryItem->isManaged() &&
             $this->getQty()->sameValueAs($inventoryItem->getQty());
     }
 
