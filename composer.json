@@ -1,6 +1,6 @@
 {
   "name": "retail-express/skylink-sdk",
-  "description": "SDK for connecting a PHP application to Retail Express.",
+  "description": "Framework-agnostic SDK package for connecting a PHP application to Retail Express.",
   "license": "proprietary",
   "authors": [
     {
