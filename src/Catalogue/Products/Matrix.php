@@ -2,6 +2,7 @@
 
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
+use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\Attribute;
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeCode;
 
 class Matrix implements Product
@@ -63,7 +64,20 @@ class Matrix implements Product
 
     public function getAttributeOption(AttributeCode $attributeCode)
     {
-        return clone $this->getRepresentativeProduct()->getAttributeOption($attributeCode);
+        // If our attribute code is listed in our Policy, the Matrix itself cannot suck
+        // the options for this attribute code from any products, because presumably
+        // they're all different
+        $inPolicy = $this->attributeCodeIsInPolicy($attributeCode);
+
+        if (true === $inPolicy) {
+            return null;
+        }
+
+        $attributeOption = $this->getRepresentativeProduct()->getAttributeOption($attributeCode);;
+
+        if (null !== $attributeOption) {
+            return clone $attributeOption;
+        }
     }
 
     public function getProductType()
@@ -76,5 +90,17 @@ class Matrix implements Product
         $products = $this->getProducts();
 
         return array_shift($products);
+    }
+
+    private function attributeCodeIsInPolicy(AttributeCode $attributeCode)
+    {
+        $matchingAttributes = array_filter(array_map(
+            function (Attribute $policyAttribute) use ($attributeCode) {
+                return $policyAttribute->getCode()->sameValueAs($attributeCode);
+            },
+            $this->getPolicy()->getAttributes()
+        ));
+
+        return count($matchingAttributes) > 0;
     }
 }
