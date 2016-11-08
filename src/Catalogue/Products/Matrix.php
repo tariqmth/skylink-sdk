@@ -33,12 +33,12 @@ class Matrix implements Product
 
     public function getId()
     {
-        return clone $this->getRepresentativeProduct()->getId();
+        return null;
     }
 
     public function getSku()
     {
-        return clone $this->getRepresentativeProduct()->getSku();
+        return $this->getName();
     }
 
     public function getName()
