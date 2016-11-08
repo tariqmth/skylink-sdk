@@ -27,7 +27,7 @@ class V2VoucherRepository implements VoucherRepository
         $balance = (float) array_get($parsedResponse, '0.value');
 
         if ($balance === 0.0) {
-            return;
+            return null;
         }
 
         return new Voucher($voucherCode, new Real($balance));

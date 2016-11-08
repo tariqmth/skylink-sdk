@@ -157,7 +157,7 @@ class Order implements XmlSerializable
     public function getCustomerId()
     {
         if (null === $this->customerId) {
-            return;
+            return null;
         }
 
         return clone $this->customerId;
@@ -166,7 +166,7 @@ class Order implements XmlSerializable
     public function getNewCustomerPassword()
     {
         if (null === $this->newCustomerPassword) {
-            return;
+            return null;
         }
 
         return clone $this->newCustomerPassword;
@@ -207,7 +207,7 @@ class Order implements XmlSerializable
     public function getOutletIdToFulfillFrom()
     {
         if (!$this->specifiedOutletIdToFulfillFrom()) {
-            return;
+            return null;
         }
 
         return clone $this->fulfillFromOutletId;
@@ -221,7 +221,7 @@ class Order implements XmlSerializable
     public function getPublicComments()
     {
         if (null === $this->publicComments) {
-            return;
+            return null;
         }
 
         return clone $this->publicComments;
@@ -230,7 +230,7 @@ class Order implements XmlSerializable
     public function getPrivateComments()
     {
         if (null === $this->privateComments) {
-            return;
+            return null;
         }
 
         return clone $this->privateComments;

@@ -135,7 +135,7 @@ class V2
     private function checkPayloadForErrors($rawPayload)
     {
         // @todo Reimplement error handling
-        return;
+        return null;
 
         $xmlService = $this->getXmlService();
         $xmlService->elementMap = [

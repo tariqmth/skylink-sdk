@@ -108,7 +108,7 @@ class Payment
     public function getVoucherCode()
     {
         if (null === $this->voucherCode) {
-            return;
+            return null;
         }
 
         return clone $this->voucherCode;

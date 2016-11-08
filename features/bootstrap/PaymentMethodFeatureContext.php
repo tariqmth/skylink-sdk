@@ -46,7 +46,7 @@ trait PaymentMethodFeatureContext
             }
 
             if ($paymentMethod->getName()->sameValueAs(new StringLiteral($name))) {
-                return;
+                return null;
             }
 
             throw new Exception("The payment method's name was {$paymentMethod->getName()}.");

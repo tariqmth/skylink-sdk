@@ -46,7 +46,7 @@ trait OutletFeatureContext
             }
 
             if ($outlet->getName()->sameValueAs(new StringLiteral($name))) {
-                return;
+                return null;
             }
 
             throw new Exception("The outlet's name was {$outlet->getName()}.");
