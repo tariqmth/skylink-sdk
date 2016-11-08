@@ -220,7 +220,7 @@ class Address implements ValueObjectInterface
     public function __toString()
     {
         // Multi-dimensional array representing entire lines plus components of each line
-        //
+
         // [
         //    {line 1},
         //    [

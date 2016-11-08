@@ -41,7 +41,6 @@ class InventoryItem implements ValueObjectInterface
         return $this->managed;
     }
 
-
     public function getQty()
     {
         return clone $this->qty;

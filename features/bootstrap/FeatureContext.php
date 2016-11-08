@@ -4,13 +4,8 @@ require_once __DIR__.'/CustomerFeatureContext.php';
 require_once __DIR__.'/ProductFeatureContext.php';
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Gherkin\Node\TableNode;
-
 use Dotenv\Dotenv;
-use Ramsey\Uuid\Uuid;
 use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\V2AttributeRepository;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\MatrixPolicyMapper;

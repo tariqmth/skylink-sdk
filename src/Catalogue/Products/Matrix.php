@@ -73,7 +73,7 @@ class Matrix implements Product
             return null;
         }
 
-        $attributeOption = $this->getRepresentativeProduct()->getAttributeOption($attributeCode);;
+        $attributeOption = $this->getRepresentativeProduct()->getAttributeOption($attributeCode);
 
         if (null !== $attributeOption) {
             return clone $attributeOption;
