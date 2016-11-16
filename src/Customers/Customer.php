@@ -2,6 +2,7 @@
 
 namespace RetailExpress\SkyLink\Sdk\Customers;
 
+use LogicException;
 use Sabre\Xml\XmlDeserializable;
 use Sabre\Xml\XmlSerializable;
 use ValueObjects\StringLiteral\StringLiteral;
@@ -64,6 +65,18 @@ class Customer implements XmlDeserializable, XmlSerializable
         );
     }
 
+    /**
+     * @see \RetailExpress\SkyLink\Sdk\Sales\Orders\Order::setId()
+     */
+    public function setId(CustomerId $id)
+    {
+        if (null !== $this->getId()) {
+            throw new LogicException('Customer ID already set, cannot override.');
+        }
+
+        $this->id = $id;
+    }
+
     public function getBillingContact()
     {
         return clone $this->billingContact;
@@ -81,11 +94,19 @@ class Customer implements XmlDeserializable, XmlSerializable
 
     public function getId()
     {
+        if (null === $this->id) {
+            return null;
+        }
+
         return clone $this->id;
     }
 
     public function getPassword()
     {
+        if (null === $this->password) {
+            return null;
+        }
+
         return clone $this->password;
     }
 }

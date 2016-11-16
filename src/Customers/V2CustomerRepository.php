@@ -37,8 +37,20 @@ class V2CustomerRepository implements CustomerRepository
             'Customer' => $customer,
         ]);
 
-        $this->api->call('CustomerCreateUpdate', [
+        $rawResponse = $this->api->call('CustomerCreateUpdate', [
             'CustomerXML' => $xml,
         ]);
+
+        $xmlService = $this->api->getXmlService();
+        $xmlService->elementMap = [
+            '{}Customer' => 'Sabre\Xml\Deserializer\keyValue',
+        ];
+
+        $parsedResponse = $xmlService->parse($rawResponse);
+
+        if (null === $customer->getId()) {
+            $customerId = new CustomerId(array_get($parsedResponse, '0.value.{}CustomerId'));
+            $customer->setId($customerId);
+        }
     }
 }
