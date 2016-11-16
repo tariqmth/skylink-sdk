@@ -3,6 +3,7 @@
 namespace RetailExpress\SkyLink\Sdk\Sales\Orders;
 
 use DateTimeImmutable;
+use LogicException;
 use RetailExpress\SkyLink\Sdk\Customers\BillingContact;
 use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
 use RetailExpress\SkyLink\Sdk\Customers\ShippingContact;
@@ -104,11 +105,19 @@ class Order implements XmlSerializable
      */
     public function setId(OrderId $id)
     {
+        if (null !== $this->getId()) {
+            throw new LogicException('Order ID already set, cannot override.');
+        }
+
         $this->id = $id;
     }
 
     public function setCustomerId(CustomerId $customerId)
     {
+        if (null !== $this->getCustomerId()) {
+            throw new LogicException('Customer ID already set, cannot override.');
+        }
+
         $this->customerId = $customerId;
     }
 
