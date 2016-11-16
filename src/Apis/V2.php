@@ -19,7 +19,7 @@ class V2
     {
         return new self(
             Url::fromNative($url),
-            Uuid::fromString($clientId),
+            Uuid::fromNative($clientId),
             new StringLiteral($username),
             new StringLiteral($password)
         );
