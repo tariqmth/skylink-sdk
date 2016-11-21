@@ -83,6 +83,12 @@ class Address implements ValueObjectInterface
             return $index;
         }
 
+        // Next, we'll check check to see if the country name is actually a country code
+        $countryNameUppercase = strtoupper($countryName);
+        if (array_key_exists($countryNameUppercase, $names)) {
+            return $countryNameUppercase;
+        }
+
         // Failing that, load in the aliases
         foreach (self::getCountryAliases() as $countryCode => $aliases) {
             foreach ($aliases as $alias) {
