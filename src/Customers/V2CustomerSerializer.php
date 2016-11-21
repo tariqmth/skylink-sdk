@@ -13,7 +13,7 @@ trait V2CustomerSerializer
         $payload = [];
 
         if (null !== $this->id) {
-            $payload['CustomerId'] = $this->id->toInteger();
+            $payload['CustomerId'] = $this->id->toNative();
         }
 
         if (null !== $this->getPassword()) {
