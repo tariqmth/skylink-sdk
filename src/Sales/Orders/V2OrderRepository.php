@@ -41,8 +41,10 @@ class V2OrderRepository implements OrderRepository
         $parsedResponse = $xmlService->parse($rawResponse);
 
         // A successful response contains 4 nodes, Customer, Order, OrderItems and OrderPayments
-        $customerParsedResponse = array_get($parsedResponse, '0.value.0.value');
-        $order->setCustomerId(new CustomerId($customerParsedResponse['{}CustomerId']));
+        if (null === $order->getCustomerId()) {
+            $customerParsedResponse = array_get($parsedResponse, '0.value.0.value');
+            $order->setCustomerId(new CustomerId($customerParsedResponse['{}CustomerId']));
+        }
 
         $orderParsedResponse = array_get($parsedResponse, '0.value.1.value');
         $order->setId(new OrderId($orderParsedResponse['{}OrderId']));
