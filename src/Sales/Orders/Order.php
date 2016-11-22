@@ -160,6 +160,10 @@ class Order implements XmlSerializable
 
     public function getId()
     {
+        if (null === $this->id) {
+            return null;
+        }
+
         return clone $this->id;
     }
 
