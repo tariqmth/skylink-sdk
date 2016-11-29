@@ -22,20 +22,6 @@ class Customer implements XmlDeserializable, XmlSerializable
 
     private $password;
 
-    private function __construct(
-        BillingContact $billingContact,
-        ShippingContact $shippingContact,
-        NewsletterSubscription $newsletterSubscription,
-        CustomerId $id = null,
-        StringLiteral $password = null
-    ) {
-        $this->billingContact = $billingContact;
-        $this->shippingContact = $shippingContact;
-        $this->newsletterSubscription = $newsletterSubscription;
-        $this->id = $id;
-        $this->password = $password;
-    }
-
     public static function existing(
         CustomerId $id,
         BillingContact $billingContact,
@@ -63,6 +49,20 @@ class Customer implements XmlDeserializable, XmlSerializable
             null,
             $password
         );
+    }
+
+    private function __construct(
+        BillingContact $billingContact,
+        ShippingContact $shippingContact,
+        NewsletterSubscription $newsletterSubscription,
+        CustomerId $id = null,
+        StringLiteral $password = null
+    ) {
+        $this->billingContact = $billingContact;
+        $this->shippingContact = $shippingContact;
+        $this->newsletterSubscription = $newsletterSubscription;
+        $this->id = $id;
+        $this->password = $password;
     }
 
     /**
