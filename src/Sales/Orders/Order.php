@@ -8,6 +8,7 @@ use RetailExpress\SkyLink\Sdk\Customers\BillingContact;
 use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
 use RetailExpress\SkyLink\Sdk\Customers\ShippingContact;
 use RetailExpress\SkyLink\Sdk\Outlets\OutletId;
+use RetailExpress\SkyLink\Sdk\Orders\Payments\Payment;
 use Sabre\Xml\XmlSerializable;
 use ValueObjects\Number\Real;
 use ValueObjects\StringLiteral\StringLiteral;
@@ -31,6 +32,8 @@ class Order implements XmlSerializable
     private $shippingContact;
 
     private $items = [];
+
+    private $payments = [];
 
     private $shippingCharge;
 
@@ -134,6 +137,14 @@ class Order implements XmlSerializable
         return $new;
     }
 
+    public function withPayment(Payment $payment)
+    {
+        $new = clone $this;
+        $new->payments[] = $payment;
+
+        return $new;
+    }
+
     public function fulfillFromOutletId(OutletId $fulfillFromOutletId)
     {
         $new = clone $this;
@@ -210,6 +221,13 @@ class Order implements XmlSerializable
         return array_map(function (Item $item) {
             return clone $item;
         }, $this->items);
+    }
+
+    public function getPayments()
+    {
+        return array_map(function (Payment $payment) {
+            return clone $payment;
+        }, $this->payments);
     }
 
     public function getShippingCharge()
