@@ -7,15 +7,20 @@ use RetailExpress\SkyLink\Sdk\Sales\Orders\Item;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\Order;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\ShippingCharge;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\Status;
+use RetailExpress\SkyLink\Sdk\Sales\Payments\Payment;
 use ValueObjects\StringLiteral\StringLiteral;
 
 trait OrderFeatureContext
 {
     private $orderRepository;
 
+    private $paymentRepository;
+
     private $pendingOrderInformation = [];
 
     private $order;
+
+    private $payment;
 
     /**
      * @Given I want to ship my order to:
@@ -113,5 +118,15 @@ trait OrderFeatureContext
         if (null === $this->order->getId()) {
             throw new Exception('No valid order ID was present.');
         }
+    }
+
+    /**
+     * @Then I can pay a total of :arg1 towards the order using payment method :arg2
+     */
+    public function iCanPayATotalOfTowardsTheOrderUsingPaymentMethod($total, $methodId)
+    {
+        $this->payment = Payment::normalFromNative((string) $this->order->getId(), time(), $methodId, $total);
+
+        $this->paymentRepository->add($this->payment);
     }
 }

@@ -13,7 +13,7 @@ trait V2OrderSerializer
     {
         $payload = [];
 
-        $payload['DateCreated'] = date(V2_API_DATE_FORMAT, $this->getPlacedAt()->getTimestamp());
+        $payload['DateCreated'] = $this->getPlacedAt()->format(V2_API_DATE_FORMAT);
         $payload['OrderTotal'] = (string) $this->getTotal();
         $payload['FreightTotal'] = (string) $this->getShippingCharge()->getPrice();
         $payload['OrderStatus'] = $this->getStatus()->toV2Status();

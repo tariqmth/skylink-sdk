@@ -4,5 +4,5 @@ namespace RetailExpress\SkyLink\Sdk\Sales\Payments;
 
 interface PaymentRepository
 {
-    public function add(OrderId $orderId, Payment $payment);
+    public function add(Payment $payment);
 }

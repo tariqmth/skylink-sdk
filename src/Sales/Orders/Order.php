@@ -139,6 +139,18 @@ class Order implements XmlSerializable
 
     public function withPayment(Payment $payment)
     {
+        if (null === $this->getId()) {
+            throw new LogicException('Payments can only be added to existing orders with an ID.');
+        }
+
+        if (false === $payment->getOrderId()->sameValueAs($this->getId())) {
+            throw new LogicException(sprintf(
+                'Payment is associated with Order #%s while being assigned to Order #%s.',
+                $payment->getOrderId(),
+                $this->getId()
+            ));
+        }
+
         $new = clone $this;
         $new->payments[] = $payment;
 

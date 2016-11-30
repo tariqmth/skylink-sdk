@@ -37,30 +37,35 @@ class V2
         );
     }
 
-    public function call($method, array $arguments = [])
+    public function call($method, array $arguments = [], callable $postProcessing = null)
     {
         try {
             $response = $this->soapClient->__soapCall($method, [$arguments]);
         } catch (SoapFault $soapFault) {
+
             // To determine if the response is valid XML or not, we'll look for the presence of
             // the XML opening tag. If it does not exist, we know we are dealing with a zipped
             // response instead, at which point we'll write the response to a temporary file
             // and return a resource pointing to the temporary file so that it's contents
             // may be parsed without hindering on memory too badly.
             $response = $this->soapClient->__getLastResponse();
+
+            // @todo Look at __getLastResponseHeaders for "Content-Type: binary/x-gzip"
             if (starts_with($response, '<?xml version="1.0" encoding="utf-8"?>')) {
                 $message = $this->extractUsefulSoapFaultMessage($soapFault->getMessage());
-
-                $v2ApiException = new V2ApiException($message);
-                $v2ApiException->setSoapFault($soapFault);
-
-                throw $v2ApiException;
+                throw V2ApiException::withSoapFault($soapFault, $message);
             }
 
             $response = $this->unzipReponse($response);
         }
 
-        return $this->dissectApiResponse($response);
+        $response = $this->dissectApiResponse($response);
+
+        if (null !== $postProcessing) {
+            $postProcessing($response);
+        }
+
+        return $response;
     }
 
     public function getXmlService()
@@ -110,59 +115,22 @@ class V2
      */
     private function dissectApiResponse($response)
     {
-        if (is_object($response)) {
-            $responseAsArray = get_object_vars($response);
-
-            // If we ever encounter a situation where there's more than one element in our response
-            // then we'll look into using array_first() with logic for finding the element that
-            // we need. Until that time, we'll just throw an exception so we don't have any
-            // strange behaviour leaking out and producing strange bugs.
-            $responseElements = count($responseAsArray);
-            if ($responseElements !== 1) {
-                throw new V2ApiException("Expected 1 element in an API response, but received {$responseElements}.");
-            }
-
-            $payload = array_shift($responseAsArray)->any;
-        } else {
-            $payload = $response;
+        if (!is_object($response)) {
+            return $response;
         }
 
-        $this->checkPayloadForErrors($payload);
+        $responseAsArray = get_object_vars($response);
 
-        return $payload;
-    }
-
-    private function checkPayloadForErrors($rawPayload)
-    {
-        // @todo Reimplement error handling
-        return null;
-
-        $xmlService = $this->getXmlService();
-        $xmlService->elementMap = [
-            '{}Response' => 'Sabre\Xml\Deserializer\keyValue',
-        ];
-        $parsedPayload = $xmlService->parse($rawPayload);
-
-        // Check for generic errors
-        if (isset($parsedPayload['{}Error'])) {
-            throw new V2ApiException($parsedPayload['{}Error']);
+        // If we ever encounter a situation where there's more than one element in our response
+        // then we'll look into using array_first() with logic for finding the element that
+        // we need. Until that time, we'll just throw an exception so we don't have any
+        // strange behaviour leaking out and producing strange bugs.
+        $responseElements = count($responseAsArray);
+        if ($responseElements !== 1) {
+            throw new V2ApiException("Expected 1 element in an API response, but received {$responseElements}.");
         }
 
-        /*
-         * Check for responses signalling validation failures (unfortuantely there are no messages).
-         * Yes, this is a particularly strange response payload, SOAP API FTW.
-         *
-         * @link https://www.dropbox.com/s/r8hqgu3amjo4j6z/Screenshot%202016-02-23%2010.34.55.png?dl=0
-         */
-        array_walk($parsedPayload, function (&$value, $key) {
-            foreach ($value as $childValue) {
-                if (isset($childValue['name']) && $childValue['name'] === '{}Result') {
-                    if ($childValue['value'] === 'Fail') {
-                        throw new V2ApiException('Unspecified API failure.');
-                    }
-                }
-            }
-        });
+        return array_shift($responseAsArray)->any;
     }
 
     private function assertSecureUrl(Url $url)
