@@ -54,7 +54,7 @@ class V2OrderRepository implements OrderRepository
     public function get(OrderId $orderId)
     {
         throw new BadMethodCallException(sprintf(
-            '%s::get(%s) is not currently supported by the V2 API, please use retail-express/skylink-sdk-order-shim',
+            '%s::get(%s) is not currently supported by the V2 API, please use retail-express/skylink-v2-sdk-order-shim',
             OrderRepository::class,
             $orderId
         ));

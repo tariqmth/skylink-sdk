@@ -37,7 +37,7 @@
     "vlucas/phpdotenv": "^2.2"
   },
   "suggest": {
-    "retail-express/skylink-sdk-order-shim": "Support for simulating singular order fetching through the caching of a bulk order sync call."
+    "retail-express/skylink-sdk-v2-order-shim": "Shim for the V2 API that simulates support for fetching single orders through caching of a bulk order sync."
   },
   "extra": {
     "branch-alias": {
