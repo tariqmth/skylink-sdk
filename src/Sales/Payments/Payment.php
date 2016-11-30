@@ -25,6 +25,8 @@ class Payment implements XmlSerializable
 
     private $voucherCode;
 
+    private $id;
+
     public static function setVoucherMethodId(PaymentMethodId $methodId)
     {
         self::$voucherMethodId = $methodId;
@@ -99,6 +101,15 @@ class Payment implements XmlSerializable
         return $new;
     }
 
+    public function setId(PaymentId $id)
+    {
+        if (null !== $this->getId()) {
+            throw new LogicException('Payment ID already set, cannot override.');
+        }
+
+        $this->id = $id;
+    }
+
     public function getOrderId()
     {
         return clone $this->orderId;
@@ -131,5 +142,14 @@ class Payment implements XmlSerializable
     public function usesVoucherCode()
     {
         return (bool) $this->getVoucherCode();
+    }
+
+    public function getId()
+    {
+        if (null === $this->id) {
+            return null;
+        }
+
+        return clone $this->id;
     }
 }
