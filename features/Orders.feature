@@ -1,7 +1,6 @@
 @completed
 Feature: Orders
 
-  @run
   Scenario: Placing an order
     Given I am connected to sales channel "1"
       And I use a unique email based on "hello@example.com" and a password "hello123"
