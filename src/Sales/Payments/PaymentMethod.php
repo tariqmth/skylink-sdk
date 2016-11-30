@@ -5,8 +5,10 @@ namespace RetailExpress\SkyLink\Sdk\Sales\Payments;
 use RetailExpress\SkyLink\Sdk\ValueObjects\SimpleStatus;
 use Sabre\Xml\XmlDeserializable;
 use ValueObjects\StringLiteral\StringLiteral;
+use ValueObjects\Util\Util;
+use ValueObjects\ValueObjectInterface;
 
-class PaymentMethod implements XmlDeserializable
+class PaymentMethod implements ValueObjectInterface, XmlDeserializable
 {
     use V2PaymentMethodDeserializer;
 
@@ -51,5 +53,21 @@ class PaymentMethod implements XmlDeserializable
     public function getStatus()
     {
         return clone $this->status;
+    }
+
+    public function sameValueAs(ValueObjectInterface $paymentMethod)
+    {
+        if (false === Util::classEquals($this, $paymentMethod)) {
+            return false;
+        }
+
+        return $this->getId()->sameValueAs($paymentMethod->getId()) &&
+            $this->getName()->sameValueAs($paymentMethod->getName()) &&
+            $this->getStatus()->sameValueAs($paymentMethod->getStatus());
+    }
+
+    public function __toString()
+    {
+        return (string) $this->getId();
     }
 }
