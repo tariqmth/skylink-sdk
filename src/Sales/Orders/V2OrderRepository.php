@@ -2,6 +2,7 @@
 
 namespace RetailExpress\SkyLink\Sdk\Sales\Orders;
 
+use BadMethodCallException;
 use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
 use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
 use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
@@ -48,6 +49,15 @@ class V2OrderRepository implements OrderRepository
 
         $orderParsedResponse = array_get($parsedResponse, '0.value.1.value');
         $order->setId(new OrderId($orderParsedResponse['{}OrderId']));
+    }
+
+    public function get(OrderId $orderId)
+    {
+        throw new BadMethodCallException(sprintf(
+            '%s::get(%s) is not currently supported by the V2 API, please use retail-express/skylink-sdk-order-shim',
+            OrderRepository::class,
+            $orderId
+        ));
     }
 
     /**

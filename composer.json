@@ -36,6 +36,9 @@
     "symfony/var-dumper": "^3.0",
     "vlucas/phpdotenv": "^2.2"
   },
+  "suggest": {
+    "retail-express/skylink-sdk-order-shim": "Support for simulating singular order fetching through the caching of a bulk order sync call."
+  },
   "extra": {
     "branch-alias": {
       "dev-master": "1.0.x-dev"
