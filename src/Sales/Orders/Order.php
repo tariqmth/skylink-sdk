@@ -8,7 +8,7 @@ use RetailExpress\SkyLink\Sdk\Customers\BillingContact;
 use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
 use RetailExpress\SkyLink\Sdk\Customers\ShippingContact;
 use RetailExpress\SkyLink\Sdk\Outlets\OutletId;
-use RetailExpress\SkyLink\Sdk\Orders\Payments\Payment;
+use RetailExpress\SkyLink\Sdk\Sales\Payments\Payment;
 use Sabre\Xml\XmlSerializable;
 use ValueObjects\Number\Real;
 use ValueObjects\StringLiteral\StringLiteral;
