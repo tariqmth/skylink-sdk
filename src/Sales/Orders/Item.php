@@ -19,6 +19,10 @@ class Item
 
     private $taxRate;
 
+    private $id;
+
+    private $orderId;
+
     public static function fromNative()
     {
         $args = func_get_args();
@@ -47,6 +51,24 @@ class Item
         $this->taxRate = $taxRate;
     }
 
+    public function setId(ItemId $id)
+    {
+        if (null !== $this->getId()) {
+            throw new LogicException('Item ID already set, cannot override.');
+        }
+
+        $this->id = $id;
+    }
+
+    public function setOrderId(OrderId $orderId)
+    {
+        if (null !== $this->getOrderId()) {
+            throw new LogicException('Order ID already set, cannot override.');
+        }
+
+        $this->orderId = $orderId;
+    }
+
     public function getProductId()
     {
         return clone $this->productId;
@@ -71,5 +93,23 @@ class Item
         $priceExclTaxFloat = $this->getPriceExclTax()->toNative();
 
         return new Real($qtyOrderedFloat * $priceExclTaxFloat);
+    }
+
+    public function getId()
+    {
+        if (null === $this->id) {
+            return null;
+        }
+
+        return clone $this->id;
+    }
+
+    public function getOrderId()
+    {
+        if (null === $this->orderId) {
+            return null;
+        }
+
+        return clone $this->orderId;
     }
 }
