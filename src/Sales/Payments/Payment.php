@@ -15,7 +15,7 @@ class Payment implements XmlSerializable
 
     private static $voucherMethodId;
 
-    private $order;
+    private $orderId;
 
     private $madeAt;
 
