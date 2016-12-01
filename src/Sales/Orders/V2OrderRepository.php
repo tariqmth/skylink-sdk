@@ -51,7 +51,7 @@ class V2OrderRepository implements OrderRepository
         $order->setId(new OrderId($orderParsedResponse['{}OrderId']));
     }
 
-    public function get(OrderId $orderId)
+    public function get(SalesChannelId $salesChannelId, OrderId $orderId)
     {
         throw new BadMethodCallException(sprintf(
             '%s::get(%s) is not currently supported by the V2 API, please use retail-express/skylink-v2-sdk-order-shim',

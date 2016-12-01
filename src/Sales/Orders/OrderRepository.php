@@ -8,5 +8,5 @@ interface OrderRepository
 {
     public function add(SalesChannelId $salesChannelId, Order $order);
 
-    public function get(OrderId $orderId);
+    public function get(SalesChannelId $salesChannelId, OrderId $orderId);
 }
