@@ -8,7 +8,7 @@ use RetailExpress\SkyLink\Sdk\Customers\BillingContact;
 use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
 use RetailExpress\SkyLink\Sdk\Customers\ShippingContact;
 use RetailExpress\SkyLink\Sdk\Outlets\OutletId;
-use RetailExpress\SkyLink\Sdk\Sales\Batch as FulfillmentBatch;
+use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\Batch as FulfillmentBatch;
 use RetailExpress\SkyLink\Sdk\Sales\Payments\Payment;
 use Sabre\Xml\XmlSerializable;
 use ValueObjects\Number\Real;
@@ -166,7 +166,10 @@ class Order implements XmlSerializable
             throw new LogicException('Payments can only be added to existing orders with an ID.');
         }
 
-        $this->fulfillmentBatches[] = $fulfillmentBatch;
+        $new = clone $this;
+        $new->fulfillmentBatches[] = $fulfillmentBatch;
+
+        return $new;
     }
 
     public function fulfillFromOutletId(OutletId $fulfillFromOutletId)
