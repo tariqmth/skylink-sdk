@@ -6,13 +6,19 @@ use InvalidArgumentException;
 
 class Batch
 {
-    private $threshold;
-
     private $fulfillments = [];
 
-    public function __construct(BatchThreshold $threshold, array $fulfillments)
+    private $threshold;
+
+    public function __construct(array $fulfillments, BatchThreshold $threshold = null)
     {
         $this->threshold = $threshold;
+
+        // @codeCoverageIgnoreStart
+        if (null === $threshold) {
+            $threshold = $this->createDefaultThreshold();
+        }
+        // @codeCoverageIgnoreEnd
 
         $this->fulfillments = array_map(function (Fulfillment $fulfillment) {
             return $fulfillment;
@@ -22,16 +28,16 @@ class Batch
         $this->assertFulfillmentsAreWitihnThreshold();
     }
 
-    public function getThreshold()
-    {
-        return clone $this->threshold;
-    }
-
     public function getFulfillments()
     {
         return array_map(function (Fulfillment $fulfillment) {
             return clone $fulfillment;
         }, $this->fulfillments);
+    }
+
+    public function getThreshold()
+    {
+        return clone $this->threshold;
     }
 
     public function getOrderId()
@@ -101,5 +107,13 @@ class Batch
     private function getRepresentativeFulfillment()
     {
         return $this->getFulfillments()[0];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    private function createDefaultThreshold()
+    {
+        return BatchThreshold::fromNative(300); // 5 minutes
     }
 }
