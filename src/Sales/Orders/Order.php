@@ -8,6 +8,7 @@ use RetailExpress\SkyLink\Sdk\Customers\BillingContact;
 use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
 use RetailExpress\SkyLink\Sdk\Customers\ShippingContact;
 use RetailExpress\SkyLink\Sdk\Outlets\OutletId;
+use RetailExpress\SkyLink\Sdk\Sales\Batch as FulfillmentBatch;
 use RetailExpress\SkyLink\Sdk\Sales\Payments\Payment;
 use Sabre\Xml\XmlSerializable;
 use ValueObjects\Number\Real;
@@ -34,6 +35,8 @@ class Order implements XmlSerializable
     private $items = [];
 
     private $payments = [];
+
+    private $fulfillmentBatches = [];
 
     private $shippingCharge;
 
@@ -157,6 +160,15 @@ class Order implements XmlSerializable
         return $new;
     }
 
+    public function withFulfillmentBatch(FulfillmentBatch $fulfillmentBatch)
+    {
+        if (null === $this->getId()) {
+            throw new LogicException('Payments can only be added to existing orders with an ID.');
+        }
+
+        $this->fulfillmentBatches[] = $fulfillmentBatch;
+    }
+
     public function fulfillFromOutletId(OutletId $fulfillFromOutletId)
     {
         $new = clone $this;
@@ -240,6 +252,13 @@ class Order implements XmlSerializable
         return array_map(function (Payment $payment) {
             return clone $payment;
         }, $this->payments);
+    }
+
+    public function getFulfillmentBatches()
+    {
+        return array_map(function (FulfillmentBatch $fulfillmentBatch) {
+            return clone $fulfillmentBatch;
+        }, $this->fulfillmentBatches);
     }
 
     public function getShippingCharge()
