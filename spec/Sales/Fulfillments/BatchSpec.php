@@ -16,24 +16,24 @@ use ValueObjects\Number\Integer;
 
 class BatchSpec extends ObjectBehavior
 {
+    private $batchThreshold;
+
     private $fulfillment1;
 
     private $fulfillment2;
-
-    private $batchThreshold;
 
     private $orderId;
 
     private $fulfilledAt;
 
     public function let(
+        BatchThreshold $batchThreshold,
         Fulfillment $fulfillment1,
-        Fulfillment $fulfillment2,
-        BatchThreshold $batchThreshold
+        Fulfillment $fulfillment2
     ) {
+        $this->batchThreshold = $batchThreshold;
         $this->fulfillment1 = $fulfillment1;
         $this->fulfillment2 = $fulfillment2;
-        $this->batchThreshold = $batchThreshold;
 
         $this->batchThreshold->getSeconds()->willReturn(new Integer(60));
         $this->fulfillment1->getOrderId()->willReturn($this->orderId = new OrderId('1-1'));
@@ -46,10 +46,10 @@ class BatchSpec extends ObjectBehavior
         $this->fulfillment2->getId()->willReturn(null);
 
 
-        $this->beConstructedWith([
+        $this->beConstructedWith($this->batchThreshold, [
             $this->fulfillment1,
             $this->fulfillment2,
-        ], $this->batchThreshold);
+        ]);
     }
 
     public function it_is_initializable()
@@ -72,15 +72,15 @@ class BatchSpec extends ObjectBehavior
         $this->shouldThrow(InvalidArgumentException::class)->duringInstantiation();
     }
 
+    public function it_returns_the_threshold()
+    {
+        $this->getThreshold()->shouldBeAnInstanceOf($this->batchThreshold);
+    }
+
     public function it_returns_the_fulfillments()
     {
         $this->getFulfillments()->shouldHaveCount(2);
         $this->getFulfillments()[0]->shouldBeAnInstanceOf($this->fulfillment1);
-    }
-
-    public function it_returns_the_threshold()
-    {
-        $this->getThreshold()->shouldBeAnInstanceOf($this->batchThreshold);
     }
 
     public function it_returns_the_order_id()
