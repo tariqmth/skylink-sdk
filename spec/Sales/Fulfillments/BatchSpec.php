@@ -8,7 +8,6 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\Batch;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\BatchId;
-use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\BatchThreshold;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\Fulfillment;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\FulfillmentId;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\OrderId;
@@ -16,8 +15,6 @@ use ValueObjects\Number\Integer;
 
 class BatchSpec extends ObjectBehavior
 {
-    private $batchThreshold;
-
     private $fulfillment1;
 
     private $fulfillment2;
@@ -27,15 +24,12 @@ class BatchSpec extends ObjectBehavior
     private $fulfilledAt;
 
     public function let(
-        BatchThreshold $batchThreshold,
         Fulfillment $fulfillment1,
         Fulfillment $fulfillment2
     ) {
-        $this->batchThreshold = $batchThreshold;
         $this->fulfillment1 = $fulfillment1;
         $this->fulfillment2 = $fulfillment2;
 
-        $this->batchThreshold->getSeconds()->willReturn(new Integer(60));
         $this->fulfillment1->getOrderId()->willReturn($this->orderId = new OrderId('1-1'));
         $this->fulfillment1->getFulfilledAt()->willReturn(
             $this->fulfilledAt = new DateTimeImmutable()
@@ -46,7 +40,7 @@ class BatchSpec extends ObjectBehavior
         $this->fulfillment2->getId()->willReturn(null);
 
 
-        $this->beConstructedWith($this->batchThreshold, [
+        $this->beConstructedWith([
             $this->fulfillment1,
             $this->fulfillment2,
         ]);
@@ -62,19 +56,6 @@ class BatchSpec extends ObjectBehavior
     {
         $this->fulfillment2->getOrderId()->willReturn(new OrderId('1-2'));
         $this->shouldThrow(InvalidArgumentException::class)->duringInstantiation();
-    }
-
-    public function it_compares_all_fulfillments_against_the_given_threshold()
-    {
-        $priorFulfilledAt = (new DateTimeImmutable())->modify('-1 hours');
-        $this->fulfillment2->getFulfilledAt()->willReturn($priorFulfilledAt);
-
-        $this->shouldThrow(InvalidArgumentException::class)->duringInstantiation();
-    }
-
-    public function it_returns_the_threshold()
-    {
-        $this->getThreshold()->shouldBeAnInstanceOf($this->batchThreshold);
     }
 
     public function it_returns_the_fulfillments()

@@ -6,25 +6,15 @@ use InvalidArgumentException;
 
 class Batch
 {
-    private $threshold;
-
     private $fulfillments = [];
 
-    public function __construct(BatchThreshold $threshold, array $fulfillments)
+    public function __construct(array $fulfillments)
     {
-        $this->threshold = $threshold;
-
         $this->fulfillments = array_map(function (Fulfillment $fulfillment) {
             return $fulfillment;
         }, $fulfillments);
 
         $this->assertAllFulfillmentsAreFromTheSameOrder();
-        $this->assertFulfillmentsAreWitihnThreshold();
-    }
-
-    public function getThreshold()
-    {
-        return clone $this->threshold;
     }
 
     public function getFulfillments()
@@ -71,29 +61,6 @@ class Batch
             throw new InvalidArgumentException(sprintf(
                 'All fulfillments must belong to the same order, %d orders provided.',
                 $uniqueOrderIdStringsCount
-            ));
-        }
-    }
-
-    private function assertFulfillmentsAreWitihnThreshold()
-    {
-        // Grab the fulfillment timestamps
-        $fulfillmentTimestamps = array_map(function (Fulfillment $fulfillment) {
-            return $fulfillment->getFulfilledAt()->getTimestamp();
-        }, $this->getFulfillments());
-
-        // Grab the difference of the highest and lowest timestamps
-        $highest = max($fulfillmentTimestamps);
-        $lowest = min($fulfillmentTimestamps);
-
-        $difference = $highest - $lowest;
-        $thresholdSeconds = $this->getThreshold()->getSeconds()->toNative();
-
-        if ($difference > $thresholdSeconds) {
-            throw new InvalidArgumentException(sprintf(
-                'There is a difference of %d second(s) in given fulfillments, whereas the batch threshold only allows %s second(s).',
-                $difference,
-                $thresholdSeconds
             ));
         }
     }

@@ -34,6 +34,16 @@ class BatchThreshold implements ValueObjectInterface
         return new self(new Integer($args[0]));
     }
 
+    /**
+     * Creates a default batch threshold.
+     *
+     * @return BatchThreshold
+     */
+    public static function createDefault()
+    {
+        return self::fromNative(300); // 5 Minutes
+    }
+
     public function __construct(Integer $seconds)
     {
         $this->assertValidSeconds($seconds);
