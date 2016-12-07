@@ -8,6 +8,7 @@ trait V2StatusConverter
 {
     private static $mappings = [
         'pending' => 'Quote',
+        'pending_payment' => 'Awaiting Payment',
         'processing' => 'Incomplete',
         'complete' => 'Processed',
     ];
