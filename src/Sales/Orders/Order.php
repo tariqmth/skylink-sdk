@@ -7,6 +7,8 @@ use LogicException;
 use RetailExpress\SkyLink\Sdk\Customers\BillingContact;
 use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
 use RetailExpress\SkyLink\Sdk\Customers\ShippingContact;
+use RetailExpress\SkyLink\Sdk\Exceptions\Sales\Orders\NoOrderItemWithIdException;
+use RetailExpress\SkyLink\Sdk\Exceptions\Sales\Orders\NoFulfillmentBatchWithIdException;
 use RetailExpress\SkyLink\Sdk\Outlets\OutletId;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\Batch as FulfillmentBatch;
 use RetailExpress\SkyLink\Sdk\Sales\Payments\Payment;
@@ -250,6 +252,19 @@ class Order implements XmlSerializable
         }, $this->items);
     }
 
+    public function getItemWithId(ItemId $itemId)
+    {
+        return array_first(
+            $this->getItems(),
+            function ($key, Item $item) use ($itemId) {
+                return $item->getId()->sameValueAs($itemId);
+            },
+            function () use ($itemId) {
+                throw NoOrderItemWithIdException::withOrderIdAndItemId($this->getId(), $itemId);
+            }
+        );
+    }
+
     public function getPayments()
     {
         return array_map(function (Payment $payment) {
@@ -262,6 +277,22 @@ class Order implements XmlSerializable
         return array_map(function (FulfillmentBatch $fulfillmentBatch) {
             return clone $fulfillmentBatch;
         }, $this->fulfillmentBatches);
+    }
+
+    public function getFulfillmentBatchWithId(FulfillmentBatchId $fulfillmentBatchId)
+    {
+        return array_first(
+            $this->getFulfillmentBatches(),
+            function ($key, FulfillmentBatch $fulfillmentBatch) use ($fulfillmentBatchId) {
+                return $fulfillmentBatch->getId()->sameValueAs($fulfillmentBatchId);
+            },
+            function () use ($fulfillmentBatchId) {
+                throw NoFulfillmentBatchWithIdException::withOrderIdAndFulfillmentBatchId(
+                    $this->getId(),
+                    $fulfillmentBatchId
+                );
+            }
+        );
     }
 
     public function getShippingCharge()
