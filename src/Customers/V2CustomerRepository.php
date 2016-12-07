@@ -2,6 +2,7 @@
 
 namespace RetailExpress\SkyLink\Sdk\Customers;
 
+use DateTimeImmutable;
 use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
 
 class V2CustomerRepository implements CustomerRepository
@@ -11,6 +12,31 @@ class V2CustomerRepository implements CustomerRepository
     public function __construct(V2Api $api)
     {
         $this->api = $api;
+    }
+
+    public function allIds(DateTimeImmutable $updatedSince = null)
+    {
+        if (null === $updatedSince) {
+            $updatedSince = new DateTimeImmutable('@0');
+        }
+
+        $rawResponse = $this->api->call('CustomerGetBulkDetails', [
+            'LastUpdated' => $updatedSince->format(V2_API_DATE_FORMAT),
+            'OnlyCustomersWithEmails' => 1,
+        ]);
+
+        $xmlService = $this->api->getXmlService();
+        $xmlService->elementMap = [
+            '{}Customer' => CustomerId::class,
+        ];
+        $parsedResponse = $xmlService->parse($rawResponse);
+        $flattenedParsedResponse = array_flatten($parsedResponse);
+
+        $customerIds = array_filter($flattenedParsedResponse, function ($payload) {
+            return $payload instanceof CustomerId;
+        });
+
+        return array_values($customerIds);
     }
 
     public function find(CustomerId $customerId)
