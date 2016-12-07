@@ -2,10 +2,8 @@
 
 namespace spec\RetailExpress\SkyLink\Sdk\Sales\Fulfillments;
 
-use DateTimeImmutable;
 use LogicException;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\Fulfillment;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\FulfillmentId;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\OrderId;

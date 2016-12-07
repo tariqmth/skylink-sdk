@@ -43,17 +43,12 @@ class FulfillmentGrouper
         $thresholdInSeconds = $this->threshold->getSeconds()->toNative();
 
         // Loop over our timestamps and batch them together so they fall within the threshold
-        array_walk($timestamps, function (
-            $timestamp,
-            $fulfillmentIndex
-        // @codeCoverageIgnoreStart
-        ) use (
-            &$batches,
-            &$firstTimestampInBatchIndex,
-            &$currentBatchIndex,
-            $thresholdInSeconds
-        ) {
-        // @codeCoverageIgnoreEnd
+        array_walk(
+            $timestamps, function (
+                $timestamp,
+                $fulfillmentIndex
+            ) use (&$batches, &$firstTimestampInBatchIndex, &$currentBatchIndex, $thresholdInSeconds) {
+            // @codeCoverageIgnoreEnd
 
             // Calculate the difference between the current timestamp and the first one in the batch
             $timestampDifference = $timestamp - $firstTimestampInBatchIndex;
@@ -61,13 +56,15 @@ class FulfillmentGrouper
             // If we're inside the threshold, we'll add the fulfillment index to the current batch
             if ($timestampDifference <= $thresholdInSeconds) {
                 $batches[$currentBatchIndex][] = $fulfillmentIndex;
+
                 return;
             }
 
             // If we're outside of the threshold, we'll start a new batch and update the timestamp
             $batches[++$currentBatchIndex][] = $fulfillmentIndex;
             $firstTimestampInBatchIndex = $timestamp;
-        });
+            }
+        );
 
         // We'll transform our batches of fulfillment indexes into Batch instance with fulfillments in it
         return array_map(function (array $batch) use ($fulfillments) {

@@ -4,7 +4,6 @@ namespace spec\RetailExpress\SkyLink\Sdk\Sales\Fulfillments;
 
 use DateTimeImmutable;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\BatchThreshold;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\Fulfillment;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\FulfillmentGrouper;

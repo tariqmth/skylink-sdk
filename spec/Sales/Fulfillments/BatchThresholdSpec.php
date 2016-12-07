@@ -4,7 +4,6 @@ namespace spec\RetailExpress\SkyLink\Sdk\Sales\Fulfillments;
 
 use BadMethodCallException;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\BatchThreshold;
 use ValueObjects\Exception\InvalidNativeArgumentException;
 use ValueObjects\NullValue\NullValue;

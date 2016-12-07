@@ -5,13 +5,11 @@ namespace spec\RetailExpress\SkyLink\Sdk\Sales\Fulfillments;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\Batch;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\BatchId;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\Fulfillment;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\FulfillmentId;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\OrderId;
-use ValueObjects\Number\Integer;
 
 class BatchSpec extends ObjectBehavior
 {
@@ -38,7 +36,6 @@ class BatchSpec extends ObjectBehavior
         $this->fulfillment2->getOrderId()->willReturn($this->orderId);
         $this->fulfillment2->getFulfilledAt()->willReturn($this->fulfilledAt);
         $this->fulfillment2->getId()->willReturn(null);
-
 
         $this->beConstructedWith([
             $this->fulfillment1,

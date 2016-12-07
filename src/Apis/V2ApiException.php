@@ -12,6 +12,7 @@ class V2ApiException extends ApiException
     {
         $new = new self($message);
         $new->soapFault = $soapFault;
+
         return $new;
     }
 

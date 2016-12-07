@@ -3,7 +3,6 @@
 namespace RetailExpress\SkyLink\Sdk\Sales\Fulfillments;
 
 use BadMethodCallException;
-use InvalidArgumentException;
 use ValueObjects\Exception\InvalidNativeArgumentException;
 use ValueObjects\Util\Util;
 use ValueObjects\ValueObjectInterface;
@@ -14,7 +13,7 @@ class BatchThreshold implements ValueObjectInterface
     /**
      * Seconds in the threshold.
      *
-     * @var Integer
+     * @var int
      */
     private $seconds;
 
@@ -59,7 +58,8 @@ class BatchThreshold implements ValueObjectInterface
     /**
      * Compare two Batch Thresholds and tells whether they can be considered equal.
      *
-     * @param  ValueObjectInterface $object
+     * @param ValueObjectInterface $object
+     *
      * @return bool
      */
     public function sameValueAs(ValueObjectInterface $batchThreshold)
@@ -72,7 +72,7 @@ class BatchThreshold implements ValueObjectInterface
     }
 
     /**
-     * Returns a string representation of the object
+     * Returns a string representation of the object.
      *
      * @return string
      */
