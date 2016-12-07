@@ -2,6 +2,7 @@
 
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
+use DateTimeImmutable;
 use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
 use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 
@@ -15,6 +16,33 @@ class V2ProductRepository implements ProductRepository
     {
         $this->matrixPolicyMapper = $matrixPolicyMapper;
         $this->api = $api;
+    }
+
+    public function allIds(
+        SalesChannelId $salesChannelId,
+        DateTimeImmutable $updatedSince = null
+    ) {
+        if (null === $updatedSince) {
+            $updatedSince = new DateTimeImmutable('@0');
+        }
+
+        $rawResponse = $this->api->call('ProductsGetBulkDetailsByChannel', [
+            'ChannelId' => $salesChannelId->toNative(),
+            'LastUpdated' => $updatedSince->format(V2_API_DATE_FORMAT),
+        ]);
+
+        $xmlService = $this->api->getXmlService();
+        $xmlService->elementMap = [
+            '{}Product' => ProductId::class,
+        ];
+        $parsedResponse = $xmlService->parse($rawResponse);
+        $flattenedParsedResponse = array_flatten($parsedResponse);
+
+        $productIds = array_filter($flattenedParsedResponse, function ($payload) {
+            return $payload instanceof ProductId;
+        });
+
+        return array_values($productIds);
     }
 
     public function find(
