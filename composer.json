@@ -22,7 +22,7 @@
   },
   "require": {
     "php": ">=5.5.0",
-    "illuminate/support": "^5.1",
+    "illuminate/support": ">=5.1 <5.3",
     "nicolopignatelli/valueobjects": "^4.0",
     "sabre/xml": "^1.4"
   },
