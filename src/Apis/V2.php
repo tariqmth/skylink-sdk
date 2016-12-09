@@ -2,18 +2,26 @@
 
 namespace RetailExpress\SkyLink\Sdk\Apis;
 
+use DateTimeImmutable;
+use EcomDev\CacheKey\GeneratorInterface as CacheKeyGeneratorInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Sabre\Xml\Service as XmlService;
 use SoapClient;
 use SoapFault;
 use SoapHeader;
 use ValueObjects\Identity\UUID as Uuid;
+use ValueObjects\Number\Integer;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\SchemeName;
 use ValueObjects\Web\Url;
 
 class V2
 {
-    public $soapClient;
+    private $soapClient;
+
+    private $cache;
+
+    private $cacheKeyGenerator;
 
     public static function fromNative($url, $clientId, $username, $password)
     {
@@ -35,6 +43,12 @@ class V2
             $username,
             $password
         );
+    }
+
+    public function useCache(CacheItemPoolInterface $cache, CacheKeyGeneratorInterface $cacheKeyGenerator)
+    {
+        $this->cache = $cache;
+        $this->cacheKeyGenerator = $cacheKeyGenerator;
     }
 
     public function call($method, array $arguments = [], callable $postProcessing = null)
@@ -64,6 +78,29 @@ class V2
         if (null !== $postProcessing) {
             $postProcessing($response);
         }
+
+        return $response;
+    }
+
+    public function cachedCall(Integer $cacheTime, $method, array $arguments = [], array $cacheBlacklist = [], callable $postProcessing = null)
+    {
+        $this->assertCacheIsSetup();
+        $cacheKey = $this->generateCacheKey($method, $arguments, $cacheBlacklist);
+
+        $item = $this->cache->getItem($cacheKey);
+
+        // If the item is not in the cache, we'll call the API
+        if (true === $item->isHit()) {
+            return $item->get();
+        }
+
+        $response = $this->call($method, $arguments, $postProcessing);
+        $item->set($response);
+
+        $expiresAt = (new DateTimeImmutable())->modify(sprintf('+%s seconds', $cacheTime));
+        $item->expiresAt($expiresAt);
+
+        $this->cache->save($item);
 
         return $response;
     }
@@ -163,5 +200,21 @@ class V2
         preg_match('/^System.Web.Services.Protocols.SoapException: (.*?)\n/', $message, $matches);
 
         return count($matches === 2) ? $matches[1] : $message;
+    }
+
+    private function assertCacheIsSetup()
+    {
+        // No need to check cache key generator as the same setter is used for both cache and it
+        if (null === $this->cache) {
+            throw new V2ApiException('Cached call was attempted however no cache has been setup.');
+        }
+    }
+
+    private function generateCacheKey($method, array $arguments, array $cacheBlacklist)
+    {
+        $arguments = array_diff_key($arguments, array_flip($cacheBlacklist));
+        $cacheParameters = ['method' => $method, 'arguments' => $arguments];
+
+        return $this->cacheKeyGenerator->generate($cacheParameters);
     }
 }
