@@ -28,7 +28,7 @@ trait V2CustomerDeserializer
 
         // The shipping name comes back as a singular field, so we'll try split it out!
         list($shippingFirstName, $shippingLastName) = self::splitShippingName(
-            $payload['DelName'],
+            array_get_notempty($payload, 'DelName', ''),
             [
                 $payload['BillFirstName'],
                 $payload['BillLastName'],
