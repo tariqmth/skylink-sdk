@@ -63,9 +63,9 @@ class V2ProductRepository implements ProductRepository
         $parsedResponse = $xmlService->parse($rawResponse);
         $flattenedParsedResponse = array_flatten($parsedResponse);
 
-        $products = array_filter($flattenedParsedResponse, function ($payload) {
+        $products = array_values(array_filter($flattenedParsedResponse, function ($payload) {
             return $payload instanceof SimpleProduct;
-        });
+        }));
 
         // If there is more than one product, we're dealing with a product matrix
         if (count($products) > 1) {
