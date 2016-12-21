@@ -6,7 +6,7 @@ use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\Attribute;
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeCode;
 use ValueObjects\StringLiteral\StringLiteral;
 
-class Matrix implements Product
+class Matrix implements Product, CompositeProduct
 {
     private $policy;
 
@@ -16,7 +16,7 @@ class Matrix implements Product
     {
         $this->policy = $policy;
 
-        $this->products = array_map(function (Product $product) {
+        $this->products = array_map(function (SimpleProduct $product) {
             return $product;
         }, $products);
     }
@@ -26,9 +26,12 @@ class Matrix implements Product
         return clone $this->policy;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getProducts()
     {
-        return array_map(function (Product $product) {
+        return array_map(function (SimpleProduct $product) {
             return clone $product;
         }, $this->products);
     }
