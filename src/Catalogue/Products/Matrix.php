@@ -4,6 +4,7 @@ namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\Attribute;
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeCode;
+use ValueObjects\StringLiteral\StringLiteral;
 
 class Matrix implements Product
 {
@@ -39,7 +40,7 @@ class Matrix implements Product
 
     public function getSku()
     {
-        return $this->getName();
+        return new StringLiteral(str_slug($this->getName()));
     }
 
     public function getName()
