@@ -23,6 +23,7 @@ class V2CustomerRepository implements CustomerRepository
         $rawResponse = $this->api->call('CustomerGetBulkDetails', [
             'LastUpdated' => $updatedSince->format(V2_API_DATE_FORMAT),
             'OnlyCustomersWithEmails' => 1,
+            'OnlyCustomersForExport' => 1,
         ]);
 
         $xmlService = $this->api->getXmlService();
