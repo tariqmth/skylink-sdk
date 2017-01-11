@@ -10,21 +10,17 @@ class V2PaymentMethodRepository implements PaymentMethodRepository
 {
     private $api;
 
-    private $cacheTime;
-
-
-    public function __construct(V2Api $api, Integer $cacheTime)
+    public function __construct(V2Api $api)
     {
         $this->api = $api;
-        $this->cacheTime = $cacheTime;
     }
 
     public function all(SalesChannelId $salesChannelId)
     {
-        $rawResponse = $this->api->cachedCall($this->cacheTime, 'ProductsGetBulkDetailsByChannel', [
+        $rawResponse = $this->api->call('ProductsGetBulkDetailsByChannel', [
             'ChannelId' => $salesChannelId->toNative(),
             'LastUpdated' => date('Y-m-d\TH:i:s.000'),
-        ], ['LastUpdated']);
+        ]);
 
         $xmlService = $this->api->getXmlService();
         $xmlService->elementMap = [

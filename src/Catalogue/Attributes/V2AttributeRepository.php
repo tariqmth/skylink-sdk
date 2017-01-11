@@ -10,12 +10,9 @@ class V2AttributeRepository implements AttributeRepository
 {
     private $api;
 
-    private $cacheTime;
-
-    public function __construct(V2Api $api, Integer $cacheTime)
+    public function __construct(V2Api $api)
     {
         $this->api = $api;
-        $this->cacheTime = $cacheTime;
     }
 
     public function find(AttributeCode $attributeCode, SalesChannelId $salesChannelId)
@@ -23,10 +20,10 @@ class V2AttributeRepository implements AttributeRepository
         // We do not require all products if the attribute code is predefined
         $lastUpdated = date(V2_API_DATE_FORMAT, $attributeCode->isPredefined() ? time() : 0);
 
-        $rawResponse = $this->api->cachedCall($this->cacheTime, 'ProductsGetBulkDetailsByChannel', [
+        $rawResponse = $this->api->call('ProductsGetBulkDetailsByChannel', [
             'ChannelId' => $salesChannelId->toNative(),
             'LastUpdated' => $lastUpdated,
-        ], $attributeCode->isPredefined() ? ['LastUpdated'] : []);
+        ]);
 
         $xmlService = $this->api->getXmlService();
         $xmlService->elementMap = [
