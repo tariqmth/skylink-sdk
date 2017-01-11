@@ -5,15 +5,31 @@ namespace RetailExpress\SkyLink\Sdk\Sales\Orders;
 use BadMethodCallException;
 use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
 use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
+use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\Batch;
+use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\Fulfillment;
+use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\FulfillmentGrouper;
+use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\V2FulfillmentDeserializer;
+use RetailExpress\SkyLink\Sdk\Sales\Payments\Payment;
+use RetailExpress\SkyLink\Sdk\Sales\Payments\V2PaymentDeserializer;
 use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 
 class V2OrderRepository implements OrderRepository
 {
     private $api;
 
-    public function __construct(V2Api $api)
-    {
+    private $fulfillmentGrouper;
+
+    public function __construct(
+        V2Api $api,
+        FulfillmentGrouper $fulfillmentGrouper = null
+    ) {
         $this->api = $api;
+
+        if (null === $fulfillmentGrouper) {
+            $fulfillmentGrouper = $this->createDefaultFulfillmentGrouper();
+        }
+
+        $this->fulfillmentGrouper = $fulfillmentGrouper;
     }
 
     public function add(SalesChannelId $salesChannelId, Order $order)
@@ -51,13 +67,55 @@ class V2OrderRepository implements OrderRepository
         $order->setId(new OrderId($orderParsedResponse['{}OrderId']));
     }
 
-    public function get(SalesChannelId $salesChannelId, OrderId $orderId)
+    public function get(OrderId $orderId)
     {
-        throw new BadMethodCallException(sprintf(
-            '%s::get(%s) is not currently supported by the V2 API, please use retail-express/skylink-v2-sdk-order-shim',
-            OrderRepository::class,
-            $orderId
-        ));
+        $rawResponse = $this->api->call('WebOrderGetFulfillment', [
+            'OrderId' => $orderId->toNative(),
+        ]);
+
+        // Currently, we don't know how to handle nested nodes that
+        // have the same value as their parent, e.g:
+        //
+        // <Payment>
+        //   <MethodId>1</MethodId>
+        //   <Payment>10.00</Payment>
+        //
+        // So we'll just switch out the XML for now.
+        $this->switchOutPaymentNodes($rawResponse);
+
+        $xmlService = $this->api->getXmlService();
+        $xmlService->elementMap = [
+            '{}Order' => V2OrderDeserializer::class,
+            '{}OrderItem' => V2OrderItemDeserializer::class,
+            '{}Payment' => V2PaymentDeserializer::class,
+            '{}Fulfillment' => V2FulfillmentDeserializer::class,
+        ];
+
+        $parsedResponse = $xmlService->parse($rawResponse);
+        $parsedResponse = array_flatten($parsedResponse);
+
+        // Filter out the matching order
+        $order = array_first($parsedResponse, function ($key, $payload) {
+            return $payload instanceof Order;
+        });
+
+        if (null === $order) {
+            return null;
+        }
+
+        $this->extractAndAttachOrderItems($parsedResponse, $order);
+        $this->extractAndAttachPayments($parsedResponse, $order);
+
+        $fulfillments = $this->extractFulfillments($parsedResponse);
+        $groupsOfFullfillments = $this->fulfillmentGrouper->groupForBatching($fulfillments);
+
+        $fulfillmentBatches = array_map(function (array $groupOfFulfillments) {
+            return new Batch($groupOfFulfillments);
+        }, $groupsOfFullfillments);
+
+        $this->attachFulfillmentBatches($fulfillmentBatches, $order);
+
+        return $order;
     }
 
     /**
@@ -76,5 +134,55 @@ class V2OrderRepository implements OrderRepository
 {$xml}
 ]]>
 XML;
+    }
+
+    private function switchOutPaymentNodes(&$xml)
+    {
+        $xml = preg_replace(
+            '/<Payment>([\d\.]+)<\/Payment>/',
+            '<Total>$1</Total>',
+            $xml
+        );
+    }
+
+    private function extractAndAttachOrderItems(array $parsedResponse, Order &$order)
+    {
+        $orderItems = array_filter($parsedResponse, function ($payload) {
+            return $payload instanceof Item;
+        });
+
+        array_walk($orderItems, function (Item $orderItem) use (&$order) {
+            $order = $order->withItem($orderItem);
+        });
+    }
+
+    private function extractAndAttachPayments(array $parsedResponse, Order &$order)
+    {
+        $payments = array_filter($parsedResponse, function ($payload) {
+            return $payload instanceof Payment;
+        });
+
+        array_walk($payments, function (Payment $payment) use (&$order) {
+            $order = $order->withPayment($payment);
+        });
+    }
+
+    private function extractFulfillments(array $parsedResponse)
+    {
+        return array_values(array_filter($parsedResponse, function ($payload) {
+            return $payload instanceof Fulfillment;
+        }));
+    }
+
+    private function attachFulfillmentBatches(array $fulfillmentBatches, Order &$order)
+    {
+        array_walk($fulfillmentBatches, function (Batch $fulfillmentBatch) use (&$order) {
+            $order = $order->withFulfillmentBatch($fulfillmentBatch);
+        });
+    }
+
+    private function createDefaultFulfillmentGrouper()
+    {
+        return new FulfillmentGrouper();
     }
 }

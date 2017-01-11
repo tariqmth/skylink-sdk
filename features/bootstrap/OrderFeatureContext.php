@@ -5,6 +5,7 @@ use RetailExpress\SkyLink\Sdk\Customers\BillingContact;
 use RetailExpress\SkyLink\Sdk\Customers\ShippingContact;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\Item;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\Order;
+use RetailExpress\SkyLink\Sdk\Sales\Orders\OrderId;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\ShippingCharge;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\Status;
 use RetailExpress\SkyLink\Sdk\Sales\Payments\Payment;
@@ -117,6 +118,20 @@ trait OrderFeatureContext
 
         if (null === $this->order->getId()) {
             throw new Exception('No valid order ID was present.');
+        }
+    }
+
+    /**
+     * @Then I should be able to find the order :arg1
+     */
+    public function iShouldBeAbleToFindTheOrder($orderId)
+    {
+        $orderId = new OrderId($orderId);
+
+        $this->order = $this->orderRepository->get($orderId);
+
+        if (null === $this->order) {
+            throw new Exception("Order with ID {$orderId} could not be found.");
         }
     }
 
