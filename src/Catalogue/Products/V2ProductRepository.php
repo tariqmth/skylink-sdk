@@ -75,6 +75,25 @@ class V2ProductRepository implements ProductRepository
         }
     }
 
+    public function findSpecific(
+        ProductId $productId,
+        SalesChannelId $salesChannelId
+    ) {
+        $product = $this->find($productId, $salesChannelId);
+
+        if (null === $product ) {
+            return null;
+        }
+
+        if (!$product instanceof CompositeProduct) {
+            return $product;
+        }
+
+        return array_first($product->getProducts(), function ($key, Product $associatedProduct) use ($productId) {
+            return $associatedProduct->getId()->sameValueAs($productId);
+        });
+    }
+
     private function buildProductMatrix(array $products)
     {
         $firstProduct = current($products);
