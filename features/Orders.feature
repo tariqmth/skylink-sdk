@@ -20,3 +20,6 @@ Feature: Orders
       And I should have a new customer id and order id
       And I can pay a total of "9.95" towards the order using payment method "1"
       And I can pay a total of "20.00" towards the order using payment method "2"
+
+  Scenario: Retrieving an order
+    Given I should be able to find the order "16-00000001"
