@@ -76,8 +76,8 @@ class PhysicalPackage
             return clone $this->manualCubicWeight;
         }
 
-        return new Real($this->getWeight()->toNative() *
-            $this->getLength()->toNative() *
+        return new Real($this->getLength()->toNative() *
+            $this->getWidth()->toNative() *
             $this->getHeight()->toNative() *
             self::CUBIC_WEIGHT_CONVERSION_FACTOR);
     }
