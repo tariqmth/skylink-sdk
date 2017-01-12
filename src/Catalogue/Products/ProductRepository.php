@@ -20,14 +20,28 @@ interface ProductRepository
     );
 
     /**
-     * Finds a product, given it's Product ID and a Sales Channel ID.
+     * Finds a product, given it's Product ID and a Sales Channel ID. This method may return a
+     * composite product (such as a Matrix) that contains the requested product.
      *
      * @param ProductId      $productId
      * @param SalesChannelId $salesChannelId
      *
-     * @return Product An implementation of Product, be it a Simple Product or Matrix
+     * @return Product An implementation of Product, be it a Simple Product or Composite Product
      */
     public function find(
+        ProductId $productId,
+        SalesChannelId $salesChannelId
+    );
+
+    /**
+     * Finds the specific product with the given Product ID and Sales Channel ID.
+     *
+     * @param ProductId      $productId
+     * @param SalesChannelId $salesChannelId
+     *
+     * @return Product An implementation of Product
+     */
+    public function findSpecific(
         ProductId $productId,
         SalesChannelId $salesChannelId
     );
