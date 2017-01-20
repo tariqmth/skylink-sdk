@@ -15,7 +15,6 @@ trait PaymentMethodFeatureContext
     public function iGetAllPaymentMethods()
     {
         $this->paymentMethods = $this->paymentMethodRepository->all($this->salesChannelId);
-        var_dump($this->paymentMethods);
     }
 
     /**
