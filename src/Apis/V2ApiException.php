@@ -8,9 +8,12 @@ class V2ApiException extends ApiException
 {
     private $soapFault;
 
-    public static function withSoapFault(SoapFault $soapFault, $message)
+    private $lastSoapRequest;
+
+    public static function withSoapFaultAndRequest(SoapFault $soapFault, $lastSoapRequest, $message)
     {
         $new = new self($message);
+        $new->lastSoapRequest = $lastSoapRequest;
         $new->soapFault = $soapFault;
 
         return $new;
@@ -19,5 +22,10 @@ class V2ApiException extends ApiException
     public function getSoapFault()
     {
         return $this->soapFault;
+    }
+
+    public function getLastSoapRequest()
+    {
+        return $this->lastSoapRequest;
     }
 }

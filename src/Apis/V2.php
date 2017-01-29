@@ -55,7 +55,7 @@ class V2
             // @todo Look at __getLastResponseHeaders for "Content-Type: binary/x-gzip"
             if (starts_with($response, '<?xml version="1.0" encoding="utf-8"?>')) {
                 $message = $this->extractUsefulSoapFaultMessage($soapFault->getMessage());
-                throw V2ApiException::withSoapFault($soapFault, $message);
+                throw V2ApiException::withSoapFaultAndRequest($soapFault, $this->soapClient->__getLastRequest(), $message);
             }
 
             $response = $this->unzipReponse($response);
