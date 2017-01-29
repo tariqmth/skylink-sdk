@@ -60,7 +60,6 @@ class ItemQty implements ValueObjectInterface
      * Tells whether two Item Qty instances are equal.
      *
      * @param ValueObjectInterface $itemQty
-     *itemQty
      *
      * @return bool
      */
