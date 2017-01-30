@@ -9,6 +9,7 @@ use Dotenv\Dotenv;
 use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\V2AttributeRepository;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\MatrixPolicyMapper;
+use RetailExpress\SkyLink\Sdk\Catalogue\Products\V2ProductDeserializer;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\V2ProductRepository;
 use RetailExpress\SkyLink\Sdk\Customers\V2CustomerRepository;
 use RetailExpress\SkyLink\Sdk\Loyalty\FakeLoyaltyRepository;
@@ -55,7 +56,11 @@ class FeatureContext implements Context, SnippetAcceptingContext
 
         // Initialise the Retail Express V2 Product Repository
         $this->attributeRepository = new V2AttributeRepository($api);
-        $this->productRepository = new V2ProductRepository(new MatrixPolicyMapper(), $api);
+        $this->productRepository = new V2ProductRepository(
+            new MatrixPolicyMapper(),
+            new V2ProductDeserializer(),
+            $api
+        );
         $this->customerRepository = new V2CustomerRepository($api);
         $this->loyaltyRepository = new FakeLoyaltyRepository();
         $this->outletRepository = new V2OutletRepository($api);

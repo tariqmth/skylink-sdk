@@ -4,13 +4,10 @@ namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeCode;
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeOption;
-use Sabre\Xml\XmlDeserializable;
 use ValueObjects\StringLiteral\StringLiteral;
 
-class SimpleProduct implements Product, XmlDeserializable
+class SimpleProduct implements Product
 {
-    use V2ProductDeserializer;
-
     private $id;
 
     private $sku;

@@ -5,16 +5,23 @@ namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 use DateTimeImmutable;
 use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
 use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
+use Sabre\Xml\Reader as XmlReader;
 
 class V2ProductRepository implements ProductRepository
 {
     private $matrixPolicyMapper;
 
+    private $v2ProductDeserializer;
+
     private $api;
 
-    public function __construct(MatrixPolicyMapper $matrixPolicyMapper, V2Api $api)
-    {
+    public function __construct(
+        MatrixPolicyMapper $matrixPolicyMapper,
+        V2ProductDeserializer $v2ProductDeserializer,
+        V2Api $api
+    ) {
         $this->matrixPolicyMapper = $matrixPolicyMapper;
+        $this->v2ProductDeserializer = $v2ProductDeserializer;
         $this->api = $api;
     }
 
@@ -58,7 +65,9 @@ class V2ProductRepository implements ProductRepository
 
         $xmlService = $this->api->getXmlService();
         $xmlService->elementMap = [
-            '{}Product' => SimpleProduct::class,
+            '{}Product' => function (XmlReader $xmlReader) {
+                return $this->v2ProductDeserializer->xmlDeserialize($xmlReader);
+            },
         ];
         $parsedResponse = $xmlService->parse($rawResponse);
         $flattenedParsedResponse = array_flatten($parsedResponse);
