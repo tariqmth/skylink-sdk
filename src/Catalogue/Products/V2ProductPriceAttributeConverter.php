@@ -9,7 +9,7 @@ trait V2ProductPriceAttributeConverter
     private static $mappings = [
         'discounted_price' => 'DiscountedPrice',
         'default_price' => 'DefaultPrice',
-        'web_sell_price' => 'WebSellPrice',
+        'web_price' => 'WebSellPrice',
         'rrp' => 'RRP',
     ];
 

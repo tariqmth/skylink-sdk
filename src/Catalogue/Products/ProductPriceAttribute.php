@@ -10,7 +10,7 @@ class ProductPriceAttribute extends Enum
 
     const DISCOUNTED_PRICE = 'discounted_price';
     const DEFAULT_PRICE = 'default_price';
-    const WEB_SELL_PRICE = 'web_sell_price';
+    const WEB_PRICE = 'web_price';
     const RRP = 'rrp';
 
     public static function getDefaultForRegularPrice()
