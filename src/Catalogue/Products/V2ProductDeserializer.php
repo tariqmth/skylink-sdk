@@ -8,12 +8,33 @@ use Sabre\Xml\Deserializer as XmlDeserializer;
 use Sabre\Xml\Reader as XmlReader;
 use ValueObjects\StringLiteral\StringLiteral;
 
-trait V2ProductDeserializer
+class V2ProductDeserializer
 {
+    private $regularPriceAttribute;
+
+    private $specialPriceAttribute;
+
+    public function __construct(
+        ProductPriceAttribute $regularPriceAttribute = null,
+        ProductPriceAttribute $specialPriceAttribute = null
+    ) {
+        if (null === $regularPriceAttribute) {
+            $regularPriceAttribute = ProductPriceAttribute::getDefaultForRegularPrice();
+            $regularPriceAttribute = ProductPriceAttribute::get('web_sell_price');
+        }
+
+        if (null === $specialPriceAttribute) {
+            $specialPriceAttribute = ProductPriceAttribute::getDefaultForSpecialPrice();
+        }
+
+        $this->regularPriceAttribute = $regularPriceAttribute;
+        $this->specialPriceAttribute = $specialPriceAttribute;
+    }
+
     /**
      * @todo Validate options from Attribute Repository
      */
-    public static function xmlDeserialize(XmlReader $xmlReader)
+    public function xmlDeserialize(XmlReader $xmlReader)
     {
         $payload = XmlDeserializer\keyValue($xmlReader, '');
 
@@ -22,8 +43,8 @@ trait V2ProductDeserializer
         $name = new StringLiteral($payload['Description']);
 
         $pricingStructure = PricingStructure::fromNative(
-            $payload['DefaultPrice'],
-            $payload['DiscountedPrice'],
+            $this->extractRegularPrice($payload),
+            $this->extractSpecialPrice($payload),
             $payload['TaxRate']
         );
 
@@ -42,7 +63,37 @@ trait V2ProductDeserializer
 
         $options = self::extractAttributeOptions($payload, ['', 'Id']);
 
-        return new self($id, $sku, $name, $pricingStructure, $inventoryItem, $physicalPackage, $options);
+        return new SimpleProduct(
+            $id,
+            $sku,
+            $name,
+            $pricingStructure,
+            $inventoryItem,
+            $physicalPackage,
+            $options
+        );
+    }
+
+    private function extractRegularPrice(array $payload)
+    {
+        return array_get(
+            $payload,
+            $this->regularPriceAttribute->getV2XmlAttribute(),
+            function () use ($payload) {
+                return $payload[ProductPriceAttribute::getDefaultForRegularPrice()->getV2XmlAttribute()];
+            }
+        );
+    }
+
+    private function extractSpecialPrice(array $payload)
+    {
+        return array_get(
+            $payload,
+            $this->specialPriceAttribute->getV2XmlAttribute(),
+            function () use ($payload) {
+                return $payload[ProductPriceAttribute::getDefaultForSpecialPrice()->getV2XmlAttribute()];
+            }
+        );
     }
 
     private static function extractAttributeOptions(array $payload, array $suffixesToCheck)
