@@ -34,4 +34,11 @@ class V2OutletRepository implements OutletRepository
 
         return $outlets;
     }
+
+    public function find(OutletId $outletId, SalesChannelId $salesChannelId)
+    {
+        return array_first($this->all($salesChannelId), function ($key, Outlet $outlet) use ($outletId) {
+            return $outlet->getId()->sameValueAs($outletId);
+        });
+    }
 }
