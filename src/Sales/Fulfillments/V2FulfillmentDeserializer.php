@@ -2,8 +2,6 @@
 
 namespace RetailExpress\SkyLink\Sdk\Sales\Fulfillments;
 
-use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\Fulfillment;
-use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\FulfillmentId;
 use Sabre\Xml\Deserializer as XmlDeserializer;
 use Sabre\Xml\Reader;
 use Sabre\Xml\XmlDeserializable;

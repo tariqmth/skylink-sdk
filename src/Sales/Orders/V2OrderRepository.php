@@ -2,7 +2,6 @@
 
 namespace RetailExpress\SkyLink\Sdk\Sales\Orders;
 
-use BadMethodCallException;
 use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
 use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
 use RetailExpress\SkyLink\Sdk\Sales\Fulfillments\Batch;
@@ -75,11 +74,11 @@ class V2OrderRepository implements OrderRepository
 
         // Currently, we don't know how to handle nested nodes that
         // have the same value as their parent, e.g:
-        //
+
         // <Payment>
         //   <MethodId>1</MethodId>
         //   <Payment>10.00</Payment>
-        //
+
         // So we'll just switch out the XML for now.
         $this->switchOutPaymentNodes($rawResponse);
 

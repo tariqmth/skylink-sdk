@@ -2,13 +2,11 @@
 
 namespace RetailExpress\SkyLink\Sdk\Apis;
 
-use DateTimeImmutable;
 use Sabre\Xml\Service as XmlService;
 use SoapClient;
 use SoapFault;
 use SoapHeader;
 use ValueObjects\Identity\UUID as Uuid;
-use ValueObjects\Number\Integer;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\SchemeName;
 use ValueObjects\Web\Url;

@@ -48,7 +48,7 @@ class FulfillmentGrouper
                 $timestamp,
                 $fulfillmentIndex
             ) use (&$batches, &$firstTimestampInBatchIndex, &$currentBatchIndex, $thresholdInSeconds) {
-            // @codeCoverageIgnoreEnd
+                // @codeCoverageIgnoreEnd
 
             // Calculate the difference between the current timestamp and the first one in the batch
             $timestampDifference = $timestamp - $firstTimestampInBatchIndex;
@@ -62,7 +62,7 @@ class FulfillmentGrouper
 
             // If we're outside of the threshold, we'll start a new batch and update the timestamp
             $batches[++$currentBatchIndex][] = $fulfillmentIndex;
-            $firstTimestampInBatchIndex = $timestamp;
+                $firstTimestampInBatchIndex = $timestamp;
             }
         );
 

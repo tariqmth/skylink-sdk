@@ -2,8 +2,6 @@
 
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
-use ValueObjects\Enum\Enum;
-
 trait V2ProductPriceAttributeConverter
 {
     private static $mappings = [

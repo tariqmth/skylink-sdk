@@ -90,7 +90,7 @@ class V2ProductRepository implements ProductRepository
     ) {
         $product = $this->find($productId, $salesChannelId);
 
-        if (null === $product ) {
+        if (null === $product) {
             return null;
         }
 

@@ -2,9 +2,6 @@
 
 namespace RetailExpress\SkyLink\Sdk\Sales\Orders;
 
-use RetailExpress\SkyLink\Sdk\Sales\Orders\OrderId;
-use RetailExpress\SkyLink\Sdk\Sales\Orders\Item;
-use RetailExpress\SkyLink\Sdk\Sales\Orders\ItemId;
 use Sabre\Xml\Deserializer as XmlDeserializer;
 use Sabre\Xml\Reader;
 use Sabre\Xml\XmlDeserializable;
