@@ -8,10 +8,10 @@ class ProductPriceAttribute extends Enum
 {
     use V2ProductPriceAttributeConverter;
 
-    const DISCOUNTED_PRICE = 'discounted_price';
-    const DEFAULT_PRICE = 'default_price';
-    const WEB_PRICE = 'web_price';
     const RRP = 'rrp';
+    const DEFAULT_PRICE = 'default_price';
+    const DISCOUNTED_PRICE = 'discounted_price';
+    const WEB_PRICE = 'web_price';
 
     public static function getDefaultForRegularPrice()
     {
@@ -20,6 +20,6 @@ class ProductPriceAttribute extends Enum
 
     public static function getDefaultForSpecialPrice()
     {
-        return self::get('default_price');
+        return self::get('discounted_price');
     }
 }

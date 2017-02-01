@@ -20,7 +20,6 @@ class V2ProductDeserializer
     ) {
         if (null === $regularPriceAttribute) {
             $regularPriceAttribute = ProductPriceAttribute::getDefaultForRegularPrice();
-            $regularPriceAttribute = ProductPriceAttribute::get('web_sell_price');
         }
 
         if (null === $specialPriceAttribute) {
