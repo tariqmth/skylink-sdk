@@ -3,7 +3,6 @@
 namespace RetailExpress\SkyLink\Sdk\Sales\Payments;
 
 use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
-use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 
 class V2PaymentMethodRepository implements PaymentMethodRepository
 {
@@ -14,12 +13,9 @@ class V2PaymentMethodRepository implements PaymentMethodRepository
         $this->api = $api;
     }
 
-    public function all(SalesChannelId $salesChannelId)
+    public function all()
     {
-        $rawResponse = $this->api->call('ProductsGetBulkDetailsByChannel', [
-            'ChannelId' => $salesChannelId->toNative(),
-            'LastUpdated' => date('Y-m-d\TH:i:s.000'),
-        ]);
+        $rawResponse = $this->api->call('GetPaymentMethods');
 
         $xmlService = $this->api->getXmlService();
         $xmlService->elementMap = [
