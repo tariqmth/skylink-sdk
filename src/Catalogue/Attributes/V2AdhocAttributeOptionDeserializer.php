@@ -3,6 +3,7 @@
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Attributes;
 
 use Sabre\Xml\Deserializer as XmlDeserializer;
+use Sabre\Xml\ParseException;
 use Sabre\Xml\Reader as XmlReader;
 use Sabre\Xml\XmlDeserializable;
 
@@ -10,26 +11,18 @@ class V2AdhocAttributeOptionDeserializer implements XmlDeserializable
 {
     public static function xmlDeserialize(XmlReader $xmlReader)
     {
-        $payload = XmlDeserializer\keyValue($xmlReader, '');
+        $attributeCode = self::getAttributeCode($xmlReader->localName);
+        $attributeValue = XmlDeserializer\keyValue($xmlReader, '')['Value'];
 
-        $attributeCodes = AttributeCode::getAdhoc();
+        return AttributeOption::fromNative(
+            $attributeCode,
+            $attributeValue,
+            $attributeValue
+        );
+    }
 
-        $options = [];
-
-        foreach ($attributeCodes as $attributeCode) {
-            $studlyAttributeCode = studly_case($attributeCode);
-
-            if (!array_key_exists($studlyAttributeCode, $payload)) {
-                continue;
-            }
-
-            $options[] = AttributeOption::fromNative(
-                $attributeCode,
-                $payload[$studlyAttributeCode],
-                $payload[$studlyAttributeCode]
-            );
-        }
-
-        return $options;
+    private static function getAttributeCode($nodeName)
+    {
+        return sprintf('custom_%s', substr($nodeName, -1));
     }
 }

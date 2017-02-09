@@ -19,10 +19,7 @@ class V2AttributeRepository implements AttributeRepository
         // We do not require all products if the attribute code is predefined
         $lastUpdated = date(V2_API_DATE_FORMAT, $attributeCode->isPredefined() ? time() : 0);
 
-        $rawResponse = $this->api->call('ProductsGetBulkDetailsByChannel', [
-            'ChannelId' => $salesChannelId->toNative(),
-            'LastUpdated' => $lastUpdated,
-        ]);
+        $rawResponse = $this->api->call('GetAllProductAttributes');
 
         $xmlService = $this->api->getXmlService();
         $xmlService->elementMap = [
@@ -31,7 +28,9 @@ class V2AttributeRepository implements AttributeRepository
             '{}Season' => V2PredefinedAttributeOptionDeserializer::class,
             '{}Size' => V2PredefinedAttributeOptionDeserializer::class,
             '{}ProductType' => V2PredefinedAttributeOptionDeserializer::class,
-            '{}Product' => V2AdhocAttributeOptionDeserializer::class,
+            '{}Custom1' => V2AdhocAttributeOptionDeserializer::class,
+            '{}Custom2' => V2AdhocAttributeOptionDeserializer::class,
+            '{}Custom3' => V2AdhocAttributeOptionDeserializer::class,
         ];
 
         $parsedResponse = $xmlService->parse($rawResponse);
