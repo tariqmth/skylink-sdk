@@ -1,6 +1,7 @@
 <?php
 
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeCode;
+use RetailExpress\SkyLink\Sdk\Catalogue\Eta\EtaQty;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\ProductId;
 use ValueObjects\StringLiteral\StringLiteral;
 
@@ -9,6 +10,8 @@ trait ProductFeatureContext
     private $attributeRepository;
 
     private $brandAttribute;
+
+    private $etaRepository;
 
     private $productRepository;
 
@@ -33,6 +36,38 @@ trait ProductFeatureContext
 
         if ((int) $count !== $brandsCount) {
             throw new Exception("There were {$brandsCount} brands.");
+        }
+    }
+
+    /**
+     * @When I find the ETA for :arg1 products with id :arg2
+     */
+    public function iFindTheEtaForProductsWithId($qty, $productId)
+    {
+        $this->eta = $this->etaRepository->find(
+            new ProductId($productId),
+            new EtaQty($qty),
+            $this->salesChannelId
+        );
+    }
+
+    /**
+     * @Then I should see the ETA is in the future
+     */
+    public function iShouldSeeTheEtaIsInTheFuture()
+    {
+        if (null === $this->eta) {
+            throw new Exception("Expected an ETA to exist but there was none.");
+        }
+    }
+
+    /**
+     * @Then I should see there is no ETA
+     */
+    public function iShouldSeeThereIsNoEta()
+    {
+        if (null !== $this->eta) {
+            throw new Exception("Expected no ETA to exist but there was one.");
         }
     }
 
