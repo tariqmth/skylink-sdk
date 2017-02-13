@@ -49,7 +49,8 @@ class V2ProductDeserializer
 
         $inventoryItem = InventoryItem::fromNative(
             $payload['ManageStock'],
-            $payload['StockAvailable']
+            $payload['StockAvailable'],
+            $payload['StockOnOrder']
         );
 
         $physicalPackage = PhysicalPackage::fromNative(

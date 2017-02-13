@@ -3,6 +3,7 @@
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
 use BadMethodCallException;
+use ValueObjects\Exception\InvalidNativeArgumentException;
 use ValueObjects\Number\Integer;
 use ValueObjects\Util\Util;
 use ValueObjects\ValueObjectInterface;
@@ -12,6 +13,8 @@ class InventoryItem implements ValueObjectInterface
     private $managed;
 
     private $qty;
+
+    private $qtyOnOrder;
 
     /**
      * Returns an Inventory Item taking PHP native values as arguments.
@@ -26,14 +29,22 @@ class InventoryItem implements ValueObjectInterface
             throw new BadMethodCallException('You must provide at least 1 argument: 1) managed');
         }
 
-        return new self($args[0], new Integer($args[1]));
+        $qty = isset($args[1]) ? new Integer($args[1]) : null;
+        $qtyOnOrder = isset($args[2]) ? new Integer($args[2]) : null;
+
+        return new self($args[0], $qty, $qtyOnOrder);
     }
 
-    public function __construct($managed, Integer $qty = null)
+    public function __construct($managed, Integer $qty = null, Integer $qtyOnOrder = null)
     {
         $this->assertManagedArgument($managed);
         $this->managed = boolval($managed);
         $this->qty = $qty;
+
+        if (null !== $qtyOnOrder) {
+            $this->assertQtyOnOrder($qtyOnOrder);
+            $this->qtyOnOrder = $qtyOnOrder;
+        }
     }
 
     public function isManaged()
@@ -44,6 +55,18 @@ class InventoryItem implements ValueObjectInterface
     public function getQty()
     {
         return clone $this->qty;
+    }
+
+    public function hasQtyOnOrder()
+    {
+        return null !== $this->qtyOnOrder;
+    }
+
+    public function getQtyOnOrder()
+    {
+        if ($this->hasQtyOnOrder()) {
+            return clone $this->qtyOnOrder;
+        }
     }
 
     /**
@@ -60,7 +83,9 @@ class InventoryItem implements ValueObjectInterface
         }
 
         return $this->isManaged() === $inventoryItem->isManaged() &&
-            $this->getQty()->sameValueAs($inventoryItem->getQty());
+            $this->getQty()->sameValueAs($inventoryItem->getQty()) &&
+            $this->hasQtyOnOrder() === $inventoryItem->hasQtyOnOrder() &&
+            true === $this->hasQtyOnOrder() && $this->getQtyOnOrder()->sameValueAs($inventoryItem->getQtyOnOrder());
     }
 
     /**
@@ -75,10 +100,20 @@ class InventoryItem implements ValueObjectInterface
 
     private function assertManagedArgument($managed)
     {
-        $managed = filter_var($managed, FILTER_VALIDATE_INT);
+        $managed = filter_var($managed, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
-        if (false === $managed) {
+        if (null === $managed) {
             throw new InvalidNativeArgumentException($managed, array('bool'));
+        }
+    }
+
+    private function assertQtyOnOrder(Integer $qtyOnOrder)
+    {
+        $qtyOnOrderFloat = $qtyOnOrder->toNative();
+
+        if ($qtyOnOrderFloat < 0) {
+            $message = "Qty on order cannot be less than 0, {$qtyOnOrder} given.";
+            throw new InvalidArgumentException($message);
         }
     }
 }
