@@ -79,6 +79,6 @@ class PriceGroupKey implements ValueObjectInterface
      */
     public function __toString()
     {
-        return (string) $this->getId();
+        return "{$this->getType()}: {$this->getId()}";
     }
 }
