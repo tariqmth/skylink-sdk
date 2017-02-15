@@ -2,6 +2,7 @@
 
 namespace RetailExpress\SkyLink\Sdk\Customers;
 
+use RetailExpress\SkyLink\Sdk\Customers\PriceGroups\PriceGroupKey;
 use Sabre\Xml\Deserializer as XmlDeserializer;
 use Sabre\Xml\Reader as XmlReader;
 
@@ -54,6 +55,16 @@ trait V2CustomerDeserializer
             $shippingContact,
             new NewsletterSubscription($payload['ReceivesNews'])
         );
+
+        $standardPriceGroupId = array_get_notempty($payload, 'PriceGroupId');
+        if (null !== $standardPriceGroupId) {
+            $customer = $customer->withPriceGroupKey(PriceGroupKey::fromNative('standard', $standardPriceGroupId));
+        }
+
+        $fixedPriceGroupId = array_get_notempty($payload, 'FixedPriceGroupId');
+        if (null !== $fixedPriceGroupId) {
+            $customer = $customer->withPriceGroupKey(PriceGroupKey::fromNative('fixed', $fixedPriceGroupId));
+        }
 
         return $customer;
     }
