@@ -8,7 +8,7 @@ Feature: Customers
      And I should see they work for "Sample Company"
      And I should see their billing contact is:
      """
-     Joe Bloggs
+     Joey Bloggs
      Sample Company
      Unit 5
      192 Ann St
