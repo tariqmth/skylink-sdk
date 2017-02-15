@@ -3,6 +3,8 @@
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
 use BadMethodCallException;
+use LogicException;
+use RetailExpress\SkyLink\Sdk\Customers\PriceGroups\PriceGroupKey;
 use RetailExpress\SkyLink\Sdk\ValueObjects\TaxRate;
 use ValueObjects\Number\Real;
 use ValueObjects\Util\Util;
@@ -15,6 +17,8 @@ class PricingStructure implements ValueObjectInterface
     private $specialPrice;
 
     private $taxRate;
+
+    private $priceGroupPrices = [];
 
     /**
      * Returns an Pricing Structure taking PHP native values as arguments.
@@ -42,6 +46,23 @@ class PricingStructure implements ValueObjectInterface
         $this->taxRate = $taxRate;
     }
 
+    public function withPriceGroupPrice(PriceGroupPrice $priceGroupPrice)
+    {
+        $priceGroupKey = $priceGroupPrice->getKey();
+
+        $index = (string) $priceGroupKey;
+        if (array_key_exists($index, $this->priceGroupPrices)) {
+            throw new LogicException("Only one price may be set per-price group, attempting to set two for \"{$priceGroupKey->getType()}\" price group {$priceGroupKey->getId()}.");
+        }
+
+        $new = clone $this;
+        $new->priceGroupPrices[$index] = $priceGroupPrice;
+
+        ksort($new->priceGroupPrices);
+
+        return $new;
+    }
+
     public function getRegularPrice()
     {
         return clone $this->regularPrice;
@@ -57,6 +78,13 @@ class PricingStructure implements ValueObjectInterface
         return clone $this->taxRate;
     }
 
+    public function getPriceGroupPrices()
+    {
+        return array_map(function (PriceGroupPrice $priceGroupPrice) {
+            return clone $priceGroupPrice;
+        }, $this->priceGroupPrices);
+    }
+
     /**
      * Compare two Pricing Structure instances and tells whether they can be considered equal.
      *
@@ -70,7 +98,8 @@ class PricingStructure implements ValueObjectInterface
             return false;
         }
 
-        return $this->getRegularPrice()->sameValueAs($pricingStructure->getRegularPrice()) &&
+        // @todo compare group prices
+        $passes = $this->getRegularPrice()->sameValueAs($pricingStructure->getRegularPrice()) &&
             $this->getSpecialPrice()->sameValueAs($pricingStructure->getSpecialPrice()) &&
             $this->getTaxRate()->sameValueAs($pricingStructure->getTaxRate());
     }

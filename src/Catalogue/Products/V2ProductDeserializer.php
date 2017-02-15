@@ -106,7 +106,7 @@ class V2ProductDeserializer
             foreach ($suffixesToCheck as $suffixToCheck) {
                 $key = $studlyAttributeCode.$suffixToCheck;
 
-                if (!array_key_exists($key, $payload)) {
+                if (!array_key_exists($key, $payload) || empty($payload[$key])) {
                     continue;
                 }
 
