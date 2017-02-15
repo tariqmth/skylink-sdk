@@ -80,9 +80,9 @@ class PricingStructure implements ValueObjectInterface
 
     public function getPriceGroupPrices()
     {
-        return array_map(function (PriceGroupPrice $priceGroupPrice) {
+        return array_values(array_map(function (PriceGroupPrice $priceGroupPrice) {
             return clone $priceGroupPrice;
-        }, $this->priceGroupPrices);
+        }, $this->priceGroupPrices));
     }
 
     /**

@@ -47,6 +47,10 @@ class V2ProductDeserializer
             $payload['TaxRate']
         );
 
+        array_map(function (PriceGroupPrice $priceGroupPrice) use (&$pricingStructure) {
+            $pricingStructure = $pricingStructure->withPriceGroupPrice($priceGroupPrice);
+        }, $this->extractPriceGroupPrices($payload));
+
         $inventoryItem = InventoryItem::fromNative(
             $payload['ManageStock'],
             $payload['StockAvailable'],
@@ -93,6 +97,30 @@ class V2ProductDeserializer
             function () use ($payload) {
                 return $payload[ProductPriceAttribute::getDefaultForSpecialPrice()->getV2XmlAttribute()];
             }
+        );
+    }
+
+    private function extractPriceGroupPrices(array $payload)
+    {
+        $priceGroupPrices = [];
+
+        array_map(function (array $priceGroupPricePayload) use (&$priceGroupPrices) {
+            $priceGroupPrices[] = $this->convertPriceGroupPricePayload('standard', $priceGroupPricePayload);
+        }, array_get($payload, 'Standard_Price_Group', []));
+
+        array_map(function (array $priceGroupPricePayload) use (&$priceGroupPrices) {
+            $priceGroupPrices[] = $this->convertPriceGroupPricePayload('fixed', $priceGroupPricePayload);
+        }, array_get($payload, 'Fixed_Price_Group', []));
+
+        return $priceGroupPrices;
+    }
+
+    private function convertPriceGroupPricePayload($type, array $priceGroupPricePayload)
+    {
+        return PriceGroupPrice::fromNative(
+            $type,
+            $priceGroupPricePayload['attributes']['Id'],
+            $priceGroupPricePayload['value']
         );
     }
 
