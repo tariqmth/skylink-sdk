@@ -12,6 +12,7 @@ use RetailExpress\SkyLink\Sdk\Catalogue\Eta\V2EtaRepository;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\MatrixPolicyMapper;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\V2ProductDeserializer;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\V2ProductRepository;
+use RetailExpress\SkyLink\Sdk\Customers\PriceGroups\V2PriceGroupRepository;
 use RetailExpress\SkyLink\Sdk\Customers\V2CustomerRepository;
 use RetailExpress\SkyLink\Sdk\Loyalty\FakeLoyaltyRepository;
 use RetailExpress\SkyLink\Sdk\Outlets\V2OutletRepository;
@@ -31,6 +32,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
     use OrderFeatureContext;
     use OutletFeatureContext;
     use PaymentMethodFeatureContext;
+    use PriceGroupFeatureContext;
     use ProductFeatureContext;
     use VoucherFeatureContext;
 
@@ -64,6 +66,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
             $api
         );
         $this->customerRepository = new V2CustomerRepository($api);
+        $this->priceGroupRepository = new V2PriceGroupRepository($api);
         $this->loyaltyRepository = new FakeLoyaltyRepository();
         $this->outletRepository = new V2OutletRepository($api);
         $this->orderRepository = new V2OrderRepository($api);

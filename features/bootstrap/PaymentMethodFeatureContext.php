@@ -43,7 +43,7 @@ trait PaymentMethodFeatureContext
                 return null;
             }
 
-            throw new Exception("The payment method's name was {$paymentMethod->getName()}.");
+            throw new Exception("The payment method's name was \"{$paymentMethod->getName()}\".");
         }
 
         throw new Exception("Could not find payment method {$paymentMethodId}.");
