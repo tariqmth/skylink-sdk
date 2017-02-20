@@ -46,11 +46,21 @@ class PriceGroupKey implements ValueObjectInterface
         $this->id = $id;
     }
 
+    /**
+     * @todo Remove the full @return namespace when Magento stops bitching about the class not existing when using this class.
+     *
+     * @return \RetailExpress\SkyLink\Sdk\Customers\PriceGroups\PriceGroupType
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * @todo see PriceGroupKey::getType()
+     *
+     * @return \RetailExpress\SkyLink\Sdk\Customers\PriceGroups\PriceGroupId
+     */
     public function getId()
     {
         return clone $this->id;
