@@ -38,7 +38,7 @@ class V2PriceGroupRepository implements PriceGroupRepository
 
     public function find(PriceGroupKey $priceGroupKey)
     {
-        return array_first($this->all(), function (PriceGroup $priceGroup) use ($priceGroupKey) {
+        return array_first($this->all(), function ($key, PriceGroup $priceGroup) use ($priceGroupKey) {
             return $priceGroup->getKey()->sameValueAs($priceGroupKey);
         });
     }
