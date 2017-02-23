@@ -47,6 +47,10 @@ class V2ProductDeserializer
             $payload['TaxRate']
         );
 
+        array_map(function (PriceGroupPrice $priceGroupPrice) use (&$pricingStructure) {
+            $pricingStructure = $pricingStructure->withPriceGroupPrice($priceGroupPrice);
+        }, $this->extractPriceGroupPrices($payload));
+
         $inventoryItem = InventoryItem::fromNative(
             $payload['ManageStock'],
             $payload['StockAvailable'],
@@ -96,6 +100,30 @@ class V2ProductDeserializer
         );
     }
 
+    private function extractPriceGroupPrices(array $payload)
+    {
+        $priceGroupPrices = [];
+
+        array_map(function (array $priceGroupPricePayload) use (&$priceGroupPrices) {
+            $priceGroupPrices[] = $this->convertPriceGroupPricePayload('standard', $priceGroupPricePayload);
+        }, array_get_notempty($payload, 'Standard_Price_Group', []));
+
+        array_map(function (array $priceGroupPricePayload) use (&$priceGroupPrices) {
+            $priceGroupPrices[] = $this->convertPriceGroupPricePayload('fixed', $priceGroupPricePayload);
+        }, array_get_notempty($payload, 'Fixed_Price_Group', []));
+
+        return $priceGroupPrices;
+    }
+
+    private function convertPriceGroupPricePayload($type, array $priceGroupPricePayload)
+    {
+        return PriceGroupPrice::fromNative(
+            $type,
+            $priceGroupPricePayload['attributes']['Id'],
+            $priceGroupPricePayload['value']
+        );
+    }
+
     private static function extractAttributeOptions(array $payload, array $suffixesToCheck)
     {
         $options = [];
@@ -106,7 +134,7 @@ class V2ProductDeserializer
             foreach ($suffixesToCheck as $suffixToCheck) {
                 $key = $studlyAttributeCode.$suffixToCheck;
 
-                if (!array_key_exists($key, $payload)) {
+                if (!array_key_exists($key, $payload) || empty($payload[$key])) {
                     continue;
                 }
 
