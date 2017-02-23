@@ -106,11 +106,11 @@ class V2ProductDeserializer
 
         array_map(function (array $priceGroupPricePayload) use (&$priceGroupPrices) {
             $priceGroupPrices[] = $this->convertPriceGroupPricePayload('standard', $priceGroupPricePayload);
-        }, array_get($payload, 'Standard_Price_Group', []));
+        }, array_get_notempty($payload, 'Standard_Price_Group', []));
 
         array_map(function (array $priceGroupPricePayload) use (&$priceGroupPrices) {
             $priceGroupPrices[] = $this->convertPriceGroupPricePayload('fixed', $priceGroupPricePayload);
-        }, array_get($payload, 'Fixed_Price_Group', []));
+        }, array_get_notempty($payload, 'Fixed_Price_Group', []));
 
         return $priceGroupPrices;
     }
