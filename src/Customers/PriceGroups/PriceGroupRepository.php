@@ -10,4 +10,13 @@ interface PriceGroupRepository
      * @return PriceGroup[]
      */
     public function all();
+
+    /**
+     * Get a specific price group.
+     *
+     * @param PriceGroupKey $priceGroupKey
+     *
+     * @return PriceGroup|null
+     */
+    public function find(PriceGroupKey $priceGroupKey);
 }
