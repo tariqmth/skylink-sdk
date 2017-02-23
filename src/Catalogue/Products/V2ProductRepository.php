@@ -56,10 +56,8 @@ class V2ProductRepository implements ProductRepository
         ProductId $productId,
         SalesChannelId $salesChannelId
     ) {
-        $rawResponse = $this->api->call('ProductGetDetailsStockPricingByChannel', [
-            'ProductId' => $productId->toNative(),
-            'CustomerId' => 0,
-            'PriceGroupId' => 0,
+        $rawResponse = $this->api->call('EDSGetProductsByChannel', [
+            'ProductIds' => [$productId->toNative()],
             'ChannelId' => $salesChannelId->toNative(),
         ]);
 
