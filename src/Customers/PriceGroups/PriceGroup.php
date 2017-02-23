@@ -58,6 +58,15 @@ class PriceGroup implements ValueObjectInterface, XmlDeserializable
         return clone $this->name;
     }
 
+    public function getTypeWithName()
+    {
+        return new StringLiteral(sprintf(
+            '%s (%s)',
+            $this->getName(),
+            title_case($this->getKey()->getType())
+        ));
+    }
+
     /**
      * Tells whether two Price Group instances are equal.
      *
