@@ -3,6 +3,7 @@
 namespace RetailExpress\SkyLink\Sdk;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class Util
 {
@@ -17,12 +18,20 @@ class Util
      */
     public static function arrayGetNotempty(array $array, $key, $default = null)
     {
-        $flattened = Arr::dot($array);
+        // Assign a random default value to compare against
+        $randomDefault = Str::random();
+        $value = Arr::get($array, $key, $randomDefault);
 
-        if (isset($flattened[$key]) && !empty($flattened[$key])) {
-            return $flattened[$key];
+        // If the parent function returned nothing, we'll just return our given default
+        if ($value === $randomDefault) {
+            return value($default);
         }
 
-        return value($default);
+        // If the returned value is empty, we'll return our given default
+        if (empty($value)) {
+            return value($default);
+        }
+
+        return $value;
     }
 }
