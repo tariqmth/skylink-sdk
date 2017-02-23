@@ -11,6 +11,17 @@ use ValueObjects\ValueObjectInterface;
 class PriceGroupKey implements ValueObjectInterface
 {
     /**
+     * Match creating from string in the following format (example shown):
+     *
+     *   "type : id"
+     *
+     * Where there is an optional space separating each side of the colon. For example:
+     *
+     *   "fixed : 1"
+     */
+    const STRING_PATTERN = '/^([a-z]+)(?:\s+)?\:(?:\s+)?(\d+)$/';
+
+    /**
      * @var PriceGroupType
      */
     private $type;
@@ -40,17 +51,38 @@ class PriceGroupKey implements ValueObjectInterface
         return new self($type, $id);
     }
 
+    public static function fromString($string)
+    {
+        preg_match(self::STRING_PATTERN, $string, $matches);
+
+        if (count($matches) !== 3) {
+            throw new BadMethodCallException('You must provide a string in the format "type : id".');
+        }
+
+        return self::fromNative($matches[1], $matches[2]);
+    }
+
     public function __construct(PriceGroupType $type, PriceGroupId $id)
     {
         $this->type = $type;
         $this->id = $id;
     }
 
+    /**
+     * @todo Remove the full @return namespace when Magento stops bitching about the class not existing when using this class.
+     *
+     * @return \RetailExpress\SkyLink\Sdk\Customers\PriceGroups\PriceGroupType
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * @todo see PriceGroupKey::getType()
+     *
+     * @return \RetailExpress\SkyLink\Sdk\Customers\PriceGroups\PriceGroupId
+     */
     public function getId()
     {
         return clone $this->id;
@@ -79,6 +111,6 @@ class PriceGroupKey implements ValueObjectInterface
      */
     public function __toString()
     {
-        return "{$this->getType()}: {$this->getId()}";
+        return "{$this->getType()}:{$this->getId()}";
     }
 }
