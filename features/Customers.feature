@@ -3,7 +3,7 @@ Feature: Customers
 
   Scenario: Retrieving a customer with lots of information
     When I find the customer with id "300000"
-    Then I should see that their full name is "Joe" "Bloggs"
+    Then I should see that their full name is "Joey" "Bloggs"
      And I should see their email is "joe@testing.com"
      And I should see they work for "Sample Company"
      And I should see their billing contact is:
