@@ -15,16 +15,9 @@ class V2CustomerRepository implements CustomerRepository
         $this->api = $api;
     }
 
-    public function allIds(DateTimeImmutable $updatedSince = null)
+    public function allIds()
     {
-        if (null === $updatedSince) {
-            $updatedSince = new DateTimeImmutable('@0');
-        }
-
-        $rawResponse = $this->api->call('CustomerGetBulkDetails', [
-            'LastUpdated' => $updatedSince->format(V2_API_DATE_FORMAT),
-            'OnlyCustomersWithEmails' => 1,
-            'OnlyCustomersForExport' => 1,
+        $rawResponse = $this->api->call('EDSGetCustomers', [
         ]);
 
         $xmlService = $this->api->getXmlService();
