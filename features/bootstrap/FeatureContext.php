@@ -14,7 +14,7 @@ use RetailExpress\SkyLink\Sdk\Catalogue\Products\V2ProductDeserializer;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\V2ProductRepository;
 use RetailExpress\SkyLink\Sdk\Customers\PriceGroups\V2PriceGroupRepository;
 use RetailExpress\SkyLink\Sdk\Customers\V2CustomerRepository;
-use RetailExpress\SkyLink\Sdk\Loyalty\FakeLoyaltyRepository;
+use RetailExpress\SkyLink\Sdk\Loyalty\V2LoyaltyRepository;
 use RetailExpress\SkyLink\Sdk\Outlets\V2OutletRepository;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\V2OrderRepository;
 use RetailExpress\SkyLink\Sdk\Sales\Payments\V2PaymentMethodRepository;
@@ -67,7 +67,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
         );
         $this->customerRepository = new V2CustomerRepository($api);
         $this->priceGroupRepository = new V2PriceGroupRepository($api);
-        $this->loyaltyRepository = new FakeLoyaltyRepository();
+        $this->loyaltyRepository = new V2LoyaltyRepository($api);
         $this->outletRepository = new V2OutletRepository($api);
         $this->orderRepository = new V2OrderRepository($api);
         $this->paymentMethodRepository = new V2PaymentMethodRepository($api);
