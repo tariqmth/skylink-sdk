@@ -6,7 +6,7 @@ use DateTimeImmutable;
 
 interface CustomerRepository
 {
-    public function allIds(DateTimeImmutable $updatedSince = null);
+    public function allIds();
 
     /**
      * Finds a Customer with the given Customer ID.
