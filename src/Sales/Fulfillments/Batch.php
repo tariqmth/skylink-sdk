@@ -36,16 +36,18 @@ class Batch
 
     public function getId()
     {
-        $idStrings = array_filter(array_map(function (Fulfillment $fulfillment) {
-            return $fulfillment->getId() ?: null;
+        $fulfillmentIds = array_filter(array_map(function (Fulfillment $fulfillment) {
+            return $fulfillment->getId()->toNative() ?: null;
         }, $this->getFulfillments()));
 
         // If no fulfillments have an ID
-        if (count($idStrings) === 0) {
+        if (count($fulfillmentIds) === 0) {
             return null;
         }
 
-        return new BatchId(md5(implode('', $idStrings)));
+        sort($fulfillmentIds);
+
+        return new BatchId(md5(implode('', $fulfillmentIds)));
     }
 
     private function assertAllFulfillmentsAreFromTheSameOrder()

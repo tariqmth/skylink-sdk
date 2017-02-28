@@ -2,8 +2,8 @@
 
 namespace RetailExpress\SkyLink\Sdk\Sales\Fulfillments;
 
-use ValueObjects\StringLiteral\StringLiteral;
+use ValueObjects\Number\Integer;
 
-class FulfillmentId extends StringLiteral
+class FulfillmentId extends Integer
 {
 }
