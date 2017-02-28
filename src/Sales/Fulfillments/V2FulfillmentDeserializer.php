@@ -19,14 +19,7 @@ class V2FulfillmentDeserializer implements XmlDeserializable
             $payload['QtyFulfilled']
         );
 
-        $idComponents = [
-            (string) $fulfillment->getOrderId(),
-            (string) $fulfillment->getOrderItemId(),
-            (string) $fulfillment->getFulfilledAt()->format(V2_API_DATE_FORMAT),
-            (string) $fulfillment->getQty(),
-        ];
-
-        $fulfillmentId = new FulfillmentId(md5(implode('', $idComponents)));
+        $fulfillmentId = new FulfillmentId($payload['FulfillmentID']);
         $fulfillment->setId($fulfillmentId);
 
         return $fulfillment;
