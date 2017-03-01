@@ -16,55 +16,29 @@ class V2AttributeRepository implements AttributeRepository
 
     public function find(AttributeCode $attributeCode, SalesChannelId $salesChannelId)
     {
-        // We do not require all products if the attribute code is predefined
-        $lastUpdated = date(V2_API_DATE_FORMAT, $attributeCode->isPredefined() ? time() : 0);
-
         $rawResponse = $this->api->call('GetAllProductAttributes');
 
         $xmlService = $this->api->getXmlService();
+
+        // To speed up, we'll just map the relavent attribute
         $xmlService->elementMap = [
-            '{}Brand' => V2PredefinedAttributeOptionDeserializer::class,
-            '{}Colour' => V2PredefinedAttributeOptionDeserializer::class,
-            '{}Season' => V2PredefinedAttributeOptionDeserializer::class,
-            '{}Size' => V2PredefinedAttributeOptionDeserializer::class,
-            '{}ProductType' => V2PredefinedAttributeOptionDeserializer::class,
-            '{}Custom1' => V2AdhocAttributeOptionDeserializer::class,
-            '{}Custom2' => V2AdhocAttributeOptionDeserializer::class,
-            '{}Custom3' => V2AdhocAttributeOptionDeserializer::class,
+            "{}{$attributeCode->getV2XmlAttribute()}" => $attributeCode->isPredefined() ? V2PredefinedAttributeOptionDeserializer::class : V2AdhocAttributeOptionDeserializer::class,
         ];
 
         $parsedResponse = $xmlService->parse($rawResponse);
 
-        $flattenedParsedResponse = array_flatten($parsedResponse);
-
-        $uniqueOptions = [];
-        $options = array_filter($flattenedParsedResponse, function ($payload) use ($attributeCode, &$uniqueOptions) {
-
-            // Check the attribute option is applicable
-            if (!$payload instanceof AttributeOption) {
-                return false;
+        // Grab the attribute options from the parsed response
+        $attributeOptions = [];
+        array_walk($parsedResponse, function ($value) use ($attributeCode, &$attributeOptions) {
+            if ($value['name'] !== "{}{$attributeCode->getV2XmlAttributeGroup()}") {
+                return;
             }
 
-            if (!$payload->getAttribute()->getCode()->sameValueAs($attributeCode)) {
-                return false;
-            }
-
-            // Check we haven't already added the attribute (in the case of custom product atttributes)
-            if (in_array((string) $payload->getId(), $uniqueOptions)) {
-                return false;
-            }
-
-            $uniqueOptions[] = (string) $payload->getId();
-
-            return true;
+            $attributeOptions = array_map(function (array $payload) {
+                return $payload['value'];
+            }, $value['value']);
         });
 
-        $attribute = new Attribute($attributeCode);
-
-        foreach ($options as $option) {
-            $attribute = $attribute->withOption($option);
-        }
-
-        return $attribute;
+        return new Attribute($attributeCode, $attributeOptions);
     }
 }

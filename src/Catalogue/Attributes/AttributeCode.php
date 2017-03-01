@@ -7,6 +7,8 @@ use ValueObjects\StringLiteral\StringLiteral;
 
 class AttributeCode extends Enum
 {
+    use V2AttributeCodeConverter;
+
     const BRAND = 'brand';
     const COLOUR = 'colour';
     const CUSTOM_1 = 'custom_1';
