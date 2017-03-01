@@ -30,17 +30,15 @@ class Attribute implements ValueObjectInterface
         return new self($attributeCode);
     }
 
-    public function __construct(AttributeCode $code)
+    public function __construct(AttributeCode $code, array $options = null)
     {
         $this->code = $code;
-    }
 
-    public function withOption(AttributeOption $option)
-    {
-        $new = clone $this;
-        $new->options[] = $option;
-
-        return $new;
+        if (null !== $options) {
+            $this->options = array_map(function (AttributeOption $option) {
+                return $option;
+            }, $options);
+        }
     }
 
     /**
