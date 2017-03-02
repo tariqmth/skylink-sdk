@@ -3,6 +3,7 @@
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
 use ValueObjects\Enum\Enum;
+use ValueObjects\StringLiteral\StringLiteral;
 
 class ProductPriceAttribute extends Enum
 {
@@ -21,5 +22,17 @@ class ProductPriceAttribute extends Enum
     public static function getDefaultForSpecialPrice()
     {
         return self::get('discounted_price');
+    }
+
+    public function getLabel()
+    {
+        $labels = [
+            self::RRP => 'RRP',
+            self::DEFAULT_PRICE => 'Default Price',
+            self::DISCOUNTED_PRICE => 'Discounted Price',
+            self::WEB_PRICE => 'Web Price',
+        ];
+
+        return new StringLiteral($labels[$this->getValue()]);
     }
 }
