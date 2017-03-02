@@ -14,6 +14,9 @@ class V2AttributeRepository implements AttributeRepository
         $this->api = $api;
     }
 
+    /**
+     * @todo refactor this, it feels a little messy (particularly finding the attribute options).
+     */
     public function find(AttributeCode $attributeCode, SalesChannelId $salesChannelId)
     {
         $rawResponse = $this->api->call('GetAllProductAttributes');
@@ -34,9 +37,18 @@ class V2AttributeRepository implements AttributeRepository
                 return;
             }
 
-            $attributeOptions = array_map(function (array $payload) {
-                return $payload['value'];
-            }, $value['value']);
+            $attributeOptions = array_filter(array_map(function (array $payload) {
+
+                // Becuase the custom attributes are all combined, we'll check that we're dealing with an actual
+                // attribute that was transfomed and not one that wasn't.
+                $option = $payload['value'];
+
+                if (!$option instanceof AttributeOption) {
+                    return false;
+                }
+
+                return $option;
+            }, $value['value']));
         });
 
         return new Attribute($attributeCode, $attributeOptions);
