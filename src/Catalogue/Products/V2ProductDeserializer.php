@@ -10,14 +10,21 @@ use ValueObjects\StringLiteral\StringLiteral;
 
 class V2ProductDeserializer
 {
+    private $nameAttribute;
+
     private $regularPriceAttribute;
 
     private $specialPriceAttribute;
 
     public function __construct(
+        ProductNameAttribute $nameAttribute = null,
         ProductPriceAttribute $regularPriceAttribute = null,
         ProductPriceAttribute $specialPriceAttribute = null
     ) {
+        if (null === $nameAttribute) {
+            $nameAttribute = ProductNameAttribute::getDefault();
+        }
+
         if (null === $regularPriceAttribute) {
             $regularPriceAttribute = ProductPriceAttribute::getDefaultForRegularPrice();
         }
@@ -26,6 +33,7 @@ class V2ProductDeserializer
             $specialPriceAttribute = ProductPriceAttribute::getDefaultForSpecialPrice();
         }
 
+        $this->nameAttribute = $nameAttribute;
         $this->regularPriceAttribute = $regularPriceAttribute;
         $this->specialPriceAttribute = $specialPriceAttribute;
     }
@@ -39,7 +47,8 @@ class V2ProductDeserializer
 
         $id = new ProductId($payload['ProductId']);
         $sku = new StringLiteral($payload['SKU']);
-        $name = new StringLiteral($payload['Description']);
+
+        $name = new StringLiteral($this->extractProductName($payload));
 
         $pricingStructure = PricingStructure::fromNative(
             $this->extractRegularPrice($payload),
@@ -75,6 +84,17 @@ class V2ProductDeserializer
             $inventoryItem,
             $physicalPackage,
             $options
+        );
+    }
+
+    private function extractProductName(array $payload)
+    {
+        return array_get(
+            $payload,
+            $this->nameAttribute->getV2XmlAttribute(),
+            function () use ($payload) {
+                return $payload[ProductNameAttribute::getDefault()->getV2XmlAttribute()];
+            }
         );
     }
 
