@@ -19,7 +19,7 @@ class V2PriceGroupRepository implements PriceGroupRepository
     public function all()
     {
         $rawResponse = $this->api->call('EDSGetAllCustomerPriceGroups', [
-            ***REMOVED***
+***REMOVED***
         ]);
 
         $xmlService = $this->api->getXmlService();

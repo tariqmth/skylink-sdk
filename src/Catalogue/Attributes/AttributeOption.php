@@ -49,6 +49,10 @@ class AttributeOption implements ValueObjectInterface
 
     public function getLabel()
     {
+        if (null === $this->label) {
+            return $this->getId();
+        }
+
         return clone $this->label;
     }
 
