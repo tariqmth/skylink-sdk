@@ -15,6 +15,8 @@ trait ProductFeatureContext
 
     private $productRepository;
 
+    private $productIds = [];
+
     private $product;
 
     /**
@@ -68,6 +70,26 @@ trait ProductFeatureContext
     {
         if (null !== $this->eta) {
             throw new Exception("Expected no ETA to exist but there was one.");
+        }
+    }
+
+    /**
+     * @When I get all product ids
+     */
+    public function iGetAllProductIds()
+    {
+        $this->productIds = $this->productRepository->allIds();
+    }
+
+    /**
+     * @Then I can see there are :arg1 product ids
+     */
+    public function iCanSeeThereAreProductIds($count)
+    {
+        $productIdsCount = count($this->productIds);
+
+        if ((int) $count !== $productIdsCount) {
+            throw new Exception("There were {$productIdsCount} product ids.");
         }
     }
 

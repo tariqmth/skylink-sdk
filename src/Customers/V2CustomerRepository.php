@@ -17,8 +17,7 @@ class V2CustomerRepository implements CustomerRepository
 
     public function allIds()
     {
-        $rawResponse = $this->api->call('EDSGetCustomers', [
-        ]);
+        $rawResponse = $this->api->call('GetCustomers');
 
         $xmlService = $this->api->getXmlService();
         $xmlService->elementMap = [
@@ -36,7 +35,7 @@ class V2CustomerRepository implements CustomerRepository
 
     public function find(CustomerId $customerId)
     {
-        $rawResponse = $this->api->call('EDSGetCustomers', [
+        $rawResponse = $this->api->call('GetCustomers', [
             'CustomerIds' => [$customerId->toNative()],
         ]);
 
@@ -70,7 +69,6 @@ class V2CustomerRepository implements CustomerRepository
         $parsedResponse = $xmlService->parse($rawResponse);
 
         if (array_get($parsedResponse, '0.value.{}Result') === 'Fail') {
-            dd($this->api->getSoapClient()->__getLastRequest());
             throw new V2ApiException("Failed to create a customer based on the given details.");
         }
 
