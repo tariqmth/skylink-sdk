@@ -27,7 +27,7 @@ class V2ProductRepository implements ProductRepository
     public function allIds(
         SalesChannelId $salesChannelId
     ) {
-        $rawResponse = $this->api->call('GetProductIds', [
+        $rawResponse = $this->api->call('GetProductIdsByChannel', [
             'ChannelId' => $salesChannelId->toNative(),
         ]);
 
