@@ -78,7 +78,7 @@ trait ProductFeatureContext
      */
     public function iGetAllProductIds()
     {
-        $this->productIds = $this->productRepository->allIds();
+        $this->productIds = $this->productRepository->allIds($this->salesChannelId);
     }
 
     /**

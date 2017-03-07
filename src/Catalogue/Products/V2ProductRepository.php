@@ -24,9 +24,12 @@ class V2ProductRepository implements ProductRepository
         $this->api = $api;
     }
 
-    public function allIds()
-    {
-        $rawResponse = $this->api->call('GetProductIds');
+    public function allIds(
+        SalesChannelId $salesChannelId
+    ) {
+        $rawResponse = $this->api->call('GetProductIds', [
+            'ChannelId' => $salesChannelId->toNative(),
+        ]);
 
         $xmlService = $this->api->getXmlService();
         $xmlService->elementMap = [

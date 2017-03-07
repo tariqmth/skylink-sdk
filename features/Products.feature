@@ -7,6 +7,7 @@ Feature: Products
      Then I should see there are "5" brands
 
   Scenario: Retrieving product ids
+    Given I am connected to sales channel "1"
      When I get all product ids
      Then I can see there are "19" product ids
 
