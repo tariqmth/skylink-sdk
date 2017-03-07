@@ -17,7 +17,10 @@ class V2CustomerRepository implements CustomerRepository
 
     public function allIds()
     {
-        $rawResponse = $this->api->call('GetCustomers');
+        $rawResponse = $this->api->call('GetCustomerIds', [
+            'OnlyCustomersForExport' => true,
+            'OnlyCustomersWithEmails' => true,
+        ]);
 
         $xmlService = $this->api->getXmlService();
         $xmlService->elementMap = [

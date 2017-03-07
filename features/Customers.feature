@@ -1,5 +1,9 @@
-@completed
+  @completed
 Feature: Customers
+
+  Scenario: Retrieving all customer ids
+    When I get all customer ids
+    Then I can see there is at least "50" customers
 
   Scenario: Retrieving a customer with lots of information
     When I find the customer with id "300000"
