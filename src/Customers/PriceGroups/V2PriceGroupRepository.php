@@ -18,9 +18,7 @@ class V2PriceGroupRepository implements PriceGroupRepository
      */
     public function all()
     {
-        $rawResponse = $this->api->call('GetAllCustomerPriceGroups', [
-            ***REMOVED***
-        ]);
+        $rawResponse = $this->api->call('GetCustomerPriceGroups');
 
         $xmlService = $this->api->getXmlService();
         $xmlService->elementMap = [
