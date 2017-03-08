@@ -21,7 +21,7 @@ class V2EtaRepository implements EtaRepository
      */
     public function find(ProductId $productId, EtaQty $qty, SalesChannelId $salesChannelId)
     {
-        $rawResponse = $this->api->call('ProductGetETADateByChannel', [
+        $rawResponse = $this->api->call('GetProductEtaDateByChannel', [
             'ChannelId' => $salesChannelId->toNative(),
             'RequestXML' => <<<XML
 <Products>

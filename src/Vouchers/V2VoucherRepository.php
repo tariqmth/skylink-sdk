@@ -16,7 +16,7 @@ class V2VoucherRepository implements VoucherRepository
 
     public function find(VoucherCode $voucherCode)
     {
-        $rawResponse = $this->api->call('VoucherGetBalance', [
+        $rawResponse = $this->api->call('GetVoucherBalance', [
             'VoucherCode' => $voucherCode->toNative(),
         ]);
 

@@ -68,7 +68,7 @@ class V2OrderRepository implements OrderRepository
 
     public function get(OrderId $orderId)
     {
-        $rawResponse = $this->api->call('WebOrderGetFulfillment', [
+        $rawResponse = $this->api->call('GetOrder', [
             'OrderId' => $orderId->toNative(),
         ]);
 
