@@ -37,6 +37,11 @@ class V2AttributeRepository implements AttributeRepository
                 return;
             }
 
+            // Check for the existence of options
+            if (null === $value['value']) {
+                return;
+            }
+
             $attributeOptions = array_filter(array_map(function (array $payload) {
 
                 // Becuase the custom attributes are all combined, we'll check that we're dealing with an actual
