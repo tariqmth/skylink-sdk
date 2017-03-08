@@ -27,11 +27,12 @@ class V2CustomerRepository implements CustomerRepository
             '{}Customer' => CustomerId::class,
         ];
         $parsedResponse = $xmlService->parse($rawResponse);
-        $flattenedParsedResponse = array_flatten($parsedResponse);
 
-        $customerIds = array_filter($flattenedParsedResponse, function ($payload) {
-            return $payload instanceof CustomerId;
-        });
+        $customerIds = array_filter(array_map(function (array $payload) {
+            if ($payload['value'] instanceof CustomerId) {
+                return $payload['value'];
+            }
+        }, array_get($parsedResponse, '0.value')));
 
         return array_values($customerIds);
     }
