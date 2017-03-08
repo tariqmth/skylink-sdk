@@ -12,9 +12,12 @@ trait V2CustomerDeserializer
     {
         $payload = XmlDeserializer\keyValue($xmlReader, '');
 
+        $billingFirstName = array_get_notempty($payload, 'BillFirstName', '');
+        $billingLastName = array_get_notempty($payload, 'BillLastName', '');
+
         $billingContact = BillingContact::fromNative(
-            $payload['BillFirstName'],
-            $payload['BillLastName'],
+            $billingFirstName,
+            $billingLastName,
             array_get_notempty($payload, 'BillEmail', "{$payload['CustomerId']}@example.com"),
             array_get_notempty($payload, 'BillCompany', ''),
             array_get_notempty($payload, 'BillAddress', ''),
@@ -31,8 +34,8 @@ trait V2CustomerDeserializer
         list($shippingFirstName, $shippingLastName) = self::splitShippingName(
             array_get_notempty($payload, 'DelName', ''),
             [
-                $payload['BillFirstName'],
-                $payload['BillLastName'],
+                $billingFirstName,
+                $billingLastName,
             ]
         );
 
