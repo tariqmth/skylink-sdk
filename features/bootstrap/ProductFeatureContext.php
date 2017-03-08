@@ -102,7 +102,23 @@ trait ProductFeatureContext
             new ProductId($productId),
             $this->salesChannelId
         );
+    }
 
+     /**
+     * @Then I should see the product does not exist
+     */
+    public function iShouldSeeTheProductDoesNotExist()
+    {
+        if (null !== $this->product) {
+            throw new Exception("Product with ID \"{$productId}\" exists.");
+        }
+    }
+
+    /**
+     * @Then I should see the product exists
+     */
+    public function iShouldSeeTheProductExists()
+    {
         if (null === $this->product) {
             throw new Exception("Failed to retrieve product with ID \"{$productId}\".");
         }

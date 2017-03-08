@@ -14,13 +14,21 @@ Feature: Products
   Scenario: Retrieving a simple product with minimal information
     Given I am connected to sales channel "1"
      When I find the product with id "124005"
-     Then I should see that its sku is "HB0011OSFA"
+     Then I should see the product exists
+      And I should see that its sku is "HB0011OSFA"
 
-  Scenario: Retrieivng a simple product with lots of information
+  Scenario: Retrieving a simple product with lots of information
     Given I am connected to sales channel "1"
      When I find the product with id "124006"
-     Then I should see that its sku is "SC0011OSFA"
+     Then I should see the product exists
+      And I should see that its sku is "SC0011OSFA"
+
+  Scenario: Retrieving a simple product on a sales channel that it doesn't belong to
+    Given I am connected to sales channel "2"
+     When I find the product with id "124006"
+     Then I should see the product does not exist
 
   Scenario: Retrieving a configurable product
     Given I am connected to sales channel "1"
      When I find the product with id "124007"
+     Then I should see the product exists
