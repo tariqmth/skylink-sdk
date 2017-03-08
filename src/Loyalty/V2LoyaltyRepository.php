@@ -17,7 +17,7 @@ class V2LoyaltyRepository implements LoyaltyRepository
 
     public function find(CustomerId $customerId)
     {
-        $rawResponse = $this->api->call('EDSGetCustomers', [
+        $rawResponse = $this->api->call('GetCustomers', [
             'CustomerIds' => [$customerId->toNative()],
         ]);
 

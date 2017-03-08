@@ -3,14 +3,11 @@
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
 use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
-use RetailExpress\SkyLink\Sdk\Apis\V2ApiException;
 use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 use Sabre\Xml\Reader as XmlReader;
 
 class V2ProductRepository implements ProductRepository
 {
-    const NO_SUCH_PRODUCT_EXCEPTION = 'Server was unable to process request. ---> System.Xml.XmlException: Root element is missing.';
-
     private $matrixPolicyMapper;
 
     private $v2ProductDeserializer;
@@ -27,9 +24,10 @@ class V2ProductRepository implements ProductRepository
         $this->api = $api;
     }
 
-    public function allIds(SalesChannelId $salesChannelId)
-    {
-        $rawResponse = $this->api->call('EDSGetProductsByChannel', [
+    public function allIds(
+        SalesChannelId $salesChannelId
+    ) {
+        $rawResponse = $this->api->call('GetProductIdsByChannel', [
             'ChannelId' => $salesChannelId->toNative(),
         ]);
 
@@ -51,18 +49,10 @@ class V2ProductRepository implements ProductRepository
         ProductId $productId,
         SalesChannelId $salesChannelId
     ) {
-        try {
-            $rawResponse = $this->api->call('EDSGetProductsByChannel', [
-                'ProductIds' => [$productId->toNative()],
-                'ChannelId' => $salesChannelId->toNative(),
-            ]);
-        } catch (V2ApiException $e) {
-            if (self::NO_SUCH_PRODUCT_EXCEPTION === $e->getMessage()) {
-                return null;
-            }
-
-            throw $e;
-        }
+        $rawResponse = $this->api->call('GetProductsByChannel', [
+            'ProductIds' => [$productId->toNative()],
+            'ChannelId' => $salesChannelId->toNative(),
+        ]);
 
         $xmlService = $this->api->getXmlService();
         $xmlService->elementMap = [

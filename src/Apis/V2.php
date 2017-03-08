@@ -2,8 +2,9 @@
 
 namespace RetailExpress\SkyLink\Sdk\Apis;
 
+use Prezent\Soap\Client\SoapClient;
+use Prezent\Soap\Client\Extension\WSAddressing;
 use Sabre\Xml\Service as XmlService;
-use SoapClient;
 use SoapFault;
 use SoapHeader;
 use ValueObjects\Identity\UUID as Uuid;
@@ -145,6 +146,9 @@ class V2
         $client = new SoapClient((string) $url, [
             'soap_version' => SOAP_1_2,
             'trace' => true,
+            'event_subscribers' => [
+                new WSAddressing(),
+            ],
         ]);
 
         $header = new SoapHeader('http://retailexpress.com.au/', 'ClientHeader', [

@@ -13,9 +13,31 @@ trait CustomerFeatureContext
 {
     private $customerRepository;
 
+    private $customerIds = [];
+
     private $customer;
 
     private $pendingCustomerInformation = [];
+
+    /**
+     * @When I get all customer ids
+     */
+    public function iGetAllCustomerIds()
+    {
+        $this->customerIds = $this->customerRepository->allIds();
+    }
+
+    /**
+     * @Then I can see there is at least :arg1 customers
+     */
+    public function iCanSeeThereIsAtLeastCustomers($count)
+    {
+        $customerIdsCount = count($this->customerIds);
+
+        if ($customerIdsCount < $count) {
+            throw new Exception("There were {$customerIdsCount} customer ids.");
+        }
+    }
 
     /**
      * @When I find the customer with id :arg1

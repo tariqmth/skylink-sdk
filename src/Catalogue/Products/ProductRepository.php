@@ -8,9 +8,11 @@ use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 interface ProductRepository
 {
     /**
-     * Gets a list of product IDs on the given sales channel ID.
+     * Gets a list of product IDs on the given Sales Channel ID.
      *
-     * @param SalesChannelId    $salesChannelId
+     * @param SalesChannelId $salesChannelId
+     *
+     * @return ProductId[]
      */
     public function allIds(SalesChannelId $salesChannelId);
 

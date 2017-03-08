@@ -16,7 +16,7 @@ class V2OutletRepository implements OutletRepository
 
     public function all(SalesChannelId $salesChannelId)
     {
-        $rawResponse = $this->api->call('OutletsGetByChannel', [
+        $rawResponse = $this->api->call('GetOutletsByChannel', [
             'ChannelId' => $salesChannelId->toNative(),
         ]);
 
