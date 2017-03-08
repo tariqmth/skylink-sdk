@@ -28,7 +28,8 @@ Feature: Products
      When I find the product with id "124006"
      Then I should see the product does not exist
 
-  Scenario: Retrieving a configurable product
+  Scenario: Retrieving a matrix product
     Given I am connected to sales channel "1"
      When I find the product with id "124007"
      Then I should see the product exists
+      And it is a matrix that contains "4" products

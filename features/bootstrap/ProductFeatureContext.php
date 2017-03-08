@@ -3,6 +3,8 @@
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeCode;
 use RetailExpress\SkyLink\Sdk\Catalogue\Eta\EtaQty;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\ProductId;
+use RetailExpress\SkyLink\Sdk\Catalogue\Products\Matrix;
+use RetailExpress\SkyLink\Sdk\Catalogue\Products\SimpleProduct;
 use ValueObjects\StringLiteral\StringLiteral;
 
 trait ProductFeatureContext
@@ -133,6 +135,30 @@ trait ProductFeatureContext
 
         if (!$actualSku->sameValueAs(new StringLiteral($expectedSku))) {
             throw new Exception("SKU \"{$actualSku}\" was found.");
+        }
+    }
+
+    /**
+     * @Then it is a matrix that contains :arg1 products
+     */
+    public function itIsAMatrixThatContainsProducts($count)
+    {
+        if (!$this->product instanceof Matrix) {
+            if ($this->product instanceof SimpleProduct) {
+                throw new Exception("Product with ID \"{$this->product->getId()}\" is a simple product, not a matrix.");
+            }
+
+            throw new Exception(sprintf(
+                'Product with ID "%s" is an instance of "%s"',
+                $this->product->getId(),
+                get_class($this->product)
+            ));
+        }
+
+        $productsCount = count($this->product->getProducts());
+
+        if ($productsCount !== (int) $count) {
+            throw new Exception("Matrix with ID \"{$this->product->getId()}\" contains \"{$productsCount}\" products.");
         }
     }
 }
