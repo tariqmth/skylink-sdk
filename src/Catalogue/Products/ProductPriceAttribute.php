@@ -28,8 +28,8 @@ class ProductPriceAttribute extends Enum
     {
         $labels = [
             self::RRP => 'RRP',
-            self::DEFAULT_PRICE => 'Default Price',
-            self::DISCOUNTED_PRICE => 'Discounted Price',
+            self::DEFAULT_PRICE => 'POS Price (Without Discounts)',
+            self::DISCOUNTED_PRICE => 'POS Price (With Discounts)',
             self::WEB_PRICE => 'Web Price',
         ];
 
