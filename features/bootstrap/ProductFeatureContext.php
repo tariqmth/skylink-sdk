@@ -158,7 +158,7 @@ trait ProductFeatureContext
         $productsCount = count($this->product->getProducts());
 
         if ($productsCount !== (int) $count) {
-            throw new Exception("Matrix with ID \"{$this->product->getId()}\" contains \"{$productsCount}\" products.");
+            throw new Exception("Matrix contains \"{$productsCount}\" products.");
         }
     }
 }
