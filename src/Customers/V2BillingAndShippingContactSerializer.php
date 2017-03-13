@@ -20,6 +20,7 @@ trait V2BillingAndShippingContactSerializer
         $payload['BillPostCode'] = (string) $billingContact->getAddress()->getPostcode();
         $payload['BillState'] = (string) $billingContact->getAddress()->getState();
         $payload['BillCountry'] = (string) $billingContact->getAddress()->getCountry();
+        $payload['BillPhone'] = (string) $billingContact->getPhoneNumber();
 
         $payload['BillEmail'] = (string) $billingContact->getEmailAddress();
 
@@ -29,12 +30,14 @@ trait V2BillingAndShippingContactSerializer
             $payload['DelName'] .= " {$shippingLastName}";
         }
 
+        $payload['DelCompany'] = (string) $shippingContact->getCompanyName();
         $payload['DelAddress'] = (string) $shippingContact->getAddress()->getLine1();
         $payload['DelAddress2'] = (string) $shippingContact->getAddress()->getLine2();
         $payload['DelSuburb'] = (string) $shippingContact->getAddress()->getCity();
         $payload['DelPostCode'] = (string) $shippingContact->getAddress()->getPostcode();
         $payload['DelState'] = (string) $shippingContact->getAddress()->getState();
         $payload['DelCountry'] = (string) $shippingContact->getAddress()->getCountry();
+        $payload['DelPhone'] = (string) $shippingContact->getPhoneNumber();
 
         return $payload;
     }
