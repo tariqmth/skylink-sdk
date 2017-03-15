@@ -29,13 +29,13 @@ class AttributeOption implements ValueObjectInterface
         }
 
         $attribute = new Attribute(AttributeCode::fromNative($args[0]));
-        $id = new StringLiteral($args[1]);
+        $id = new AttributeOptionId($args[1]);
         $label = isset($args[2]) ? new StringLiteral($args[2]) : null;
 
         return new self($attribute, $id, $label);
     }
 
-    public function __construct(Attribute $attribute, StringLiteral $id, StringLiteral $label = null)
+    public function __construct(Attribute $attribute, AttributeOptionId $id, StringLiteral $label = null)
     {
         $this->attribute = $attribute;
         $this->id = $id;
