@@ -71,7 +71,7 @@ class FeatureContext implements Context, SnippetAcceptingContext
         $this->outletRepository = new V2OutletRepository($api);
         $this->orderRepository = new V2OrderRepository($api);
         $this->paymentMethodRepository = new V2PaymentMethodRepository($api);
-        $this->paymentRepository = new V2PaymentRepository($api);
+        $this->paymentRepository = new V2PaymentRepository($api, $this->orderRepository);
         $this->voucherRepository = new V2VoucherRepository($api);
     }
 

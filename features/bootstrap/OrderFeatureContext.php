@@ -46,11 +46,12 @@ trait OrderFeatureContext
     }
 
     /**
-     * @Given I am willing to pay :arg1 for shipping
+     * @Given I am willing to pay :arg1 for shipping with :arg2
      */
-    public function iAmWillingToPayForShipping($shippingCharge)
+    public function iAmWillingToPayForShippingWith($shippingCharge, $deliveryDriverName)
     {
         $this->pendingOrderInformation['shippingCharge'] = $shippingCharge;
+        $this->pendingOrderInformation['deliveryDriverName'] = $deliveryDriverName;
     }
 
     /**
@@ -92,6 +93,10 @@ trait OrderFeatureContext
             $shippingCharge
         );
 
+        $this->order = $this
+            ->order
+            ->withDeliveryDriverNameForAllItems(new StringLiteral($deliveryDriverName));
+
         foreach ($items as $item) {
             $item = Item::fromNative(
                 $item['product_id'],
@@ -122,6 +127,16 @@ trait OrderFeatureContext
     }
 
     /**
+     * @Then I can pay a total of :arg1 towards the order using payment method :arg2
+     */
+    public function iCanPayATotalOfTowardsTheOrderUsingPaymentMethod($total, $methodId)
+    {
+        $this->payment = Payment::normalFromNative((string) $this->order->getId(), time(), $methodId, $total);
+
+        $this->paymentRepository->add($this->payment);
+    }
+
+    /**
      * @Then I should be able to find the order :arg1
      */
     public function iShouldBeAbleToFindTheOrder($orderId)
@@ -136,12 +151,64 @@ trait OrderFeatureContext
     }
 
     /**
-     * @Then I can pay a total of :arg1 towards the order using payment method :arg2
+     * @Then I should be able to see it has :arg1 payments made
      */
-    public function iCanPayATotalOfTowardsTheOrderUsingPaymentMethod($total, $methodId)
+    public function iShouldBeAbleToSeeItHasPaymentsMade($count)
     {
-        $this->payment = Payment::normalFromNative((string) $this->order->getId(), time(), $methodId, $total);
+        $paymentsCount = count($this->order->getPayments());
 
-        $this->paymentRepository->add($this->payment);
+        if ((int) $count !== $paymentsCount) {
+            throw new Exception("There were {$paymentsCount} payment(s) for Order with ID {$this->order->getId()}.");
+        }
+    }
+
+     /**
+     * @Then I can see the order is not fulfilled
+     */
+    public function iCanSeeTheOrderIsNotFulfilled()
+    {
+        if (true === $this->order->isFulfilled()) {
+            throw new Exception("Order with ID {$this->order->getID()} has been fulfilled.");
+        }
+    }
+
+    /**
+     * @Then I can see the order is not paid
+     */
+    public function iCanSeeTheOrderIsNotPaid()
+    {
+        $this->order = $this->orderRepository->get($this->order->getId());
+
+        if (true === $this->order->isPaid()) {
+            throw new Exception("Order with ID {$this->order->getID()} has been paid.");
+        }
+    }
+
+    /**
+     * @Then I can see the order is paid
+     */
+    public function iCanSeeTheOrderIsPaid()
+    {
+        $this->order = $this->orderRepository->get($this->order->getId());
+
+        if (false === $this->order->isPaid()) {
+            throw new Exception("Order with ID {$this->order->getID()} has not been paid.");
+        }
+    }
+
+    /**
+     * @Then that all items have been fulfilled in :arg1 fulfillments
+     */
+    public function thatAllItemsHaveBeenFulfilledInFulfillments($count)
+    {
+        if (false === $this->order->isFulfilled()) {
+            throw new Exception("Order with ID {$this->order->getId()} is not fulfilled.");
+        }
+
+        $fulfillmentsCount = count($this->order->getFulfillments());
+
+        if ((int) $count !== $fulfillmentsCount) {
+            throw new Exception("There were {$fulfillmentsCount} fulfillment(s) for Order with ID {$this->order->getId()}.");
+        }
     }
 }

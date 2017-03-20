@@ -8,6 +8,8 @@ use RetailExpress\SkyLink\Sdk\Sales\Orders\OrderId;
 use RetailExpress\SkyLink\Sdk\Vouchers\VoucherCode;
 use Sabre\Xml\XmlSerializable;
 use ValueObjects\Number\Real;
+use ValueObjects\ValueObjectInterface;
+use ValueObjects\Util\Util;
 
 class Payment implements XmlSerializable
 {

@@ -2,8 +2,8 @@
 
 namespace RetailExpress\SkyLink\Sdk\Sales\Payments;
 
-use ValueObjects\StringLiteral\StringLiteral;
+use ValueObjects\Number\Integer;
 
-class PaymentId extends StringLiteral
+class PaymentId extends Integer
 {
 }

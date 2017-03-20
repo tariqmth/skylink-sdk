@@ -44,6 +44,10 @@ class Order implements XmlSerializable
 
     private $fulfillFromOutletId;
 
+    private $itemDeliveryMethod;
+
+    private $itemDeliveryDriverName;
+
     private $publicComments;
 
     private $privateComments;
@@ -179,6 +183,26 @@ class Order implements XmlSerializable
         $new = clone $this;
         $new->fulfillFromOutletId = $fulfillFromOutletId;
 
+        $new->assertFulfillmentIsCompatibleWithDeliveryMethod();
+
+        return $new;
+    }
+
+    public function withDeliveryMethodForAllItems(ItemDeliveryMethod $itemDeliveryMethod)
+    {
+        $new = clone $this;
+        $new->itemDeliveryMethod = $itemDeliveryMethod;
+
+        $new->assertFulfillmentIsCompatibleWithDeliveryMethod();
+
+        return $new;
+    }
+
+    public function withDeliveryDriverNameForAllItems(StringLiteral $itemDeliveryDriverName)
+    {
+        $new = clone $this;
+        $new->itemDeliveryDriverName = $itemDeliveryDriverName;
+
         return $new;
     }
 
@@ -272,6 +296,34 @@ class Order implements XmlSerializable
         }, $this->payments);
     }
 
+    public function getLatestPayment()
+    {
+        $paymentsById = [];
+
+        array_map(function (Payment $payment) use (&$paymentsById) {
+            $paymentsById[(string) $payment->getId()] = $payment;
+        }, $this->getPayments());
+
+        if (0 === count($paymentsById)) {
+            return null;
+        }
+
+        return $paymentsById[max(array_keys($paymentsById))];
+    }
+
+    public function isPaid()
+    {
+        $toPay = $this->getTotal()->toNative();
+
+        array_map(function (Payment $payment) use (&$toPay) {
+            $toPay -= $payment->getTotal()->toNative();
+        }, $this->getPayments());
+
+        // Sometimes rex might allow overpaying on an order, but to us, it's
+        // still paid either way
+        return $toPay <= 0;
+    }
+
     public function getFulfillmentBatches()
     {
         return array_map(function (FulfillmentBatch $fulfillmentBatch) {
@@ -295,6 +347,28 @@ class Order implements XmlSerializable
         );
     }
 
+    public function getFulfillments()
+    {
+        $fulfillments = [];
+
+        array_map(function (FulfillmentBatch $fulfillmentBatch) use (&$fulfillments) {
+            $fulfillments = array_merge($fulfillments, $fulfillmentBatch->getFulfillments());
+        }, $this->getFulfillmentBatches());
+
+        return $fulfillments;
+    }
+
+    public function isFulfilled()
+    {
+        foreach ($this->getItems() as $item) {
+            if (false === $item->getQty()->isFulfilled()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function getShippingCharge()
     {
         return clone $this->shippingCharge;
@@ -312,6 +386,39 @@ class Order implements XmlSerializable
     public function specifiedOutletIdToFulfillFrom()
     {
         return null !== $this->fulfillFromOutletId;
+    }
+
+    public function getItemDeliveryMethod()
+    {
+        // If no item delivery method was specified, we'll use the defualt
+        // @todo is this right??
+        if (!$this->specifiedItemDeliveryMethod()) {
+            $this->itemDeliveryMethod = ItemDeliveryMethod::getDefault();
+            $this->assertFulfillmentIsCompatibleWithDeliveryMethod();
+
+            return $this->getItemDeliveryMethod();
+        }
+
+        return $this->itemDeliveryMethod;
+    }
+
+    public function specifiedItemDeliveryMethod()
+    {
+        return null !== $this->itemDeliveryMethod;
+    }
+
+    public function getItemDeliveryDriverName()
+    {
+        if (!$this->specifiedItemDeliveryDriverName()) {
+            return null;
+        }
+
+        return clone $this->itemDeliveryDriverName;
+    }
+
+    public function specifiedItemDeliveryDriverName()
+    {
+        return null !== $this->itemDeliveryDriverName;
     }
 
     public function getPublicComments()
@@ -356,5 +463,19 @@ class Order implements XmlSerializable
         $total += $this->getShippingCharge()->getPriceExclTax()->toNative();
 
         return new Real($total);
+    }
+
+    private function assertFulfillmentIsCompatibleWithDeliveryMethod()
+    {
+        if (!$this->specifiedOutletIdToFulfillFrom() || !$this->specifiedItemDeliveryMethod()) {
+            return;
+        }
+
+        $itemDeliveryMethod = $this->getItemDeliveryMethod();
+
+        if (!$itemDeliveryMethod->isPickupLater()) {
+            $message = "An outlet was specified to fulfill from, however an incompatible item delivery method \"{$itemDeliveryMethod}\" was chosen.";
+            throw new LogicException($message);
+        }
     }
 }

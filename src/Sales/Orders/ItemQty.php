@@ -56,6 +56,12 @@ class ItemQty implements ValueObjectInterface
         return clone $this->fulfilled;
     }
 
+    public function isFulfilled()
+    {
+        // Potentially Rex might have a higher fulfilled qty than what is ordered
+        return $this->getFulfilled()->toNative() >= $this->getOrdered()->toNative();
+    }
+
     /**
      * Tells whether two Item Qty instances are equal.
      *

@@ -20,6 +20,8 @@ class V2PaymentDeserializer implements XmlDeserializable
             $payload['Total']
         );
 
+        $payment->setId(new PaymentId($payload['OrderPaymentId']));
+
         return $payment;
     }
 }

@@ -51,6 +51,14 @@ trait V2OrderSerializer
             $itemPayload['UnitPrice'] = (string) $item->getPrice();
             $itemPayload['TaxRateApplied'] = (string) $item->getTaxRate()->getRate();
 
+            // The delivery method comes from the order itself (since Rex does not support
+            // multiple delivery methods, this ensures we're sending sanitised data for them!)
+            $itemPayload['DeliveryMethod'] = $this->getItemDeliveryMethod()->getV2XmlAttribute();
+
+            if ($this->specifiedItemDeliveryDriverName()) {
+                $itemPayload['DeliveryDriverName'] = (string) $this->getItemDeliveryDriverName();
+            }
+
             $payload['OrderItems'][]['OrderItem'] = $itemPayload;
         }
 
