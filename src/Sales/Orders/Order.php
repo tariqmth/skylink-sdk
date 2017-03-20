@@ -44,7 +44,7 @@ class Order implements XmlSerializable
 
     private $fulfillFromOutletId;
 
-    private $itemDeliveryMethod;
+    private $itemFulfillmentMethod;
 
     private $itemDeliveryDriverName;
 
@@ -183,17 +183,17 @@ class Order implements XmlSerializable
         $new = clone $this;
         $new->fulfillFromOutletId = $fulfillFromOutletId;
 
-        $new->assertFulfillmentIsCompatibleWithDeliveryMethod();
+        $new->assertFulfillmentIsCompatibleWithFulfillmentMethod();
 
         return $new;
     }
 
-    public function withDeliveryMethodForAllItems(ItemDeliveryMethod $itemDeliveryMethod)
+    public function withFulfillmentMethodForAllItems(ItemFulfillmentMethod $itemFulfillmentMethod)
     {
         $new = clone $this;
-        $new->itemDeliveryMethod = $itemDeliveryMethod;
+        $new->itemFulfillmentMethod = $itemFulfillmentMethod;
 
-        $new->assertFulfillmentIsCompatibleWithDeliveryMethod();
+        $new->assertFulfillmentIsCompatibleWithFulfillmentMethod();
 
         return $new;
     }
@@ -388,23 +388,23 @@ class Order implements XmlSerializable
         return null !== $this->fulfillFromOutletId;
     }
 
-    public function getItemDeliveryMethod()
+    public function getItemFulfillmentMethod()
     {
-        // If no item delivery method was specified, we'll use the defualt
+        // If no item fulfillment method was specified, we'll use the defualt
         // @todo is this right??
-        if (!$this->specifiedItemDeliveryMethod()) {
-            $this->itemDeliveryMethod = ItemDeliveryMethod::getDefault();
-            $this->assertFulfillmentIsCompatibleWithDeliveryMethod();
+        if (!$this->specifiedItemFulfillmentMethod()) {
+            $this->itemFulfillmentMethod = ItemFulfillmentMethod::get(ItemFulfillmentMethod::getDefault());
+            $this->assertFulfillmentIsCompatibleWithFulfillmentMethod();
 
-            return $this->getItemDeliveryMethod();
+            return $this->getItemFulfillmentMethod();
         }
 
-        return $this->itemDeliveryMethod;
+        return $this->itemFulfillmentMethod;
     }
 
-    public function specifiedItemDeliveryMethod()
+    public function specifiedItemFulfillmentMethod()
     {
-        return null !== $this->itemDeliveryMethod;
+        return null !== $this->itemFulfillmentMethod;
     }
 
     public function getItemDeliveryDriverName()
@@ -465,16 +465,16 @@ class Order implements XmlSerializable
         return new Real($total);
     }
 
-    private function assertFulfillmentIsCompatibleWithDeliveryMethod()
+    private function assertFulfillmentIsCompatibleWithFulfillmentMethod()
     {
-        if (!$this->specifiedOutletIdToFulfillFrom() || !$this->specifiedItemDeliveryMethod()) {
+        if (!$this->specifiedOutletIdToFulfillFrom() || !$this->specifiedItemFulfillmentMethod()) {
             return;
         }
 
-        $itemDeliveryMethod = $this->getItemDeliveryMethod();
+        $itemFulfillmentMethod = $this->getItemFulfillmentMethod();
 
-        if (!$itemDeliveryMethod->isPickupLater()) {
-            $message = "An outlet was specified to fulfill from, however an incompatible item delivery method \"{$itemDeliveryMethod}\" was chosen.";
+        if (!$itemFulfillmentMethod->isPickupLater()) {
+            $message = "An outlet was specified to fulfill from, however an incompatible item fulfillment method \"{$itemFulfillmentMethod}\" was chosen.";
             throw new LogicException($message);
         }
     }

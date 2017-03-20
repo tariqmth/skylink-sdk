@@ -5,9 +5,9 @@ namespace RetailExpress\SkyLink\Sdk\Sales\Orders;
 use ValueObjects\Enum\Enum;
 use ValueObjects\StringLiteral\StringLiteral;
 
-class ItemDeliveryMethod extends Enum
+class ItemFulfillmentMethod extends Enum
 {
-    use V2ItemDeliveryMethodConverter;
+    use V2ItemFulfillmentMethodConverter;
 
     const CASH_CARRY = 'cash_carry';
     const HOME = 'home';
@@ -16,7 +16,17 @@ class ItemDeliveryMethod extends Enum
 
     public static function getDefault()
     {
-        return self::get('home');
+        return self::HOME;
+    }
+
+    public static function getNonAutomaticFulfilling()
+    {
+        return array_values(array_diff(self::getConstants(), [self::CASH_CARRY]));
+    }
+
+    public function automaticallyFulfills()
+    {
+        return !in_array($this->getValue(), self::getNonAutomaticFulfilling());
     }
 
     public function isPickupLater()

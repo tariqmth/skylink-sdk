@@ -2,7 +2,7 @@
 
 namespace RetailExpress\SkyLink\Sdk\Sales\Orders;
 
-trait V2ItemDeliveryMethodConverter
+trait V2ItemFulfillmentMethodConverter
 {
     private static $mappings = [
         'cash_carry' => null,
