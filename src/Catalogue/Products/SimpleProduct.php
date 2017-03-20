@@ -14,6 +14,8 @@ class SimpleProduct implements Product
 
     private $name;
 
+    private $description;
+
     private $pricingStructure;
 
     private $inventoryItem;
@@ -26,6 +28,7 @@ class SimpleProduct implements Product
         ProductId $id,
         StringLiteral $sku,
         StringLiteral $name,
+        Description $description,
         PricingStructure $pricingStructure,
         InventoryItem $inventoryItem,
         PhysicalPackage $physicalPackage,
@@ -34,6 +37,7 @@ class SimpleProduct implements Product
         $this->id = $id;
         $this->sku = $sku;
         $this->name = $name;
+        $this->description = $description;
         $this->pricingStructure = $pricingStructure;
         $this->inventoryItem = $inventoryItem;
         $this->physicalPackage = $physicalPackage;
@@ -56,6 +60,11 @@ class SimpleProduct implements Product
     public function getName()
     {
         return clone $this->name;
+    }
+
+    public function getDescription()
+    {
+        return clone $this->description;
     }
 
     public function getPricingStructure()

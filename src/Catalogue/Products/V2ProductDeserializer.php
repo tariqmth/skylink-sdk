@@ -50,6 +50,8 @@ class V2ProductDeserializer
 
         $name = new StringLiteral($this->extractProductName($payload));
 
+        $description = new Description(array_get_notempty($payload, 'WebstoreDescription', ''));
+
         $pricingStructure = PricingStructure::fromNative(
             $this->extractRegularPrice($payload),
             $this->extractSpecialPrice($payload),
@@ -80,6 +82,7 @@ class V2ProductDeserializer
             $id,
             $sku,
             $name,
+            $description,
             $pricingStructure,
             $inventoryItem,
             $physicalPackage,

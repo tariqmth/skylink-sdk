@@ -51,6 +51,11 @@ class Matrix implements Product, CompositeProduct
         return clone $this->getRepresentativeProduct()->getName();
     }
 
+    public function getDescription()
+    {
+        return clone $this->getRepresentativeProduct()->getDescription();
+    }
+
     public function getPricingStructure()
     {
         return clone $this->getRepresentativeProduct()->getPricingStructure();

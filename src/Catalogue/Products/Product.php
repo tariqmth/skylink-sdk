@@ -12,6 +12,8 @@ interface Product
 
     public function getName();
 
+    public function getDescription();
+
     public function getPricingStructure();
 
     public function getInventoryItem();
