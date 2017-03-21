@@ -51,7 +51,7 @@ class NewsletterSubscription implements ValueObjectInterface
      */
     public function toNative()
     {
-        return intval($this->subscribed);
+        return $this->subscribed;
     }
 
     /**
