@@ -13,7 +13,7 @@ class PriceGroupType extends Enum
     /**
      * @return StringLiteral
      */
-    public function getPriceGroupName()
+    public function getPriceGroupTypeName()
     {
         $names = [
             self::STANDARD => 'Standard',

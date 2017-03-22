@@ -63,7 +63,7 @@ class PriceGroup implements ValueObjectInterface, XmlDeserializable
         return new StringLiteral(sprintf(
             '%s (%s)',
             $this->getName(),
-            $this->getKey()->getType()->getPriceGroupName()
+            $this->getKey()->getType()->getPriceGroupTypeName()
         ));
     }
 
