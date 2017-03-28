@@ -15,9 +15,11 @@ class PriceGroupKey implements ValueObjectInterface
      *
      *   "type : id"
      *
-     * Where there is an optional space separating each side of the colon. For example:
+     * Where there is optional spacing separating each side of the colon. For example:
      *
      *   "fixed : 1"
+     *   "fixed:1"
+     *   "fixed: 1"
      */
     const STRING_PATTERN = '/^([a-z]+)(?:\s+)?\:(?:\s+)?(\d+)$/';
 

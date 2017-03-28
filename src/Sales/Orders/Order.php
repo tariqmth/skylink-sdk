@@ -324,6 +324,11 @@ class Order implements XmlSerializable
         return $toPay <= 0;
     }
 
+    public function hasFulfillmentBatches()
+    {
+        return count($this->fulfillmentBatches) > 0;
+    }
+
     public function getFulfillmentBatches()
     {
         return array_map(function (FulfillmentBatch $fulfillmentBatch) {
