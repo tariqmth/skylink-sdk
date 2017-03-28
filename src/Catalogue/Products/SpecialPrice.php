@@ -50,18 +50,28 @@ class SpecialPrice implements ValueObjectInterface
         return clone $this->price;
     }
 
+    public function hasStartDate()
+    {
+        return null !== $this->startDate;
+    }
+
     public function getStartDate()
     {
-        if (null === $this->startDate) {
+        if (false === $this->hasStartDate()) {
             return null;
         }
 
         return clone $this->startDate;
     }
 
+    public function hasEndDate()
+    {
+        return null !== $this->endDate;
+    }
+
     public function getEndDate()
     {
-        if (null === $this->endDate) {
+        if (false === $this->hasEndDate()) {
             return null;
         }
 
