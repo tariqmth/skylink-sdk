@@ -47,7 +47,7 @@ class V2ProductDeserializer
 
         $id = new ProductId($payload['ProductId']);
         $sku = new StringLiteral($payload['SKU']);
-        $manufacturerSku = new StringLiteral($payload['Code']);
+        $manufacturerSku = new StringLiteral((string) $payload['Code']);
 
         $name = new StringLiteral($this->extractProductName($payload));
 
