@@ -36,10 +36,17 @@ class PricingStructure implements ValueObjectInterface
             throw new BadMethodCallException($message);
         }
 
-        return new self(new Real($args[0]), new Real($args[1]), TaxRate::fromNative($args[2]));
+        // If sepcial price is an array, they're passing possibly a start and an end date
+        if (is_array($args[1])) {
+            $specialPrice = forward_static_call_array([SpecialPrice::class, 'fromNative'], $args[1]);
+        } else {
+            $specialPrice = SpecialPrice::fromNative($args[1]);
+        }
+
+        return new self(new Real($args[0]), $specialPrice, TaxRate::fromNative($args[2]));
     }
 
-    public function __construct(Real $regularPrice, Real $specialPrice, TaxRate $taxRate)
+    public function __construct(Real $regularPrice, SpecialPrice $specialPrice, TaxRate $taxRate)
     {
         $this->regularPrice = $regularPrice;
         $this->specialPrice = $specialPrice;
@@ -99,7 +106,7 @@ class PricingStructure implements ValueObjectInterface
         }
 
         // @todo compare group prices
-        $passes = $this->getRegularPrice()->sameValueAs($pricingStructure->getRegularPrice()) &&
+        return $this->getRegularPrice()->sameValueAs($pricingStructure->getRegularPrice()) &&
             $this->getSpecialPrice()->sameValueAs($pricingStructure->getSpecialPrice()) &&
             $this->getTaxRate()->sameValueAs($pricingStructure->getTaxRate());
     }

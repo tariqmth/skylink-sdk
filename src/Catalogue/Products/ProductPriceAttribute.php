@@ -11,7 +11,7 @@ class ProductPriceAttribute extends Enum
 
     const RRP = 'rrp';
     const DEFAULT_PRICE = 'default_price';
-    const DISCOUNTED_PRICE = 'discounted_price';
+    const PROMOTIONAL_PRICE = 'promotional_price';
     const WEB_PRICE = 'web_price';
 
     public static function getDefaultForRegularPrice()
@@ -21,7 +21,7 @@ class ProductPriceAttribute extends Enum
 
     public static function getDefaultForSpecialPrice()
     {
-        return self::get('discounted_price');
+        return self::get('promotional_price');
     }
 
     public function getLabel()
@@ -29,10 +29,15 @@ class ProductPriceAttribute extends Enum
         $labels = [
             self::RRP => 'RRP',
             self::DEFAULT_PRICE => 'POS Price (Without Discounts)',
-            self::DISCOUNTED_PRICE => 'POS Price (With Discounts)',
+            self::PROMOTIONAL_PRICE => 'POS Price (With Discounts)',
             self::WEB_PRICE => 'Web Price',
         ];
 
         return new StringLiteral($labels[$this->getValue()]);
+    }
+
+    public function isTimed()
+    {
+        return self::PROMOTIONAL_PRICE === $this->getValue();
     }
 }

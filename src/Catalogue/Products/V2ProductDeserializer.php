@@ -114,13 +114,42 @@ class V2ProductDeserializer
 
     private function extractSpecialPrice(array $payload)
     {
-        return array_get(
+        $price = array_get(
             $payload,
             $this->specialPriceAttribute->getV2XmlAttribute(),
             function () use ($payload) {
                 return $payload[ProductPriceAttribute::getDefaultForSpecialPrice()->getV2XmlAttribute()];
             }
         );
+
+        if (false === $this->specialPriceAttribute->isTimed()) {
+            return $price;
+        }
+
+        $startDate = array_get(
+            $payload,
+            $this->specialPriceAttribute->getV2XmlAttributesForStartDate()
+        );
+
+        $endDate = array_get(
+            $payload,
+            $this->specialPriceAttribute->getV2XmlAttributesForEndDate()
+        );
+
+        return [
+            $price,
+            $this->convertOptionalDateToTimestamp($startDate),
+            $this->convertOptionalDateToTimestamp($endDate)
+        ];
+    }
+
+    private function convertOptionalDateToTimestamp($date)
+    {
+        if (null === $date) {
+            return null;
+        }
+
+        return strtotime($date);
     }
 
     private function extractPriceGroupPrices(array $payload)
