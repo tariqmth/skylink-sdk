@@ -12,6 +12,8 @@ class SimpleProduct implements Product
 
     private $sku;
 
+    private $manufacturerSku;
+
     private $name;
 
     private $description;
@@ -27,6 +29,7 @@ class SimpleProduct implements Product
     public function __construct(
         ProductId $id,
         StringLiteral $sku,
+        StringLiteral $manufacturerSku,
         StringLiteral $name,
         Description $description,
         PricingStructure $pricingStructure,
@@ -36,6 +39,7 @@ class SimpleProduct implements Product
     ) {
         $this->id = $id;
         $this->sku = $sku;
+        $this->manufacturerSku = $manufacturerSku;
         $this->name = $name;
         $this->description = $description;
         $this->pricingStructure = $pricingStructure;
@@ -55,6 +59,11 @@ class SimpleProduct implements Product
     public function getSku()
     {
         return clone $this->sku;
+    }
+
+    public function getManufacturerSku()
+    {
+        return clone $this->manufacturerSku;
     }
 
     public function getName()

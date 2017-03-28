@@ -10,6 +10,8 @@ interface Product
 
     public function getSku();
 
+    public function getManufacturerSku();
+
     public function getName();
 
     public function getDescription();

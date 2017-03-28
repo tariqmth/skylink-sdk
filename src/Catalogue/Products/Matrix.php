@@ -2,6 +2,7 @@
 
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
+use InvalidArgumentException;
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\Attribute;
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeCode;
 use ValueObjects\StringLiteral\StringLiteral;
@@ -19,6 +20,8 @@ class Matrix implements Product, CompositeProduct
         $this->products = array_map(function (SimpleProduct $product) {
             return $product;
         }, $products);
+
+        $this->assertProductsAllHaveTheSameManufacturerSku();
     }
 
     public function getPolicy()
@@ -43,7 +46,12 @@ class Matrix implements Product, CompositeProduct
 
     public function getSku()
     {
-        return new StringLiteral(str_slug($this->getName()));
+        return clone $this->getManufacturerSku();
+    }
+
+    public function getManufacturerSku()
+    {
+        return clone $this->getRepresentativeProduct()->getManufacturerSku();
     }
 
     public function getName()
@@ -111,5 +119,21 @@ class Matrix implements Product, CompositeProduct
         ));
 
         return count($matchingAttributes) > 0;
+    }
+
+    private function assertProductsAllHaveTheSameManufacturerSku()
+    {
+        $manufacturerSkus = array_map(function (SimpleProduct $product) {
+            return (string) $product->getManufacturerSku();
+        }, $this->products);
+
+        $uniqueManufacturerSkus = array_unique($manufacturerSkus);
+
+        if (count($uniqueManufacturerSkus) > 1) {
+            throw new InvalidArgumentException(sprintf(
+                'A matrix requires all products have the same manufacturer sku, "%s" used.',
+                implode(', ', $uniqueManufacturerSkus)
+            ));
+        }
     }
 }

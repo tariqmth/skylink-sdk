@@ -139,6 +139,19 @@ trait ProductFeatureContext
     }
 
     /**
+     * @Then I should see that its manufacturer sku is :arg1
+     */
+    public function iShouldSeeThatItsManufacturerSkuIs($expectedManufacturerSku)
+    {
+        $actualManufacturerSku = $this->product->getManufacturerSku();
+
+        if (!$actualManufacturerSku->sameValueAs(new StringLiteral($expectedManufacturerSku))) {
+            throw new Exception("Manufacturer SKU \"{$actualManufacturerSku}\" was found.");
+        };
+    }
+
+
+    /**
      * @Then it is a matrix that contains :arg1 products
      */
     public function itIsAMatrixThatContainsProducts($count)
