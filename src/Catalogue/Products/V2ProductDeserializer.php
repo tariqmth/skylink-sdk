@@ -114,13 +114,35 @@ class V2ProductDeserializer
 
     private function extractSpecialPrice(array $payload)
     {
+        $priceAttribute = $this->specialPriceAttribute;
+
         $price = array_get(
             $payload,
-            $this->specialPriceAttribute->getV2XmlAttribute(),
-            function () use ($payload) {
-                return $payload[ProductPriceAttribute::getDefaultForSpecialPrice()->getV2XmlAttribute()];
-            }
+            $priceAttribute->getV2XmlAttribute()
         );
+
+        // If we didn't find a price, we'll check if the default attribute is different.
+        // If it is, we'll re-query the paylaod for that and then we can move on
+        if (null === $price) {
+            $defaultPriceAttribute = ProductPriceAttribute::getDefaultForSpecialPrice();
+
+            // If we're already using the default attribute, move on
+            if ($defaultPriceAttribute->sameValueAs($priceAttribute)) {
+                return null;
+            }
+
+            $priceAttribute = $defaultPriceAttribute;
+
+            $price = array_get(
+                $payload,
+                $priceAttribute->getV2XmlAttribute()
+            );
+
+            // If we still don't have a price, give up
+            if (null === $price) {
+                return null;
+            }
+        }
 
         if (false === $this->specialPriceAttribute->isTimed()) {
             return $price;
