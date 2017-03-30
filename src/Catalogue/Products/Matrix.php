@@ -22,6 +22,7 @@ class Matrix implements Product, CompositeProduct
         }, $products);
 
         $this->assertProductsAllHaveTheSameManufacturerSku();
+        $this->assertProductsAllHaveAttributeOptionsForThePolicy();
     }
 
     public function getPolicy()
@@ -125,7 +126,7 @@ class Matrix implements Product, CompositeProduct
     {
         $manufacturerSkus = array_map(function (SimpleProduct $product) {
             return (string) $product->getManufacturerSku();
-        }, $this->products);
+        }, $this->getProducts());
 
         $uniqueManufacturerSkus = array_unique($manufacturerSkus);
 
@@ -135,5 +136,25 @@ class Matrix implements Product, CompositeProduct
                 implode(', ', $uniqueManufacturerSkus)
             ));
         }
+    }
+
+    private function assertProductsAllHaveAttributeOptionsForThePolicy()
+    {
+        $requiredAttributeCodes = array_map(function (Attribute $attribute) {
+            return $attribute->getCode();
+        }, $this->policy->getAttributes());
+
+        array_map(function (SimpleProduct $product) use ($requiredAttributeCodes) {
+            array_walk($requiredAttributeCodes, function (AttributeCode $requiredAttributeCode) use ($product) {
+                if (null === $product->getAttributeOption($requiredAttributeCode)) {
+                    throw new InvalidArgumentException(sprintf(
+                        'A matrix requires all products have options for the attributes in the matrix policy. Product #%d (SKU "%s") does not have an option set for the "%s" Attribute.',
+                        $product->getId()->toNative(),
+                        $product->getSku(),
+                        $requiredAttributeCode
+                    ));
+                }
+            });
+        }, $this->getProducts());
     }
 }
