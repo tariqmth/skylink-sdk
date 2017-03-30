@@ -23,6 +23,7 @@ class Matrix implements Product, CompositeProduct
 
         $this->assertProductsAllHaveTheSameManufacturerSku();
         $this->assertProductsAllHaveAttributeOptionsForThePolicy();
+        $this->assertProductsAllHaveUniqueOptionsForThePolicy();
     }
 
     public function getPolicy()
@@ -38,6 +39,13 @@ class Matrix implements Product, CompositeProduct
         return array_map(function (SimpleProduct $product) {
             return clone $product;
         }, $this->products);
+    }
+
+    public function getProduct(ProductId $productId)
+    {
+        return array_first($this->getProducts(), function ($key, SimpleProduct $product) use ($productId) {
+            return $product->getId()->sameValueAs($productId);
+        });
     }
 
     public function getId()
@@ -156,5 +164,38 @@ class Matrix implements Product, CompositeProduct
                 }
             });
         }, $this->getProducts());
+    }
+
+    private function assertProductsAllHaveUniqueOptionsForThePolicy()
+    {
+        $attributeCodes = array_map(function (Attribute $attribute) {
+            return $attribute->getCode();
+        }, $this->policy->getAttributes());
+
+        $optionIdsByCode = [];
+
+        array_map(function (SimpleProduct $product) use ($attributeCodes, &$optionIdsByCode) {
+            array_walk($attributeCodes, function (AttributeCode $attributeCode) use ($product, &$optionIdsByCode) {
+                $optionIdsByCode[(string) $attributeCode][(string) $product->getAttributeOption($attributeCode)->getId()][] = (string) $product->getId();
+            });
+        }, $this->getProducts());
+
+        array_walk($optionIdsByCode, function (array $optionIds, $attributeCode) {
+            array_walk($optionIds, function (array $productIds, $optionId) use ($attributeCode) {
+                $productsCount = count($productIds);
+
+                if (1 === $productsCount) {
+                    return;
+                }
+
+                throw new InvalidArgumentException(sprintf(
+                    'A matrix requires all products have unique values for all attributes in the matrix policy. There were %d products, (product %s) that all used Option #%s for their "%s" attribute.',
+                    $productsCount,
+                    implode(', ', $productIds),
+                    $optionId,
+                    $attributeCode
+                ));
+            });
+        });
     }
 }
