@@ -47,6 +47,9 @@ class V2ProductDeserializer
 
         $id = new ProductId($payload['ProductId']);
         $sku = new StringLiteral($payload['SKU']);
+
+        // @todo decide if this should be optional, e.g. $product->withManufacturerSku()
+        // and just make Matrices use it? IDK...
         $manufacturerSku = new StringLiteral((string) $payload['Code']);
 
         $name = new StringLiteral($this->extractProductName($payload));
