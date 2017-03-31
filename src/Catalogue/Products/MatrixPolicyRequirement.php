@@ -11,7 +11,7 @@ class MatrixPolicyRequirement extends Enum
 
     public static function getDefault()
     {
-        return self::get('all');
+        return self::get('any');
     }
 
     public function isAll()

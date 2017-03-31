@@ -57,7 +57,5 @@ class MatrixPolicyProductsNotConfiguredCorrectlyException extends InvalidArgumen
             $attributeOptionId,
             $attributeCode
         ));
-
-        dd('hi');
     }
 }

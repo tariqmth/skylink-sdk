@@ -112,7 +112,7 @@ class MatrixPolicy
             // be skipped.
             if (count($indexesWithoutOptionsByCode) === count($productOptionsByCodes[$code])) {
                 if ($this->getRequirement()->isAny()) {
-                    continue;
+                    return;
                 }
 
                 throw MatrixPolicyProductsNotConfiguredCorrectlyException::withNoProductsHavingOptionsForAttributeWhenAllAreRequired(
@@ -154,11 +154,7 @@ class MatrixPolicy
                     AttributeCode::get($code)
                 );
             });
-
-            dd($productIdsByOptions);
         });
-
-        dd($indexesWithoutOptionsByCodes);
     }
 
     private function assertAttributeIsAllowed(Attribute $attribute)
