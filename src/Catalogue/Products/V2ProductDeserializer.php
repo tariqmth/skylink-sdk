@@ -50,7 +50,7 @@ class V2ProductDeserializer
 
         // @todo decide if this should be optional, e.g. $product->withManufacturerSku()
         // and just make Matrices use it? IDK...
-        $manufacturerSku = new StringLiteral((string) $payload['Code']);
+        $manufacturerSku = new StringLiteral(array_get_notempty($payload, 'Code', ''));
 
         $name = new StringLiteral($this->extractProductName($payload));
 
