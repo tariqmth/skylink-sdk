@@ -22,8 +22,8 @@ class Matrix implements Product, CompositeProduct
         }, $products);
 
         $this->assertProductsAllHaveTheSameManufacturerSku();
-        $this->assertProductsAllHaveAttributeOptionsForThePolicy();
-        $this->assertProductsAllHaveUniqueOptionsForThePolicy();
+
+        $this->policy->assertProductsAreConfiguredCorrectly($this);
     }
 
     public function getPolicy()
@@ -144,58 +144,5 @@ class Matrix implements Product, CompositeProduct
                 implode(', ', $uniqueManufacturerSkus)
             ));
         }
-    }
-
-    private function assertProductsAllHaveAttributeOptionsForThePolicy()
-    {
-        $requiredAttributeCodes = array_map(function (Attribute $attribute) {
-            return $attribute->getCode();
-        }, $this->policy->getAttributes());
-
-        array_map(function (SimpleProduct $product) use ($requiredAttributeCodes) {
-            array_walk($requiredAttributeCodes, function (AttributeCode $requiredAttributeCode) use ($product) {
-                if (null === $product->getAttributeOption($requiredAttributeCode)) {
-                    throw new InvalidArgumentException(sprintf(
-                        'A matrix requires all products have options for the attributes in the matrix policy. Product #%d (SKU "%s") does not have an option set for the "%s" Attribute.',
-                        $product->getId()->toNative(),
-                        $product->getSku(),
-                        $requiredAttributeCode
-                    ));
-                }
-            });
-        }, $this->getProducts());
-    }
-
-    private function assertProductsAllHaveUniqueOptionsForThePolicy()
-    {
-        $attributeCodes = array_map(function (Attribute $attribute) {
-            return $attribute->getCode();
-        }, $this->policy->getAttributes());
-
-        $optionIdsByCode = [];
-
-        array_map(function (SimpleProduct $product) use ($attributeCodes, &$optionIdsByCode) {
-            array_walk($attributeCodes, function (AttributeCode $attributeCode) use ($product, &$optionIdsByCode) {
-                $optionIdsByCode[(string) $attributeCode][(string) $product->getAttributeOption($attributeCode)->getId()][] = (string) $product->getId();
-            });
-        }, $this->getProducts());
-
-        array_walk($optionIdsByCode, function (array $optionIds, $attributeCode) {
-            array_walk($optionIds, function (array $productIds, $optionId) use ($attributeCode) {
-                $productsCount = count($productIds);
-
-                if (1 === $productsCount) {
-                    return;
-                }
-
-                throw new InvalidArgumentException(sprintf(
-                    'A matrix requires all products have unique values for all attributes in the matrix policy. There were %d products, (product %s) that all used Option #%s for their "%s" attribute.',
-                    $productsCount,
-                    implode(', ', $productIds),
-                    $optionId,
-                    $attributeCode
-                ));
-            });
-        });
     }
 }
