@@ -14,6 +14,14 @@ use ValueObjects\Web\Url;
 
 class V2
 {
+    private $url;
+
+    private $clientId;
+
+    private $username;
+
+    private $password;
+
     private $soapClient;
 
     public static function fromNative($url, $clientId, $username, $password)
@@ -30,11 +38,16 @@ class V2
     {
         $this->assertSecureUrl($url);
 
+        $this->url = $url;
+        $this->clientId = $clientId;
+        $this->username = $username;
+        $this->password = $password;
+
         $this->soapClient = $this->createSoapClient(
-            $url,
-            $clientId,
-            $username,
-            $password
+            $this->url,
+            $this->clientId,
+            $this->username,
+            $this->password
         );
     }
 
@@ -55,6 +68,13 @@ class V2
             if (starts_with($response, '<?xml version="1.0" encoding="utf-8"?>')) {
                 $message = $this->extractUsefulSoapFaultMessage($soapFault->getMessage());
                 throw V2ApiException::withSoapFaultAndRequest($soapFault, $this->soapClient->__getLastRequest(), $message);
+            }
+
+            if (str_contains($response, 'The client ID provided is not valid')) {
+                throw new V2ApiException(sprintf(
+                    'The API is reporting that your Client ID "%s" is not valid.',
+                    $this->clientId
+                ));
             }
 
             $response = $this->unzipReponse($response);
