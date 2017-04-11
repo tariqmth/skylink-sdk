@@ -44,18 +44,23 @@ class MatrixPolicyProductsNotConfiguredCorrectlyException extends InvalidArgumen
         ));
     }
 
-    public static function withMultipleProductsUsingTheSameOptionForAttribute(
+    public static function withMultipleProductsUsingTheSameCombinationOfOptions(
         StringLiteral $matrixSku,
         array $productIds,
-        AttributeOptionId $attributeOptionId,
-        AttributeCode $attributeCode
+        array $combination
     ) {
-        return new self(sprintf(
-            'Matrix "%s" requires all it\'s products have unique options, however products %s all use option "%s" for the "%s" attribute.',
+        $message = sprintf(
+            'Matrix "%s" requires all it\'s products have unique combinations of options, however products %s all use the same combination, ',
             $matrixSku,
-            implode(', ', $productIds),
-            $attributeOptionId,
-            $attributeCode
-        ));
+            implode(', ', $productIds)
+        );
+
+        $optionMessages = array_map(function (array $codeAndOption) {
+            return sprintf('"%s" for the "%s" attribute', $codeAndOption['attributeOptionId'], $codeAndOption['attributeCode']);
+        }, $combination);
+
+        $message .= sprintf('%s.', implode(', ', $optionMessages));
+
+        return new self($message);
     }
 }

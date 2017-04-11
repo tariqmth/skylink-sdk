@@ -132,28 +132,42 @@ class MatrixPolicy
             );
         });
 
-        // Now we'll loop through all options and check their values are unique
-        array_walk($productOptionsByCodes, function (array $productOptionsByCode, $code) use ($matrix) {
-            $productIdsByOptions = [];
+        // Now we'll create an array where the product ID is the key and the value is key/value pair of attribute codes
+        // and options. We can then use this to make sure all of the arrays are unique
+        $combinationsByIds = [];
+        array_walk($productOptionsByCodes, function (array $productOptionsByCode, $code) use ($matrix, &$combinationsByIds) {
 
-            array_walk($productOptionsByCode, function (array $productOptionByCode) use (&$productIdsByOptions) {
-                $productIdsByOptions[$productOptionByCode['option']][] = $productOptionByCode['id'];
+            array_walk($productOptionsByCode, function (array $productOptionByCode) use (&$combinationsByIds, $code) {
+                $combinationsByIds[$productOptionByCode['id']][$code] = $productOptionByCode['option'];
             });
+        });
 
-            array_walk($productIdsByOptions, function (array $productIds, $option) use ($matrix, $code) {
-                if (count($productIds) === 1) {
-                    return;
-                }
+        $productIdsByOptionHashes = [];
+        array_walk($combinationsByIds, function (array $combinationById, $id) use (&$productIdsByOptionHashes) {
+            $key = md5(serialize($combinationById));
+            $productIdsByOptionHashes[$key][] = $id;
+        });
 
-                throw MatrixPolicyProductsNotConfiguredCorrectlyException::withMultipleProductsUsingTheSameOptionForAttribute(
-                    $matrix->getSku(),
-                    array_map(function ($productId) {
-                        return new ProductId($productId);
-                    }, $productIds),
-                    new AttributeOptionId((string) $option),
-                    AttributeCode::get($code)
-                );
-            });
+        array_walk($productIdsByOptionHashes, function (array $productIds) use ($matrix, $combinationsByIds) {
+            if (count($productIds) === 1) {
+                return;
+            }
+
+            $combination = [];
+            foreach ($combinationsByIds[$productIds[0]] as $code => $option) {
+                $combination[] = [
+                    'attributeCode' => AttributeCode::get($code),
+                    'attributeOptionId' => new AttributeOptionId((string) $option),
+                ];
+            }
+
+            throw MatrixPolicyProductsNotConfiguredCorrectlyException::withMultipleProductsUsingTheSameCombinationOfOptions(
+                $matrix->getSku(),
+                array_map(function ($productId) {
+                    return new ProductId($productId);
+                }, $productIds),
+                $combination
+            );
         });
     }
 
