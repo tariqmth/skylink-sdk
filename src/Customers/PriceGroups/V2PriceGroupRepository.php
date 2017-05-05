@@ -2,7 +2,7 @@
 
 namespace RetailExpress\SkyLink\Sdk\Customers\PriceGroups;
 
-use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Sdk\Apis\V2\Api as V2Api;
 
 class V2PriceGroupRepository implements PriceGroupRepository
 {

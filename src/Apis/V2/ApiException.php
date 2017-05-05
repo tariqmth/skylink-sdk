@@ -1,18 +1,20 @@
 <?php
 
-namespace RetailExpress\SkyLink\Sdk\Apis;
+namespace RetailExpress\SkyLink\Sdk\Apis\V2;
 
+use RetailExpress\SkyLink\Sdk\Apis\ApiException as BaseApiException;
 use SoapFault;
 
-class V2ApiException extends ApiException
+class ApiException extends BaseApiException
 {
     private $soapFault;
 
     private $lastSoapRequest;
 
-    public static function withSoapFaultAndRequest(SoapFault $soapFault, $lastSoapRequest, $message)
+    public static function withSoapFaultAndRequest(SoapFault $soapFault, $lastSoapRequest, $customMessage = null)
     {
-        $new = new self($message);
+        $new = new self($customMessage ?: $soapFault->faultstring);
+
         $new->lastSoapRequest = $lastSoapRequest;
         $new->soapFault = $soapFault;
 

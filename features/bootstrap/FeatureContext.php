@@ -6,7 +6,7 @@ require_once __DIR__.'/ProductFeatureContext.php';
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Dotenv\Dotenv;
-use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Sdk\Apis\V2\Api as V2Api;
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\V2AttributeRepository;
 use RetailExpress\SkyLink\Sdk\Catalogue\Eta\V2EtaRepository;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\MatrixPolicyMapper;
@@ -21,6 +21,9 @@ use RetailExpress\SkyLink\Sdk\Sales\Payments\V2PaymentMethodRepository;
 use RetailExpress\SkyLink\Sdk\Sales\Payments\V2PaymentRepository;
 use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 use RetailExpress\SkyLink\Sdk\Vouchers\V2VoucherRepository;
+use ValueObjects\Identity\UUID as Uuid;
+use ValueObjects\StringLiteral\StringLiteral;
+use ValueObjects\Web\Url;
 
 /**
  * Defines application features from the specific context.
@@ -50,11 +53,11 @@ class FeatureContext implements Context, SnippetAcceptingContext
         // Load environment variables for sensitive credentials used in testing
         (new Dotenv(__DIR__.'/../..'))->load();
 
-        $api = V2Api::fromNative(
-            getenv('V2_API_URL'),
-            getenv('V2_API_CLIENT_ID'),
-            getenv('V2_API_USERNAME'),
-            getenv('V2_API_PASSWORD')
+        $api = new V2Api(
+            Url::fromNative(getenv('V2_API_URL')),
+            new Uuid(getenv('V2_API_CLIENT_ID')),
+            new StringLiteral(getenv('V2_API_USERNAME')),
+            new StringLiteral(getenv('V2_API_PASSWORD'))
         );
 
         // Initialise the Retail Express V2 Product Repository

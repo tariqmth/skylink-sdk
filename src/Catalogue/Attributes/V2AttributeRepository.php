@@ -2,7 +2,7 @@
 
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Attributes;
 
-use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Sdk\Apis\V2\Api as V2Api;
 use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 
 class V2AttributeRepository implements AttributeRepository

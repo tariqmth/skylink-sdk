@@ -3,7 +3,7 @@
 namespace RetailExpress\SkyLink\Sdk\Customers;
 
 use DateTimeImmutable;
-use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Sdk\Apis\V2\Api as V2Api;
 use RetailExpress\SkyLink\Sdk\Apis\V2ApiException;
 
 class V2CustomerRepository implements CustomerRepository

@@ -4,7 +4,7 @@ namespace spec\RetailExpress\SkyLink\Sdk\Sales\Orders;
 
 use BadMethodCallException;
 use PhpSpec\ObjectBehavior;
-use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Sdk\Apis\V2\Api as V2Api;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\OrderId;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\V2OrderRepository;
 use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;

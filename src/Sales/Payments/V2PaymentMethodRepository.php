@@ -2,7 +2,7 @@
 
 namespace RetailExpress\SkyLink\Sdk\Sales\Payments;
 
-use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Sdk\Apis\V2\Api as V2Api;
 
 class V2PaymentMethodRepository implements PaymentMethodRepository
 {
