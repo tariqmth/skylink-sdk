@@ -2,7 +2,7 @@
 
 namespace RetailExpress\SkyLink\Sdk\Loyalty;
 
-use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Sdk\Apis\V2\Api as V2Api;
 use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
 use RetailExpress\SkyLink\Sdk\Customers\CustomerNotFoundException;
 

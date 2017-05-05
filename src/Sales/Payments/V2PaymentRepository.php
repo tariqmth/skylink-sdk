@@ -2,7 +2,7 @@
 
 namespace RetailExpress\SkyLink\Sdk\Sales\Payments;
 
-use RetailExpress\SkyLink\Sdk\Apis\V2 as V2Api;
+use RetailExpress\SkyLink\Sdk\Apis\V2\Api as V2Api;
 use RetailExpress\SkyLink\Sdk\Apis\V2ApiException;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\OrderId;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\OrderRepository;
@@ -30,16 +30,7 @@ class V2PaymentRepository implements PaymentRepository
 
         $rawResponse = $this->api->call('OrderAddPayment', [
             'OrderPaymentXML' => $xml,
-        ], function ($response) {
-
-            // Todo, tidy this up, maybe globalise it?
-            $xml = simplexml_load_string($response);
-            $errors = array_map('trim', $xml->xpath('//Error'));
-
-            if (count($errors) > 0) {
-                throw new V2ApiException(implode(' ', $errors));
-            }
-        });
+        ]);
 
         // Retail Express doens't actually give us the payment ID back at all,
         // so we'll need to re-query the order to retrieve it
