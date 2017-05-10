@@ -78,8 +78,8 @@ class BatchSpec extends ObjectBehavior
 
     public function it_returns_a_hash_of_fulfillment_ids()
     {
-        $this->fulfillment1->getId()->willReturn(new FulfillmentId($id1 = 'first id'));
-        $this->fulfillment2->getId()->willReturn(new FulfillmentId($id2 = 'second id'));
+        $this->fulfillment1->getId()->willReturn(new FulfillmentId($id1 = 1));
+        $this->fulfillment2->getId()->willReturn(new FulfillmentId($id2 = 2));
 
         $batchIdHash = md5(implode('', [$id1, $id2]));
         $this->getId()->sameValueAs(new BatchId($batchIdHash))->shouldBe(true);

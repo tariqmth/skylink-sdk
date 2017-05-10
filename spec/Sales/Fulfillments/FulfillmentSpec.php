@@ -46,17 +46,17 @@ class FulfillmentSpec extends ObjectBehavior
     {
         $this->beConstructedThrough('fromNative', ['1-1', 1, time(), 1]);
         $this->getId()->shouldBe(null);
-        $this->setId($id = new FulfillmentId('my id'));
+        $this->setId($id = new FulfillmentId(1));
         $this->getId()->sameValueAs($id)->shouldBe(true);
     }
 
     public function it_doesnt_allow_the_id_to_be_overwritten()
     {
         $this->beConstructedThrough('fromNative', ['1-1', 1, time(), 1]);
-        $this->setId(new FulfillmentId('my id'));
+        $this->setId(new FulfillmentId(1));
 
         $this
             ->shouldThrow(LogicException::class)
-            ->duringSetId(new FulfillmentId('another id'));
+            ->duringSetId(new FulfillmentId(2));
     }
 }

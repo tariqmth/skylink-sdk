@@ -37,7 +37,11 @@ class Batch
     public function getId()
     {
         $fulfillmentIds = array_filter(array_map(function (Fulfillment $fulfillment) {
-            return $fulfillment->getId()->toNative() ?: null;
+            if (!$fulfillment->getId()) {
+                return null;
+            }
+
+            return $fulfillment->getId()->toNative();
         }, $this->getFulfillments()));
 
         // If no fulfillments have an ID
