@@ -22,6 +22,10 @@ Feature: Products
      When I find the product with id "124006"
      Then I should see the product exists
       And I should see that its sku is "SC0011OSFA"
+      And I should see that we have "100" in stock and "0" on order
+      And I should see that outlet "3" has "0" in stock
+      And I should see that outlet "2" has "100" in stock
+      And I should see that it has no stock for outlet "4"
 
   Scenario: Retrieving a simple product on a sales channel that it doesn't belong to
     Given I am connected to sales channel "2"
