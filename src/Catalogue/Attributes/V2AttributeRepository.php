@@ -17,7 +17,7 @@ class V2AttributeRepository implements AttributeRepository
     /**
      * @todo refactor this, it feels a little messy (particularly finding the attribute options).
      */
-    public function find(AttributeCode $attributeCode, SalesChannelId $salesChannelId)
+    public function find(AttributeCode $attributeCode)
     {
         $rawResponse = $this->api->call('GetAllProductAttributes');
 
