@@ -28,7 +28,7 @@ trait ProductFeatureContext
     {
         $attributeCode = AttributeCode::fromNative('brand');
 
-        $this->brandAttribute = $this->attributeRepository->find($attributeCode, $this->salesChannelId);
+        $this->brandAttribute = $this->attributeRepository->find($attributeCode);
     }
 
     /**
