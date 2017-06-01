@@ -3,13 +3,12 @@
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
 use BadMethodCallException;
-use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\Attribute;
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeCode;
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeOptionId;
 
 class MatrixPolicy
 {
-    private $attributes = [];
+    private $attributeCodes = [];
 
     private $requirement;
 
@@ -21,8 +20,8 @@ class MatrixPolicy
             throw new BadMethodCallException('You must at least provide 1 argument: 1) attribute code names');
         }
 
-        $attributes = array_map(function ($attributeCodeName) {
-            return Attribute::fromNative($attributeCodeName);
+        $attributeCodes = array_map(function ($attributeCodeName) {
+            return AttributeCode::fromNative($attributeCodeName);
         }, $args[0]);
 
         if (isset($args[1])) {
@@ -31,7 +30,7 @@ class MatrixPolicy
             $requirement = MatrixPolicyRequirement::getDefault();
         }
 
-        return new self($attributes, $requirement);
+        return new self($attributeCodes, $requirement);
     }
 
     public static function getDefault()
@@ -39,22 +38,20 @@ class MatrixPolicy
         return self::fromNative(['size', 'colour']);
     }
 
-    public function __construct(array $attributes, MatrixPolicyRequirement $requirement = null)
+    public function __construct(array $attributeCodes, MatrixPolicyRequirement $requirement = null)
     {
-        $this->attributes = array_map(function (Attribute $attribute) {
-            $this->assertAttributeIsAllowed($attribute);
+        $this->attributeCodes = array_map(function (AttributeCode $attributeCode) {
+            $this->assertAttributeCodeIsAllowed($attributeCode);
 
-            return $attribute;
-        }, $attributes);
+            return $attributeCode;
+        }, $attributeCodes);
 
         $this->requirement = $requirement ?: MatrixPolicyRequirement::getDefault();
     }
 
-    public function getAttributes()
+    public function getAttributeCodes()
     {
-        return array_map(function (Attribute $attribute) {
-            return clone $attribute;
-        }, $this->attributes);
+        return $this->attributeCodes;
     }
 
     public function getRequirement()
@@ -68,18 +65,18 @@ class MatrixPolicy
 
         $productOptionsByCodes = [];
 
-        array_map(function (Attribute $attribute) use ($products, &$productOptionsByCodes) {
+        array_map(function (AttributeCode $attributeCode) use ($products, &$productOptionsByCodes) {
 
-            $productOptions = array_map(function (SimpleProduct $product) use ($attribute) {
+            $productOptions = array_map(function (SimpleProduct $product) use ($attributeCode) {
                 return [
-                    'option' => (string) $product->getAttributeOption($attribute->getCode()),
+                    'option' => (string) $product->getAttributeOption($attributeCode),
                     'id' => $product->getId()->toNative(),
                 ];
             }, $products);
 
-            $productOptionsByCodes[(string) $attribute->getCode()] = $productOptions;
+            $productOptionsByCodes[(string) $attributeCode] = $productOptions;
 
-        }, $this->getAttributes());
+        }, $this->getAttributeCodes());
 
         // We'll build an array of indexes (in the previous array) who don't have a value and we'll group them by
         // code
@@ -171,12 +168,12 @@ class MatrixPolicy
         });
     }
 
-    private function assertAttributeIsAllowed(Attribute $attribute)
+    private function assertAttributeCodeIsAllowed(AttributeCode $attributeCode)
     {
         $notAllowed = AttributeCode::fromNative('product_type');
 
-        if ($attribute->getCode()->samevalueAs($notAllowed)) {
-            throw new \InvalidArgumentException("Attribute \"{$attribute->getCode()}\" is not allowed in a Matrix policy.");
+        if ($attributeCode->samevalueAs($notAllowed)) {
+            throw new \InvalidArgumentException("Attribute \"{$attributeCode}\" is not allowed in a Matrix policy.");
         }
     }
 }
