@@ -3,7 +3,6 @@
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
 use InvalidArgumentException;
-use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\Attribute;
 use RetailExpress\SkyLink\Sdk\Catalogue\Attributes\AttributeCode;
 use ValueObjects\StringLiteral\StringLiteral;
 
@@ -121,10 +120,10 @@ class Matrix implements Product, CompositeProduct
     private function attributeCodeIsInPolicy(AttributeCode $attributeCode)
     {
         $matchingAttributes = array_filter(array_map(
-            function (Attribute $policyAttribute) use ($attributeCode) {
-                return $policyAttribute->getCode()->sameValueAs($attributeCode);
+            function (AttributeCode $policyAttributeCode) use ($attributeCode) {
+                return $policyAttributeCode->sameValueAs($attributeCode);
             },
-            $this->getPolicy()->getAttributes()
+            $this->getPolicy()->getAttributeCodes()
         ));
 
         return count($matchingAttributes) > 0;

@@ -27,7 +27,7 @@ class MatrixPolicyMapper
         $key = $this->getStorageKey($productType);
 
         if (array_key_exists($key, $this->matrixPolicies)) {
-            return $matrixPolicies[$key];
+            return $this->matrixPolicies[$key];
         }
 
         return MatrixPolicy::getDefault();
