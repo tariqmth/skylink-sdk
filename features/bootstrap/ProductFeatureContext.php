@@ -5,6 +5,9 @@ use RetailExpress\SkyLink\Sdk\Catalogue\Eta\EtaQty;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\ProductId;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\Matrix;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\SimpleProduct;
+use RetailExpress\SkyLink\Sdk\Exceptions\Catalogue\Products\ProductHasNoQtyForOutletException;
+use RetailExpress\SkyLink\Sdk\Outlets\OutletId;
+use ValueObjects\Number\Integer;
 use ValueObjects\StringLiteral\StringLiteral;
 
 trait ProductFeatureContext
@@ -28,7 +31,7 @@ trait ProductFeatureContext
     {
         $attributeCode = AttributeCode::fromNative('brand');
 
-        $this->brandAttribute = $this->attributeRepository->find($attributeCode, $this->salesChannelId);
+        $this->brandAttribute = $this->attributeRepository->find($attributeCode);
     }
 
     /**
@@ -150,6 +153,54 @@ trait ProductFeatureContext
         };
     }
 
+    /**
+     * @Then I should see that we have :arg1 in stock and :arg2 on order
+     */
+    public function iShouldSeeThatWeHaveInStockAndOnOrder(
+        $expectedQty,
+        $expectedQtyOnOrder
+    ) {
+        $actualQty = $this->product->getInventoryItem()->getQty();
+        $actualQtyOnOrder = $this->product->getInventoryItem()->getQtyOnOrder();
+
+        if (!$actualQty->sameValueAs(new Integer($expectedQty))) {
+            throw new Exception("There was/were \"{$actualQty}\" in stock.");
+        }
+
+        if (!$actualQtyOnOrder->sameValueAs(new Integer($expectedQtyOnOrder))) {
+            throw new Exception("There was/were \"{$actualQtyOnOrder}\" on order.");
+        }
+    }
+
+    /**
+     * @Then I should see that outlet :arg1 has :arg2 in stock
+     */
+    public function iShouldSeeThatOutletHasInStock($expectedOutletId, $expectedQty)
+    {
+        $actualOutletQty = $this->product->getInventoryItem()->getOutletQty(
+            new OutletId($expectedOutletId)
+        );
+
+        $actualQty = $actualOutletQty->getQty();
+
+        if (!$actualQty->sameValueAs(new Integer($expectedQty))) {
+            throw new Exception("Outlet \"{$expectedOutletId}\" has \"{$actualQty}\" in stock.");
+        }
+    }
+
+    /**
+     * @Then I should see that it has no stock for outlet :arg1
+     */
+    public function iShouldSeeThatItHasNoStockForOutlet($expectedOutletId)
+    {
+        try {
+            $this->product->getInventoryItem()->getOutletQty(new OutletId($expectedOutletId));
+        } catch (ProductHasNoQtyForOutletException $e) {
+            return;
+        }
+
+        throw new Exception("It appears there was stock for outlet \"{$expectedOutletId}\".");
+    }
 
     /**
      * @Then it is a matrix that contains :arg1 products

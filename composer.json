@@ -59,5 +59,11 @@
       "@phpspec",
       "@behat"
     ]
+  },
+  "repositories": {
+    "retail-express": {
+      "type": "composer",
+      "url": "https://repo.ecom.retailexpress.com.au"
+    }
   }
 }

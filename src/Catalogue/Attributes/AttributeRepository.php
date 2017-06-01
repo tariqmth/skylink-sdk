@@ -6,5 +6,5 @@ use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 
 interface AttributeRepository
 {
-    public function find(AttributeCode $code, SalesChannelId $salesChannelId);
+    public function find(AttributeCode $code);
 }

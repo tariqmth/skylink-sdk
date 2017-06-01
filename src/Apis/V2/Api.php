@@ -63,7 +63,9 @@ class Api
             $response = $this->soapClient->__getLastResponse();
         }
 
-        return $this->getMiddlewareChain($this->middleware)(
+        $middlewareChain = $this->getMiddlewareChain($this->middleware);
+
+        return $middlewareChain(
             $this->soapClient->__getLastRequest(),
             $response,
             $soapFault

@@ -66,11 +66,7 @@ class V2ProductDeserializer
             $pricingStructure = $pricingStructure->withPriceGroupPrice($priceGroupPrice);
         }, $this->extractPriceGroupPrices($payload));
 
-        $inventoryItem = InventoryItem::fromNative(
-            $payload['ManageStock'],
-            $payload['StockAvailable'],
-            $payload['StockOnOrder']
-        );
+        $inventoryItem = $this->extractInventoryItem($payload, $id);
 
         $physicalPackage = PhysicalPackage::fromNative(
             array_get_notempty($payload, 'Weight', 0),
@@ -201,6 +197,32 @@ class V2ProductDeserializer
             $priceGroupPricePayload['attributes']['Id'],
             $priceGroupPricePayload['value']
         );
+    }
+
+    private function extractInventoryItem(array $payload, ProductId $id)
+    {
+        $outletQtys = [];
+
+        foreach (array_get_notempty($payload, 'StockAvailablePerOutlet', []) as $outletQtyPayload) {
+            $outletId = $outletQtyPayload['attributes']['Id'];
+            $qty = (int) $outletQtyPayload['value'];
+
+            if (array_key_exists($outletId, $outletQtys)) {
+                continue;
+            }
+
+            $outletQtys[$outletId] = [$outletId, $qty];
+        }
+
+        $inventoryItem = InventoryItem::fromNative(
+            $payload['ManageStock'],
+            $payload['StockAvailable'],
+            $payload['StockOnOrder'],
+            array_values($outletQtys)
+        );
+        $inventoryItem->setProductId($id);
+
+        return $inventoryItem;
     }
 
     private static function extractAttributeOptions(array $payload, array $suffixesToCheck)
