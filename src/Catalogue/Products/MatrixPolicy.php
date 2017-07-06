@@ -38,6 +38,13 @@ class MatrixPolicy
         return self::fromNative(['size', 'colour']);
     }
 
+    public static function attributeCodeIsAllowed(AttributeCode $attributeCode)
+    {
+        $notAllowed = AttributeCode::fromNative('product_type');
+
+        return !$notAllowed->samevalueAs($attributeCode);
+    }
+
     public function __construct(array $attributeCodes, MatrixPolicyRequirement $requirement = null)
     {
         $this->attributeCodes = array_map(function (AttributeCode $attributeCode) {
@@ -52,6 +59,16 @@ class MatrixPolicy
     public function getAttributeCodes()
     {
         return $this->attributeCodes;
+    }
+
+    public function usesAttributeCode(AttributeCode $attributeCode)
+    {
+        return null !== array_first(
+            $this->getAttributeCodes(),
+            function ($key, AttributeCode $existingAttributeCode) use ($attributeCode) {
+                return $existingAttributeCode->sameValueAs($attributeCode);
+            }
+        );
     }
 
     public function getRequirement()
@@ -170,9 +187,7 @@ class MatrixPolicy
 
     private function assertAttributeCodeIsAllowed(AttributeCode $attributeCode)
     {
-        $notAllowed = AttributeCode::fromNative('product_type');
-
-        if ($attributeCode->samevalueAs($notAllowed)) {
+        if (!self::attributeCodeIsAllowed($attributeCode)) {
             throw new \InvalidArgumentException("Attribute \"{$attributeCode}\" is not allowed in a Matrix policy.");
         }
     }
