@@ -16,7 +16,7 @@ class InventoryItem implements ValueObjectInterface
 {
     private $managed;
 
-    private $qty;
+    private $qtyAvailable;
 
     private $qtyOnOrder;
 
@@ -37,30 +37,30 @@ class InventoryItem implements ValueObjectInterface
             throw new BadMethodCallException('You must provide at least 1 argument: 1) managed');
         }
 
-        $qty = isset($args[1]) ? new Integer($args[1]) : null;
+        $qtyAvailable = isset($args[1]) ? new Integer($args[1]) : null;
         $qtyOnOrder = isset($args[2]) ? new Integer($args[2]) : null;
 
         $outletQtys = [];
         if (isset($args[3])) {
             $outletQtys = array_map(function (array $payload) {
-                list($outletId, $qty) = $payload;
+                list($outletId, $qtyAvailable) = $payload;
 
-                return OutletQty::fromNative($outletId, $qty);
+                return OutletQty::fromNative($outletId, $qtyAvailable);
             }, $args[3]);
         }
 
-        return new self($args[0], $qty, $qtyOnOrder, $outletQtys);
+        return new self($args[0], $qtyAvailable, $qtyOnOrder, $outletQtys);
     }
 
     public function __construct(
         $managed,
-        Integer $qty = null,
+        Integer $qtyAvailable = null,
         Integer $qtyOnOrder = null,
         array $outletQtys = []
     ) {
         $this->assertManagedArgument($managed);
         $this->managed = boolval($managed);
-        $this->qty = $qty;
+        $this->qtyAvailable = $qtyAvailable;
 
         if (null !== $qtyOnOrder) {
             $this->assertQtyOnOrder($qtyOnOrder);
@@ -86,9 +86,9 @@ class InventoryItem implements ValueObjectInterface
         return $this->managed;
     }
 
-    public function getQty()
+    public function getQtyAvailable()
     {
-        return clone $this->qty;
+        return clone $this->qtyAvailable;
     }
 
     public function hasQtyOnOrder()

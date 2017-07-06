@@ -154,17 +154,17 @@ trait ProductFeatureContext
     }
 
     /**
-     * @Then I should see that we have :arg1 in stock and :arg2 on order
+     * @Then I should see that we have :arg1 available and :arg2 on order
      */
-    public function iShouldSeeThatWeHaveInStockAndOnOrder(
-        $expectedQty,
+    public function iShouldSeeThatWeHaveAvailableAndOnOrder(
+        $expectedQtyAvailable,
         $expectedQtyOnOrder
     ) {
-        $actualQty = $this->product->getInventoryItem()->getQty();
+        $actualQtyAvailable = $this->product->getInventoryItem()->getQtyAvailable();
         $actualQtyOnOrder = $this->product->getInventoryItem()->getQtyOnOrder();
 
-        if (!$actualQty->sameValueAs(new Integer($expectedQty))) {
-            throw new Exception("There was/were \"{$actualQty}\" in stock.");
+        if (!$actualQtyAvailable->sameValueAs(new Integer($expectedQtyAvailable))) {
+            throw new Exception("There was/were \"{$actualQtyAvailable}\" available.");
         }
 
         if (!$actualQtyOnOrder->sameValueAs(new Integer($expectedQtyOnOrder))) {
@@ -173,9 +173,9 @@ trait ProductFeatureContext
     }
 
     /**
-     * @Then I should see that outlet :arg1 has :arg2 in stock
+     * @Then I should see that outlet :arg1 has :arg2 available
      */
-    public function iShouldSeeThatOutletHasInStock($expectedOutletId, $expectedQty)
+    public function iShouldSeeThatOutletHasAvailable($expectedOutletId, $expectedQty)
     {
         $actualOutletQty = $this->product->getInventoryItem()->getOutletQty(
             new OutletId($expectedOutletId)
@@ -184,7 +184,7 @@ trait ProductFeatureContext
         $actualQty = $actualOutletQty->getQty();
 
         if (!$actualQty->sameValueAs(new Integer($expectedQty))) {
-            throw new Exception("Outlet \"{$expectedOutletId}\" has \"{$actualQty}\" in stock.");
+            throw new Exception("Outlet \"{$expectedOutletId}\" has \"{$actualQty}\" available.");
         }
     }
 
