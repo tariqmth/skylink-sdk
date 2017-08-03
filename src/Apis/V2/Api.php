@@ -132,7 +132,6 @@ class Api
         return [
             new NestedResponseExtractorMiddleware(),
             new InvalidClientIdMiddleware(),
-            new EmptyResponseMiddleware(),
             new WebServicesExceptionMiddleware(),
             new SoapFaultMiddleware(),
             new GeneralErrorsMiddleware(),
