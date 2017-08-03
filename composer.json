@@ -23,6 +23,7 @@
   "require": {
     "php": ">=5.5.0",
     "ext-soap": "*",
+    "guzzlehttp/guzzle": "^6.3",
     "illuminate/support": ">=5.1 <5.3",
     "league/commonmark": "^0.15.3",
     "nicolopignatelli/valueobjects": "^4.0",
