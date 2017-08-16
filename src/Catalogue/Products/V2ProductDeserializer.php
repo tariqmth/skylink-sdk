@@ -172,7 +172,7 @@ class V2ProductDeserializer
             return null;
         }
 
-        return strtotime($date);
+        return from_v2_rex_date_to_timestamp($date);
     }
 
     private function extractPriceGroupPrices(array $payload)

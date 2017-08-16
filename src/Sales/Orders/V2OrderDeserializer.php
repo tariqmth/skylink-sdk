@@ -2,7 +2,6 @@
 
 namespace RetailExpress\SkyLink\Sdk\Sales\Orders;
 
-use DateTimeImmutable;
 use RetailExpress\SkyLink\Sdk\Customers\BillingContact;
 use RetailExpress\SkyLink\Sdk\Customers\CustomerId;
 use RetailExpress\SkyLink\Sdk\Customers\ShippingContact;
@@ -19,7 +18,7 @@ class V2OrderDeserializer implements XmlDeserializable
 
         $customerId = new CustomerId($payload['CustomerId']);
 
-        $placedAt = new DateTimeImmutable($payload['DateCreated']);
+        $placedAt = from_v2_rex_date($payload['CreatedAt']);
 
         $status = Status::fromV2Status($payload['OrderStatus']);
 

@@ -19,7 +19,7 @@ trait V2EtaDeserializer
         return self::fromNative(
             $payload['ProductID'],
             $payload['QtyOrdered'],
-            strtotime($payload['ETA'])
+            from_v2_rex_date_to_timestamp($payload['ETA'])
         );
     }
 }
