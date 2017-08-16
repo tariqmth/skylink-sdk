@@ -2,7 +2,6 @@
 
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Eta;
 
-use DateTimeImmutable;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\ProductId;
 use Sabre\Xml\Deserializer as XmlDeserializer;
 use Sabre\Xml\Reader as XmlReader;

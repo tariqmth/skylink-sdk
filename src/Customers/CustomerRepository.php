@@ -2,8 +2,6 @@
 
 namespace RetailExpress\SkyLink\Sdk\Customers;
 
-use DateTimeImmutable;
-
 interface CustomerRepository
 {
     public function allIds();
