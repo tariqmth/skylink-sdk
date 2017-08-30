@@ -104,7 +104,7 @@ class V2ProductDeserializer
 
     private function extractRegularPrice(array $payload)
     {
-        return array_get(
+        return array_get_notempty(
             $payload,
             $this->regularPriceAttribute->getV2XmlAttribute(),
             function () use ($payload) {
