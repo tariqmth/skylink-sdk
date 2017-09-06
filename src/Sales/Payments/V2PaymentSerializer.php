@@ -13,7 +13,7 @@ trait V2PaymentSerializer
         $payload['OrderId'] = (string) $this->getOrderId();
         $payload['MethodId'] = (string) $this->getMethodId();
         $payload['Amount'] = (string) $this->getTotal();
-        $payload['DateCreated'] = $this->getMadeAt()->format(V2_API_DATE_FORMAT);
+        $payload['DateCreated'] = to_v2_rex_date($this->getMadeAt());
 
         if ($this->usesVoucherCode()) {
             $payload['VoucherCode'] = (string) $this->getVoucherCode();

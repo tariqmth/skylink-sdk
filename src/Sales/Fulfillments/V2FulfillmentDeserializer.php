@@ -15,7 +15,7 @@ class V2FulfillmentDeserializer implements XmlDeserializable
         $fulfillment = Fulfillment::fromNative(
             $payload['OrderId'],
             $payload['OrderItemId'],
-            strtotime($payload['DateFulfilled']),
+            from_v2_rex_date_to_timestamp($payload['DateFulfilled']),
             $payload['QtyFulfilled']
         );
 

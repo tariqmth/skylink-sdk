@@ -93,7 +93,7 @@ class V2ProductDeserializer
 
     private function extractProductName(array $payload)
     {
-        return array_get(
+        return array_get_notempty(
             $payload,
             $this->nameAttribute->getV2XmlAttribute(),
             function () use ($payload) {
@@ -104,7 +104,7 @@ class V2ProductDeserializer
 
     private function extractRegularPrice(array $payload)
     {
-        return array_get(
+        return array_get_notempty(
             $payload,
             $this->regularPriceAttribute->getV2XmlAttribute(),
             function () use ($payload) {
@@ -117,7 +117,7 @@ class V2ProductDeserializer
     {
         $priceAttribute = $this->specialPriceAttribute;
 
-        $price = array_get(
+        $price = array_get_notempty(
             $payload,
             $priceAttribute->getV2XmlAttribute()
         );
@@ -134,7 +134,7 @@ class V2ProductDeserializer
 
             $priceAttribute = $defaultPriceAttribute;
 
-            $price = array_get(
+            $price = array_get_notempty(
                 $payload,
                 $priceAttribute->getV2XmlAttribute()
             );
@@ -149,12 +149,12 @@ class V2ProductDeserializer
             return $price;
         }
 
-        $startDate = array_get(
+        $startDate = array_get_notempty(
             $payload,
             $this->specialPriceAttribute->getV2XmlAttributesForStartDate()
         );
 
-        $endDate = array_get(
+        $endDate = array_get_notempty(
             $payload,
             $this->specialPriceAttribute->getV2XmlAttributesForEndDate()
         );
@@ -172,7 +172,7 @@ class V2ProductDeserializer
             return null;
         }
 
-        return strtotime($date);
+        return from_v2_rex_date_to_timestamp($date);
     }
 
     private function extractPriceGroupPrices(array $payload)

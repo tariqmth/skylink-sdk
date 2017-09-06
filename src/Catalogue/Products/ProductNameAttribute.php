@@ -22,7 +22,7 @@ class ProductNameAttribute extends Enum
     public function getLabel()
     {
         $labels = [
-            self::DESCRIPTION => 'Description',
+            self::DESCRIPTION => 'Short Description',
             self::CUSTOM_1 => 'Custom 1',
             self::CUSTOM_2 => 'Custom 2',
             self::CUSTOM_3 => 'Custom 3',

@@ -15,7 +15,7 @@ class V2PaymentDeserializer implements XmlDeserializable
 
         $payment = Payment::normalFromNative(
             $payload['OrderId'],
-            strtotime($payload['DateCreated']),
+            from_v2_rex_date_to_timestamp($payload['DateCreated']),
             $payload['MethodId'],
             $payload['Total']
         );

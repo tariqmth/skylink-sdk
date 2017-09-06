@@ -2,7 +2,6 @@
 
 namespace RetailExpress\SkyLink\Sdk\Sales\Fulfillments;
 
-use DateTimeImmutable;
 use LogicException;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\OrderId;
 use RetailExpress\SkyLink\Sdk\Sales\Orders\ItemId;

@@ -2,7 +2,6 @@
 
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Eta;
 
-use DateTimeImmutable;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\ProductId;
 use Sabre\Xml\Deserializer as XmlDeserializer;
 use Sabre\Xml\Reader as XmlReader;
@@ -20,7 +19,7 @@ trait V2EtaDeserializer
         return self::fromNative(
             $payload['ProductID'],
             $payload['QtyOrdered'],
-            strtotime($payload['ETA'])
+            from_v2_rex_date_to_timestamp($payload['ETA'])
         );
     }
 }

@@ -2,7 +2,6 @@
 
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Eta;
 
-use DateTimeImmutable;
 use RetailExpress\SkyLink\Sdk\Apis\V2\Api as V2Api;
 use RetailExpress\SkyLink\Sdk\Catalogue\Products\ProductId;
 use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;

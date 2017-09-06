@@ -2,7 +2,6 @@
 
 namespace RetailExpress\SkyLink\Sdk\Catalogue\Products;
 
-use DateTimeImmutable;
 use RetailExpress\SkyLink\Sdk\ValueObjects\SalesChannelId;
 
 interface ProductRepository

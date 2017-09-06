@@ -3,6 +3,7 @@
 namespace RetailExpress\SkyLink\Sdk\Apis\V2;
 
 use Prezent\Soap\Client\SoapClient;
+use Prezent\Soap\Client\Events;
 use Prezent\Soap\Client\Extension\WSAddressing;
 use Sabre\Xml\Service as XmlService;
 use SoapFault;
@@ -132,7 +133,6 @@ class Api
         return [
             new NestedResponseExtractorMiddleware(),
             new InvalidClientIdMiddleware(),
-            new EmptyResponseMiddleware(),
             new WebServicesExceptionMiddleware(),
             new SoapFaultMiddleware(),
             new GeneralErrorsMiddleware(),
@@ -182,6 +182,12 @@ class Api
         $client = new SoapClient((string) $url, [
             'soap_version' => SOAP_1_2,
             'trace' => true,
+            'event_listeners' => [
+                [
+                    Events::WSDL_REQUEST,
+                    [new PrezentWsdlLoader($this), 'handle']
+                ],
+            ],
             'event_subscribers' => [
                 new WSAddressing(),
             ],
