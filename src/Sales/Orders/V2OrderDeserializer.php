@@ -18,7 +18,7 @@ class V2OrderDeserializer implements XmlDeserializable
 
         $customerId = new CustomerId($payload['CustomerId']);
 
-        $placedAt = from_v2_rex_date($payload['CreatedAt']);
+        $placedAt = from_v2_rex_date($payload['DateCreated']);
 
         $status = Status::fromV2Status($payload['OrderStatus']);
 

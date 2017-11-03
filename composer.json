@@ -42,7 +42,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-develop": "1.4.x-dev"
+      "dev-develop": "1.5.x-dev"
     }
   },
   "scripts": {
