@@ -9,4 +9,6 @@ interface OutletRepository
     public function all(SalesChannelId $salesChannelId);
 
     public function find(OutletId $outletId, SalesChannelId $salesChannelId);
+
+    public function findAllMatching(array $outletIds, SalesChannelId $salesChannelId);
 }
