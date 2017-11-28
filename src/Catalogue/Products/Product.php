@@ -25,4 +25,8 @@ interface Product
     public function getAttributeOption(AttributeCode $attributeCode);
 
     public function getProductType();
+
+    public function getMatrixProduct();
+
+    public function setMatrixProduct(Matrix $matrixProduct);
 }
