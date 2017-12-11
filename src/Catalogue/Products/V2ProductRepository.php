@@ -100,6 +100,12 @@ class V2ProductRepository implements ProductRepository
 
         $matrixPolicy = $this->matrixPolicyMapper->getPolicyForProductType($firstProduct->getProductType());
 
-        return new Matrix($matrixPolicy, $products);
+        $matrixProduct = new Matrix($matrixPolicy, $products);
+
+        foreach ($products as $product) {
+            $product->setMatrixProduct($matrixProduct);
+        }
+
+        return $matrixProduct;
     }
 }

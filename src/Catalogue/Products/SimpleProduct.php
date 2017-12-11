@@ -26,6 +26,8 @@ class SimpleProduct implements Product
 
     private $attributeOptions = [];
 
+    private $matrixProduct;
+
     public function __construct(
         ProductId $id,
         StringLiteral $sku,
@@ -110,5 +112,16 @@ class SimpleProduct implements Product
     public function getProductType()
     {
         return $this->getAttributeOption(AttributeCode::fromNative('product_type'));
+    }
+
+    public function getMatrixProduct()
+    {
+        return $this->matrixProduct;
+    }
+
+    public function setMatrixProduct(Matrix $matrixProduct)
+    {
+        $this->matrixProduct = $matrixProduct;
+        return $this->matrixProduct;
     }
 }

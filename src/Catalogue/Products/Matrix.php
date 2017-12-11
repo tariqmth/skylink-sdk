@@ -144,4 +144,14 @@ class Matrix implements Product, CompositeProduct
             ));
         }
     }
+
+    public function getMatrixProduct()
+    {
+        return null;
+    }
+
+    public function setMatrixProduct(Matrix $matrixProduct)
+    {
+        return null;
+    }
 }
