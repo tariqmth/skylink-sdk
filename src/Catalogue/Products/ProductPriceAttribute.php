@@ -11,6 +11,7 @@ class ProductPriceAttribute extends Enum
 
     const RRP = 'rrp';
     const DEFAULT_PRICE = 'default_price';
+    const MASTER_POS_PRICE = 'master_pos_price';
     const PROMOTIONAL_PRICE = 'promotional_price';
     const WEB_PRICE = 'web_price';
 
@@ -28,9 +29,10 @@ class ProductPriceAttribute extends Enum
     {
         $labels = [
             self::RRP => 'RRP',
-            self::DEFAULT_PRICE => 'POS Price (Without Discounts)',
-            self::PROMOTIONAL_PRICE => 'POS Price (With Discounts)',
-            self::WEB_PRICE => 'Web Price',
+            self::MASTER_POS_PRICE => 'Master POS Price',
+            self::DEFAULT_PRICE => 'Default Price (web, outlet, master)',
+            self::PROMOTIONAL_PRICE => 'Promotional Price (outlet or master)',
+            self::WEB_PRICE => 'Web Price'
         ];
 
         return new StringLiteral($labels[$this->getValue()]);
