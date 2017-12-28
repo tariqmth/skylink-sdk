@@ -9,6 +9,7 @@ trait V2ProductPriceAttributeConverter
         'default_price' => 'DefaultPrice',
         'promotional_price' => 'PromotionalPrice',
         'web_price' => 'WebSellPrice',
+        'master_pos_price' => 'MasterPOSPrice'
     ];
 
     private static $startAndEndDateMappings = [
