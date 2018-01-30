@@ -32,7 +32,6 @@
   },
   "require-dev": {
     "behat/behat": "^3.0",
-    "henrikbjorn/phpspec-code-coverage": "^2.0",
     "phploc/phploc": "^3.0",
     "phpspec/phpspec": "^2.5",
     "sebastian/phpcpd": "^2.0",
