@@ -138,7 +138,7 @@ XML;
     private function switchOutPaymentNodes(&$xml)
     {
         $xml = preg_replace(
-            '/<Payment>([\d\.]+)<\/Payment>/',
+            '/<Payment>([\d\.-]+)<\/Payment>/',
             '<Total>$1</Total>',
             $xml
         );
