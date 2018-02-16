@@ -41,7 +41,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-develop": "1.8.x-dev"
+      "dev-develop": "1.9.x-dev"
     }
   },
   "scripts": {
