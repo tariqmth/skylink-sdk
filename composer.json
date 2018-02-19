@@ -22,6 +22,7 @@
   },
   "require": {
     "php": ">=5.5.0",
+    "phpspec/phpspec": "^2.0|^3.0",
     "ext-soap": "*",
     "guzzlehttp/guzzle": "^6.3",
     "illuminate/support": ">=5.1 <5.3",
