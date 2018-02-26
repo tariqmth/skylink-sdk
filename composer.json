@@ -22,6 +22,7 @@
   },
   "require": {
     "php": ">=5.5.0",
+    "phpspec/phpspec": "^2.0|^3.0",
     "ext-soap": "*",
     "guzzlehttp/guzzle": "^6.3",
     "illuminate/support": ">=5.1 <5.3",
@@ -41,7 +42,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-develop": "1.8.x-dev"
+      "dev-develop": "1.9.x-dev"
     }
   },
   "scripts": {
