@@ -3,7 +3,6 @@
 namespace RetailExpress\SkyLink\Sdk\Customers\PriceGroups;
 
 use ValueObjects\Enum\Enum;
-use ValueObjects\StringLiteral\StringLiteral;
 
 class PriceGroupType extends Enum
 {
@@ -11,7 +10,7 @@ class PriceGroupType extends Enum
     const FIXED = 'fixed';
 
     /**
-     * @return StringLiteral
+     * @return \ValueObjects\StringLiteral\StringLiteral
      */
     public function getPriceGroupTypeName()
     {
@@ -20,6 +19,6 @@ class PriceGroupType extends Enum
             self::FIXED => 'Fixed',
         ];
 
-        return new StringLiteral($names[$this->getValue()]);
+        return new \ValueObjects\StringLiteral\StringLiteral($names[$this->getValue()]);
     }
 }

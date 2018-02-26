@@ -30,6 +30,8 @@ trait V2CustomerSerializer
 
         $payload['ReceivesNews'] = (string) $this->getNewsletterSubscription();
 
+        $payload['ExportToWSI'] = 1;
+
         $xmlWriter->write($payload);
     }
 }
