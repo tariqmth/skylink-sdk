@@ -11,6 +11,8 @@ trait V2StatusConverter
         'pending_payment' => 'Awaiting Payment',
         'processing' => 'Incomplete',
         'complete' => 'Processed',
+        'canceled' => 'Cancelled',
+        'closed' => 'Cancelled',
     ];
 
     /**
