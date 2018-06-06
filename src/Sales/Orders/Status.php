@@ -12,4 +12,6 @@ class Status extends Enum
     const PENDING_PAYMENT = 'pending_payment';
     const PROCESSING = 'processing';
     const COMPLETE = 'complete';
+    const CANCELLED = 'canceled';
+    const CLOSED = 'closed';
 }
