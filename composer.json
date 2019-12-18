@@ -1,5 +1,5 @@
 {
-  "name": "retail-express/skylink-sdk",
+  "name": "tariqmth/skylink-sdk",
   "description": "Framework-agnostic SDK package for connecting a PHP application to Retail Express.",
   "license": "proprietary",
   "authors": [
@@ -61,10 +61,10 @@
       "@behat"
     ]
   },
-  "repositories": {
-    "retail-express": {
-      "type": "composer",
-      "url": "https://repo.ecom.retailexpress.com.au"
+ "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/tariqmth/skylink-eds.git"
     }
-  }
+  ]
 }
