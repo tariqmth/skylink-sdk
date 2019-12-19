@@ -27,7 +27,7 @@
     "guzzlehttp/guzzle": "^6.3",
     "illuminate/support": ">=5.1 <5.3",
     "league/commonmark": "^0.15.3",
-    "tariqmth/nicolopignatelli-valueobjects": "^4.0",
+    "tariqmth/nicolopignatelli-valueobjects": "v4.1",
     "prezent/soap-client": "^0.1.3",
     "sabre/xml": "^1.4"
   },
