@@ -61,14 +61,10 @@
       "@behat"
     ]
   },
- "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/tariqmth/skylink-sdk.git"
-    },
-    {
+  "repositories": {
+    "retail-express": {
       "type": "composer",
       "url": "https://repo.ecom.retailexpress.com.au"
     }
-  ]
+  }
 }
