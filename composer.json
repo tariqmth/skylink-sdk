@@ -65,6 +65,10 @@
     {
       "type": "git",
       "url": "https://github.com/tariqmth/skylink-sdk.git"
+    },
+    {
+      "type": "composer",
+      "url": "https://repo.ecom.retailexpress.com.au"
     }
   ]
 }
